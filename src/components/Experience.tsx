@@ -17,20 +17,23 @@ const Experience: React.FC = () => {
           description: t.project1Desc,
           responsibilities: [
             t.resp1,
-            t.resp2,
             t.resp3,
             t.resp4,
             t.resp5,
             t.resp6,
             t.resp7,
             t.resp8,
-            t.resp9,
           ],
         },
         {
           name: t.project2,
           description: t.project2Desc,
           responsibilities: [t.resp11, t.resp12, t.resp13],
+        },
+        {
+          name: t.project3,
+          description: t.project3Desc,
+          responsibilities: [t.resp14, t.resp15, t.resp16],
         },
       ],
     },
@@ -55,13 +58,32 @@ const Experience: React.FC = () => {
               </div>
             </div>
 
-            {exp.projects.map((project, pIdx) => (
+            {exp.projects.map((project, pIdx) => {
+              // Parse description for <strong> tags
+              const descParts = project.description.split(/(<strong>.*?<\/strong>)/g);
+              return (
               <div key={pIdx} className="mb-4 last:mb-0">
                 <div className="text-base font-semibold text-black dark:text-gray-100 mb-2">
                   {project.name}
                 </div>
                 <div className="text-black dark:text-gray-300 mb-3 text-sm leading-6">
-                  {project.description}
+                  {descParts.map((part, partIdx) => {
+                    if (
+                      part.startsWith("<strong>") &&
+                      part.endsWith("</strong>")
+                    ) {
+                      const text = part.replace(/<\/?strong>/g, "");
+                      return (
+                        <strong
+                          key={partIdx}
+                          className="font-bold text-black dark:text-gray-100"
+                        >
+                          {text}
+                        </strong>
+                      );
+                    }
+                    return <span key={partIdx}>{part}</span>;
+                  })}
                 </div>
                 <div className="experience-list">
                   <ul className="space-y-2 text-black dark:text-gray-300">
@@ -93,7 +115,8 @@ const Experience: React.FC = () => {
                   </ul>
                 </div>
               </div>
-            ))}
+            );
+            })}
           </div>
         ))}
       </div>

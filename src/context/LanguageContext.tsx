@@ -5,6 +5,7 @@ import {
   useEffect,
   ReactNode,
 } from "react";
+import { useNavigate } from "react-router";
 
 type Language = "es" | "en";
 
@@ -28,13 +29,14 @@ export const useLanguage = () => {
 
 interface LanguageProviderProps {
   children: ReactNode;
+  initialLanguage?: Language;
 }
 
-export const LanguageProvider = ({ children }: LanguageProviderProps) => {
-  const [language, setLanguage] = useState<Language>(() => {
-    // Obtener idioma guardado en localStorage o usar español por defecto
-    const savedLanguage = localStorage.getItem("language");
-    return (savedLanguage as Language) || "es";
+export const LanguageProvider = ({ children, initialLanguage }: LanguageProviderProps) => {
+  const navigate = useNavigate();
+  const [language, setLanguageState] = useState<Language>(() => {
+    // Usar el idioma inicial de la URL o el guardado en localStorage o español por defecto
+    return initialLanguage || (localStorage.getItem("language") as Language) || "es";
   });
 
   useEffect(() => {
@@ -42,8 +44,14 @@ export const LanguageProvider = ({ children }: LanguageProviderProps) => {
     localStorage.setItem("language", language);
   }, [language]);
 
+  const setLanguage = (lang: Language) => {
+    setLanguageState(lang);
+    navigate(`/${lang}`);
+  };
+
   const toggleLanguage = () => {
-    setLanguage((prevLang) => (prevLang === "es" ? "en" : "es"));
+    const newLang = language === "es" ? "en" : "es";
+    setLanguage(newLang);
   };
 
   return (

@@ -5,15 +5,9 @@ import { FiSun, FiMoon } from "react-icons/fi";
 const ThemeToggle: React.FC = () => {
   const { theme, toggleTheme } = useTheme();
 
-  const handleClick = () => {
-    console.log("Before toggle:", theme);
-    toggleTheme();
-    console.log("After toggle:", theme);
-  };
-
   return (
     <button
-      onClick={handleClick}
+      onClick={toggleTheme}
       className="flex items-center justify-center h-10 w-10 rounded-lg bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors duration-200 shadow-md"
       aria-label="Toggle theme"
     >
