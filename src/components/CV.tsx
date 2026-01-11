@@ -57,13 +57,13 @@ const CV: React.FC = () => {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-8 items-stretch">
             {/* Sidebar - Left Column */}
             <div className="lg:col-span-1 flex flex-col h-full">
-              <div className="flex flex-col justify-between h-full gap-4 lg:gap-6">
+              <div className="flex flex-col justify-between h-full gap-2 lg:gap-3">
                 <motion.div
                   initial={{ opacity: 0, x: -20 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true, margin: "-50px" }}
                   transition={{ duration: 0.5 }}
-                  className="bg-white dark:bg-gray-950 rounded-lg shadow-lg p-6 border-l-4 border-sky-400 dark:border-sky-500 hover:shadow-xl transition-all duration-300"
+                  className="bg-white dark:bg-gray-950 rounded-lg shadow-lg p-7 border-l-4 border-sky-400 dark:border-sky-500 hover:shadow-xl transition-all duration-300"
                 >
                   <Contact />
                 </motion.div>
@@ -73,7 +73,7 @@ const CV: React.FC = () => {
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true, margin: "-50px" }}
                   transition={{ duration: 0.5, delay: 0.1 }}
-                  className="bg-white dark:bg-gray-950 rounded-lg shadow-lg p-6 border-l-4 border-sky-400 dark:border-sky-500 hover:shadow-xl transition-all duration-300"
+                  className="bg-white dark:bg-gray-950 rounded-lg shadow-lg p-7 border-l-4 border-sky-400 dark:border-sky-500 hover:shadow-xl transition-all duration-300"
                 >
                   <Education />
                 </motion.div>
@@ -83,7 +83,7 @@ const CV: React.FC = () => {
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true, margin: "-50px" }}
                   transition={{ duration: 0.5, delay: 0.2 }}
-                  className="bg-white dark:bg-gray-950 rounded-lg shadow-lg p-6 border-l-4 border-sky-400 dark:border-sky-500 hover:shadow-xl transition-all duration-300"
+                  className="bg-white dark:bg-gray-950 rounded-lg shadow-lg p-7 border-l-4 border-sky-400 dark:border-sky-500 hover:shadow-xl transition-all duration-300"
                 >
                   <Skills />
                 </motion.div>
@@ -93,7 +93,7 @@ const CV: React.FC = () => {
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true, margin: "-50px" }}
                   transition={{ duration: 0.5, delay: 0.3 }}
-                  className="bg-white dark:bg-gray-950 rounded-lg shadow-lg p-6 border-l-4 border-sky-400 dark:border-sky-500 hover:shadow-xl transition-all duration-300"
+                  className="bg-white dark:bg-gray-950 rounded-lg shadow-lg p-7 border-l-4 border-sky-400 dark:border-sky-500 hover:shadow-xl transition-all duration-300"
                 >
                   <Certifications />
                 </motion.div>
@@ -103,7 +103,7 @@ const CV: React.FC = () => {
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true, margin: "-50px" }}
                   transition={{ duration: 0.5, delay: 0.4 }}
-                  className="bg-white dark:bg-gray-950 rounded-lg shadow-lg p-6 border-l-4 border-sky-400 dark:border-sky-500 hover:shadow-xl transition-all duration-300"
+                  className="bg-white dark:bg-gray-950 rounded-lg shadow-lg p-7 border-l-4 border-sky-400 dark:border-sky-500 hover:shadow-xl transition-all duration-300"
                 >
                   <Languages />
                 </motion.div>

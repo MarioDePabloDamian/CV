@@ -1,7 +1,7 @@
 import React from "react";
 import { useLanguage } from "../context/LanguageContext";
 import { translations } from "../translations/translations";
-import { FiCode, FiPause, FiPlay } from "react-icons/fi";
+import { FiPause, FiPlay } from "react-icons/fi";
 
 interface Project {
   title: string;
@@ -30,13 +30,6 @@ const Projects: React.FC = () => {
       icon: FiPause,
       statusColor: "text-yellow-600 dark:text-yellow-400",
     },
-    {
-      title: t.gameTitle,
-      description: t.gameDesc,
-      status: t.gameStatus,
-      icon: FiCode,
-      statusColor: "text-blue-600 dark:text-blue-400",
-    },
   ];
 
   return (
@@ -45,7 +38,7 @@ const Projects: React.FC = () => {
         {t.personalProjects}
       </h2>
 
-      <div className="flex flex-col lg:grid lg:grid-cols-3 gap-4 lg:gap-6 lg:items-stretch">
+      <div className="flex flex-col lg:grid lg:grid-cols-2 gap-4 lg:gap-6 lg:items-stretch">
         {projects.map((project, idx) => {
           const IconComponent = project.icon;
 

@@ -16,6 +16,8 @@ export interface TranslationKeys {
   project1Desc: string;
   project2: string;
   project2Desc: string;
+  project3: string;
+  project3Desc: string;
   resp1: string;
   resp2: string;
   resp3: string;
@@ -28,6 +30,9 @@ export interface TranslationKeys {
   resp11: string;
   resp12: string;
   resp13: string;
+  resp14: string;
+  resp15: string;
+  resp16: string;
   educationTitle: string;
   educationSchool: string;
   educationCity: string;
@@ -54,9 +59,6 @@ export interface TranslationKeys {
   emberizeTitle: string;
   emberizeDesc: string;
   emberizeStatus: string;
-  gameTitle: string;
-  gameDesc: string;
-  gameStatus: string;
 }
 
 export type Translations = {
@@ -84,7 +86,7 @@ export const translations: Translations = {
       "Profesional de software con experiencia en <strong>desarrollo web, móvil e integración de sistemas</strong>, incluyendo proyectos industriales y personales. Utilizo <strong>herramientas de inteligencia artificial</strong> para acelerar el desarrollo, aplicando <strong>validación y revisión crítica</strong> para garantizar la calidad del código. Mi enfoque se centra en la <strong>práctica real</strong> y la <strong>comprensión profunda</strong> de las tecnologías, más allá de certificaciones formales. Me mantengo constantemente actualizado con las <strong>últimas innovaciones y metodologías</strong> del sector para aplicar las mejores prácticas en cada proyecto.",
 
     // Experience
-    experienceTitle: "Dev Ops | Fullstack Developer",
+    experienceTitle: "DevOps Engineer | Fullstack Developer",
     experienceCompany: "CIVIR",
     experiencePeriod: "Mar 2025 - Actual",
     project1: "Proyecto de Observabilidad Industrial",
@@ -93,6 +95,9 @@ export const translations: Translations = {
     project2: "Proyecto HORECA - CRM + asistente de IA",
     project2Desc:
       "Comencé como QA Tester, encargado de la validación funcional y detección de errores en la plataforma.",
+    project3: "Migración de Salesforce a Odoo",
+    project3Desc:
+      "Proyecto de migración de CRM desde Salesforce a Odoo. <strong>Responsable único del proyecto</strong>, desarrollándolo de forma completamente independiente según los requerimientos del cliente.",
 
     // Responsibilities ES
     resp1:
@@ -119,6 +124,12 @@ export const translations: Translations = {
       "Contribuí a <strong>mejorar la estabilidad, usabilidad y rendimiento</strong> general del sistema.",
     resp13:
       "Participación en la <strong>automatización de pruebas</strong>, documentación de incidencias y colaboración directa con el equipo de desarrollo para aplicar mejoras continuas.",
+    resp14:
+      "Desarrollo de un <strong>módulo personalizado en Odoo</strong> para mantener todos los campos del CRM de Salesforce y garantizar la compatibilidad de datos.",
+    resp15:
+      "Configuración de <strong>entornos de desarrollo y producción en un VPS</strong>, incluyendo la configuración de <strong>firewall y certificados SSL</strong>.",
+    resp16:
+      "Análisis y <strong>mapeo de datos</strong> entre Salesforce y Odoo, identificando correspondencias y transformaciones necesarias para garantizar la integridad de la información.",
 
     // Education
     educationTitle:
@@ -162,10 +173,6 @@ export const translations: Translations = {
       "Plataforma social tipo Instagram enfocada en deportistas, con funcionalidad de match (similar a Tinder) para encontrar compañeros de entrenamiento. Permite organizar y unirse a eventos deportivos y crear comunidades alrededor del deporte.",
     emberizeStatus:
       "Pospuesto indefinidamente por falta de tiempo y financiación",
-    gameTitle: "Juego AAA - MVP",
-    gameDesc:
-      "Desarrollo de un producto mínimo viable de un videojuego AAA en colaboración con un equipo de desarrollo. El objetivo es crear un MVP funcional para atraer inversión o adquirir financiación para expandir el equipo y completar el proyecto.",
-    gameStatus: "En desarrollo activo",
   },
   en: {
     // Header
@@ -186,7 +193,7 @@ export const translations: Translations = {
       "Software professional with experience in <strong>web, mobile development and systems integration</strong>, including industrial and personal projects. I leverage <strong>artificial intelligence tools</strong> to accelerate development, applying <strong>validation and critical review</strong> to ensure code quality. My approach focuses on <strong>real-world practice</strong> and <strong>deep understanding</strong> of technologies, beyond formal certifications. I continuously stay updated with the <strong>latest innovations and methodologies</strong> in the industry to apply best practices in every project.",
 
     // Experience
-    experienceTitle: "Dev Ops | Fullstack Developer",
+    experienceTitle: "DevOps Engineer | Fullstack Developer",
     experienceCompany: "CIVIR",
     experiencePeriod: "Mar 2025 - Present",
     project1: "Industrial Observability Project",
@@ -195,6 +202,9 @@ export const translations: Translations = {
     project2: "HORECA Project - CRM + AI assistant",
     project2Desc:
       "I started as a QA Tester, responsible for functional validation and error detection in the platform.",
+    project3: "Salesforce to Odoo Migration",
+    project3Desc:
+      "CRM migration project from Salesforce to Odoo. <strong>Sole project lead</strong>, developing it completely independently according to client requirements.",
 
     // Responsibilities EN
     resp1:
@@ -221,6 +231,12 @@ export const translations: Translations = {
       "I contributed to <strong>improve stability, usability and performance</strong> of the system.",
     resp13:
       "Participation in <strong>test automation</strong>, incident documentation and direct collaboration with the development team to apply continuous improvements.",
+    resp14:
+      "Development of a <strong>custom Odoo module</strong> to maintain all Salesforce CRM fields and ensure data compatibility.",
+    resp15:
+      "Configuration of <strong>development and production environments on a VPS</strong>, including <strong>firewall and SSL certificates</strong> setup.",
+    resp16:
+      "Analysis and <strong>data mapping</strong> between Salesforce and Odoo, identifying correspondences and necessary transformations to ensure data integrity.",
 
     // Education
     educationTitle: "Higher Technician: Multi-platform Application Development",
@@ -262,9 +278,5 @@ export const translations: Translations = {
     emberizeDesc:
       "Instagram-like social platform focused on athletes, with match functionality (similar to Tinder) to find training partners. Allows organizing and joining sports events and creating communities around sports.",
     emberizeStatus: "Indefinitely postponed due to lack of time and funding",
-    gameTitle: "AAA Game - MVP",
-    gameDesc:
-      "Development of a minimum viable product for an AAA video game in collaboration with a development team. The goal is to create a functional MVP to attract investment or secure funding to expand the team and complete the project.",
-    gameStatus: "Active development",
   },
 };
