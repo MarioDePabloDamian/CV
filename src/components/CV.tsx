@@ -14,6 +14,7 @@ import LanguageSelector from "./LanguageSelector";
 import ThemeToggle from "./ThemeToggle";
 import SEO from "./SEO";
 import { useTheme } from "../context/ThemeContext";
+import { ExpandableCardProvider } from "../context/ExpandableCardContext";
 
 const CV: React.FC = () => {
   const { theme } = useTheme();
@@ -38,6 +39,7 @@ const CV: React.FC = () => {
       />
 
       {/* All content on top */}
+      <ExpandableCardProvider>
       <div className="relative z-10">
         {/* Skip to main content link for accessibility */}
         <a
@@ -173,6 +175,7 @@ const CV: React.FC = () => {
           </div>
         </motion.div>
       </div>
+      </ExpandableCardProvider>
     </div>
   );
 };

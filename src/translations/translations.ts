@@ -59,6 +59,9 @@ export interface TranslationKeys {
   emberizeTitle: string;
   emberizeDesc: string;
   emberizeStatus: string;
+  description: string;
+  responsibilities: string;
+  viewDetails: string;
 }
 
 export type Translations = {
@@ -173,6 +176,11 @@ export const translations: Translations = {
       "Plataforma social tipo Instagram enfocada en deportistas, con funcionalidad de match (similar a Tinder) para encontrar compañeros de entrenamiento. Permite organizar y unirse a eventos deportivos y crear comunidades alrededor del deporte.",
     emberizeStatus:
       "Pospuesto indefinidamente por falta de tiempo y financiación",
+    
+    // Modal
+    description: "Descripción",
+    responsibilities: "Responsabilidades",
+    viewDetails: "Ver detalles",
   },
   en: {
     // Header
@@ -278,5 +286,10 @@ export const translations: Translations = {
     emberizeDesc:
       "Instagram-like social platform focused on athletes, with match functionality (similar to Tinder) to find training partners. Allows organizing and joining sports events and creating communities around sports.",
     emberizeStatus: "Indefinitely postponed due to lack of time and funding",
+    
+    // Modal
+    description: "Description",
+    responsibilities: "Responsibilities",
+    viewDetails: "View details",
   },
 };
