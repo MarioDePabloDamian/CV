@@ -1,6 +1,7 @@
 import React from "react";
 import { motion } from "motion/react";
 import profilePhoto from "../assets/FotoCV.jpg";
+import { AnimatedTooltip } from "./ui/animated-tooltip";
 
 const Header: React.FC = () => {
   return (
@@ -62,19 +63,23 @@ const Header: React.FC = () => {
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.6, delay: 0.2 }}
-        whileHover={{ scale: 1.05 }}
       >
-        <div className="w-40 h-40 rounded-full border-4 border-sky-400 dark:border-sky-500 overflow-hidden bg-white dark:bg-gray-700 p-1 shadow-xl">
-          <img
-            src={profilePhoto}
-            alt="Mario de Pablo Damián - Fullstack Developer & DevOps Engineer"
-            className="w-full h-full object-cover rounded-full"
-            loading="lazy"
-            decoding="async"
-            width="160"
-            height="160"
-          />
-        </div>
+        <AnimatedTooltip
+          name="Mario de Pablo Damián"
+          designation="Fullstack Developer & DevOps Engineer"
+        >
+          <div className="w-40 h-40 rounded-full border-4 border-sky-400 dark:border-sky-500 overflow-hidden bg-white dark:bg-gray-700 p-1 shadow-xl transition-transform duration-300 group-hover:scale-105 cursor-pointer">
+            <img
+              src={profilePhoto}
+              alt="Mario de Pablo Damián - Fullstack Developer & DevOps Engineer"
+              className="w-full h-full object-cover rounded-full"
+              loading="lazy"
+              decoding="async"
+              width="160"
+              height="160"
+            />
+          </div>
+        </AnimatedTooltip>
       </motion.div>
     </div>
   );
