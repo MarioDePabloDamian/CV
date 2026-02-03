@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useId, useRef } from "react";
+import React, { useEffect, useId, useRef, useMemo } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { cn } from "@/lib/utils";
 import { ChevronRight, ChevronLeft } from "lucide-react";
@@ -30,6 +30,19 @@ export const ExpandableCard: React.FC<ExpandableCardProps> = ({
   const isExpanded = expandedCardId === cardId;
   const isOtherExpanded = expandedCardId !== null && expandedCardId !== cardId;
   const ref = useRef<HTMLDivElement>(null);
+
+  // Pre-renderizar el contenido expandido para que esté listo antes de la animación
+  const preRenderedExpandedContent = useMemo(() => {
+    return expandedContent ? (
+      <div>
+        {expandedContent}
+      </div>
+    ) : (
+      <div className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
+        {description}
+      </div>
+    );
+  }, [expandedContent, description]);
 
   useEffect(() => {
     if (isExpanded) {
@@ -74,6 +87,22 @@ export const ExpandableCard: React.FC<ExpandableCardProps> = ({
 
   return (
     <>
+      {/* Pre-renderizar el contenido expandido pero oculto para que esté listo antes de la animación */}
+      <div 
+        style={{ 
+          position: 'absolute',
+          visibility: 'hidden',
+          pointerEvents: 'none',
+          opacity: 0,
+          height: 0,
+          overflow: 'hidden',
+          width: 0
+        }}
+        aria-hidden="true"
+      >
+        {preRenderedExpandedContent}
+      </div>
+
       <AnimatePresence>
         {isExpanded && (
           <motion.div
@@ -122,31 +151,11 @@ export const ExpandableCard: React.FC<ExpandableCardProps> = ({
                   </motion.button>
                 </div>
 
-                {/* Content */}
+                {/* Content - Usar contenido pre-renderizado */}
                 <div 
                   className="p-6 overflow-y-auto max-h-[calc(90vh-80px)] select-text"
                 >
-                  {expandedContent ? (
-                    <motion.div
-                      layout
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      transition={{ delay: 0.1 }}
-                    >
-                      {expandedContent}
-                    </motion.div>
-                  ) : (
-                    <motion.div
-                      layoutId={`description-${cardId}-${uniqueId}`}
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ delay: 0.1 }}
-                      className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed"
-                    >
-                      {description}
-                    </motion.div>
-                  )}
+                  {preRenderedExpandedContent}
                 </div>
             </motion.div>
           </div>
