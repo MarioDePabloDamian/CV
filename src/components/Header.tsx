@@ -10,17 +10,18 @@ const Header: React.FC = () => {
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6 }}
-          className="text-5xl md:text-6xl font-bold text-gray-900 dark:text-gray-100 tracking-tight mb-3"
+          className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100 tracking-tight mb-2"
+          id="main-heading"
         >
-          Mario de Pablo Damián
+          Fullstack Developer & DevOps Engineer
         </motion.h1>
         <motion.p
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6, delay: 0.1 }}
-          className="text-xl text-gray-600 dark:text-gray-400 font-semibold"
+          className="text-lg md:text-xl text-gray-600 dark:text-gray-400 font-medium"
         >
-          Fullstack Developer & DevOps Engineer
+          Mario de Pablo Damián
         </motion.p>
         <motion.div
           initial={{ opacity: 0, y: 10 }}
@@ -30,13 +31,17 @@ const Header: React.FC = () => {
         >
           {[
             "React",
-            "FastAPI",
+            "Python",
+            "PostgreSQL",
             "Docker",
+            "Nginx",
+            "Let's Encrypt",
             "Keycloak",
             "Zabbix",
             "Elastic",
             "Zeek",
             "Odoo",
+            "GLPI",
           ].map((tech, idx) => (
             <motion.span
               key={tech}
@@ -62,10 +67,12 @@ const Header: React.FC = () => {
         <div className="w-40 h-40 rounded-full border-4 border-sky-400 dark:border-sky-500 overflow-hidden bg-white dark:bg-gray-700 p-1 shadow-xl">
           <img
             src={profilePhoto}
-            alt="Mario de Pablo Damián"
+            alt="Mario de Pablo Damián - Fullstack Developer & DevOps Engineer"
             className="w-full h-full object-cover rounded-full"
             loading="lazy"
             decoding="async"
+            width="160"
+            height="160"
           />
         </div>
       </motion.div>

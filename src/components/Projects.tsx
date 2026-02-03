@@ -1,7 +1,7 @@
 import React from "react";
 import { useLanguage } from "../context/LanguageContext";
 import { translations } from "../translations/translations";
-import { FiPause, FiPlay } from "react-icons/fi";
+import { FiPause, FiPlay, FiGithub, FiExternalLink } from "react-icons/fi";
 
 interface Project {
   title: string;
@@ -9,6 +9,8 @@ interface Project {
   status: string;
   icon: React.ComponentType<{ className?: string; size?: number }>;
   statusColor: string;
+  githubUrl?: string | null;
+  demoUrl?: string | null;
 }
 
 const Projects: React.FC = () => {
@@ -22,6 +24,8 @@ const Projects: React.FC = () => {
       status: t.blackjackStatus,
       icon: FiPlay,
       statusColor: "text-green-600 dark:text-green-400",
+      githubUrl: "https://github.com/Mariosos1/blackjack-calculator",
+      demoUrl: null,
     },
     {
       title: t.emberizeTitle,
@@ -29,6 +33,8 @@ const Projects: React.FC = () => {
       status: t.emberizeStatus,
       icon: FiPause,
       statusColor: "text-yellow-600 dark:text-yellow-400",
+      githubUrl: "https://github.com/Mariosos1/emberize",
+      demoUrl: null,
     },
   ];
 
@@ -65,13 +71,39 @@ const Projects: React.FC = () => {
                 </p>
               </div>
 
-              {/* Estado */}
-              <div className="mt-2 sm:mt-4">
+              {/* Estado y Enlaces */}
+              <div className="mt-2 sm:mt-4 flex flex-col gap-2">
                 <p
                   className={`text-xs font-medium ${project.statusColor} italic`}
                 >
                   {project.status}
                 </p>
+                <div className="flex gap-3 flex-wrap">
+                  {project.githubUrl && (
+                    <a
+                      href={project.githubUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-1.5 text-xs text-gray-700 dark:text-gray-300 hover:text-sky-600 dark:hover:text-sky-400 transition-colors"
+                      aria-label={`Ver código de ${project.title} en GitHub`}
+                    >
+                      <FiGithub size={14} />
+                      <span>GitHub</span>
+                    </a>
+                  )}
+                  {project.demoUrl && (
+                    <a
+                      href={project.demoUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-1.5 text-xs text-gray-700 dark:text-gray-300 hover:text-sky-600 dark:hover:text-sky-400 transition-colors"
+                      aria-label={`Ver demo de ${project.title}`}
+                    >
+                      <FiExternalLink size={14} />
+                      <span>Demo</span>
+                    </a>
+                  )}
+                </div>
               </div>
             </div>
           );

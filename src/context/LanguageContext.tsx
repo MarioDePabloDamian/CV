@@ -5,7 +5,7 @@ import {
   useEffect,
   ReactNode,
 } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate, useSearchParams } from "react-router";
 
 type Language = "es" | "en";
 
@@ -34,6 +34,7 @@ interface LanguageProviderProps {
 
 export const LanguageProvider = ({ children, initialLanguage }: LanguageProviderProps) => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [language, setLanguageState] = useState<Language>(() => {
     // Usar el idioma inicial de la URL o el guardado en localStorage o español por defecto
     return initialLanguage || (localStorage.getItem("language") as Language) || "es";
@@ -46,7 +47,9 @@ export const LanguageProvider = ({ children, initialLanguage }: LanguageProvider
 
   const setLanguage = (lang: Language) => {
     setLanguageState(lang);
-    navigate(`/${lang}`);
+    const newSearchParams = new URLSearchParams(searchParams);
+    newSearchParams.set("lang", lang);
+    navigate(`/?${newSearchParams.toString()}`, { replace: true });
   };
 
   const toggleLanguage = () => {

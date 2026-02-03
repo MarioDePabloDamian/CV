@@ -22,7 +22,10 @@ const LanguageSelector: React.FC = () => {
     <div className="relative">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center justify-center gap-2 px-4 h-10 bg-white dark:bg-gray-950 border-2 border-sky-400 dark:border-sky-500 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 hover:bg-sky-50 dark:hover:bg-gray-900"
+        className="flex items-center justify-center gap-2 px-4 h-10 bg-white dark:bg-gray-950 border-2 border-sky-400 dark:border-sky-500 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 hover:bg-sky-50 dark:hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2"
+        aria-label="Seleccionar idioma"
+        aria-expanded={isOpen}
+        aria-haspopup="true"
       >
         <span className="font-semibold text-sky-600 dark:text-sky-400 text-sm">
           {currentLang?.name}
@@ -49,11 +52,13 @@ const LanguageSelector: React.FC = () => {
                   setLanguage(lang.code);
                   setIsOpen(false);
                 }}
-                className={`w-full px-4 py-3 hover:bg-sky-50 dark:hover:bg-gray-900 transition-colors duration-300 first:rounded-t-lg last:rounded-b-lg text-center font-semibold text-sm ${
+                className={`w-full px-4 py-3 hover:bg-sky-50 dark:hover:bg-gray-900 transition-colors duration-300 first:rounded-t-lg last:rounded-b-lg text-center font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-inset ${
                   language === lang.code
                     ? "bg-sky-50 dark:bg-gray-900 text-sky-600 dark:text-sky-400"
                     : "text-gray-700 dark:text-gray-300"
                 }`}
+                aria-label={`Seleccionar ${lang.name}`}
+                aria-pressed={language === lang.code}
               >
                 {lang.name}
               </button>
