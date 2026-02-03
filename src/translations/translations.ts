@@ -62,6 +62,19 @@ export interface TranslationKeys {
   description: string;
   responsibilities: string;
   viewDetails: string;
+  contactFormTitle: string;
+  contactFormSubtitle: string;
+  fullName: string;
+  emailAddress: string;
+  company: string;
+  message: string;
+  submit: string;
+  contactInfo: string;
+  closeModal: string;
+  sending: string;
+  sendSuccess: string;
+  sendError: string;
+  tryAgain: string;
 }
 
 export type Translations = {
@@ -181,6 +194,21 @@ export const translations: Translations = {
     description: "Descripción",
     responsibilities: "Responsabilidades",
     viewDetails: "Ver detalles",
+    
+    // Contact Form
+    contactFormTitle: "Contáctame",
+    contactFormSubtitle: "Mi pasión está en el backend, pero puedo trabajar en Frontend, Backend, Fullstack o DevOps. Te responderé lo antes posible.",
+    fullName: "Nombre completo",
+    emailAddress: "Correo electrónico",
+    company: "Empresa",
+    message: "Mensaje",
+    submit: "Enviar",
+    contactInfo: "Información de contacto",
+    closeModal: "Cerrar modal",
+    sending: "Enviando...",
+    sendSuccess: "¡Mensaje enviado con éxito! Te responderé pronto.",
+    sendError: "Error al enviar el mensaje. Por favor, inténtalo de nuevo.",
+    tryAgain: "Intentar de nuevo",
   },
   en: {
     // Header
@@ -291,5 +319,20 @@ export const translations: Translations = {
     description: "Description",
     responsibilities: "Responsibilities",
     viewDetails: "View details",
+    
+    // Contact Form
+    contactFormTitle: "Contact Me",
+    contactFormSubtitle: "My passion is backend development, but I can work in Frontend, Backend, Fullstack, or DevOps. I'll get back to you as soon as possible.",
+    fullName: "Full Name",
+    emailAddress: "Email Address",
+    company: "Company",
+    message: "Message",
+    submit: "Submit",
+    contactInfo: "Contact Information",
+    closeModal: "Close modal",
+    sending: "Sending...",
+    sendSuccess: "Message sent successfully! I'll get back to you soon.",
+    sendError: "Error sending message. Please try again.",
+    tryAgain: "Try again",
   },
 };
