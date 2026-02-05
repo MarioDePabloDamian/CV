@@ -3,7 +3,7 @@ import React, { useEffect, useId, useRef, useMemo } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { cn } from "@/lib/utils";
 import { ChevronRight, ChevronLeft } from "lucide-react";
-import { GlowingEffect } from "./glowing-effect";
+import { HoverBorderGradient } from "./hover-border-gradient";
 import { useExpandableCard } from "@/context/ExpandableCardContext";
 import { useOutsideClick } from "@/hooks/use-outside-click";
 
@@ -31,8 +31,9 @@ export const ExpandableCard: React.FC<ExpandableCardProps> = ({
   const isOtherExpanded = expandedCardId !== null && expandedCardId !== cardId;
   const ref = useRef<HTMLDivElement>(null);
 
-  // Pre-renderizar el contenido expandido para que esté listo antes de la animación
+  // Pre-renderizar el contenido expandido solo cuando está expandido
   const preRenderedExpandedContent = useMemo(() => {
+    if (!isExpanded) return null;
     return expandedContent ? (
       <div>
         {expandedContent}
@@ -42,28 +43,26 @@ export const ExpandableCard: React.FC<ExpandableCardProps> = ({
         {description}
       </div>
     );
-  }, [expandedContent, description]);
+  }, [expandedContent, description, isExpanded]);
 
   useEffect(() => {
     if (isExpanded) {
       document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "auto";
+      return () => {
+        document.body.style.overflow = "auto";
+      };
     }
-    return () => {
-      document.body.style.overflow = "auto";
-    };
   }, [isExpanded]);
 
   useEffect(() => {
+    if (!isExpanded) return;
+    
     function onKeyDown(event: KeyboardEvent) {
-      if (event.key === "Escape" && isExpanded) {
+      if (event.key === "Escape") {
         setExpandedCardId(null);
       }
     }
-    if (isExpanded) {
-      window.addEventListener("keydown", onKeyDown);
-    }
+    window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [isExpanded, setExpandedCardId]);
 
@@ -87,22 +86,6 @@ export const ExpandableCard: React.FC<ExpandableCardProps> = ({
 
   return (
     <>
-      {/* Pre-renderizar el contenido expandido pero oculto para que esté listo antes de la animación */}
-      <div 
-        style={{ 
-          position: 'absolute',
-          visibility: 'hidden',
-          pointerEvents: 'none',
-          opacity: 0,
-          height: 0,
-          overflow: 'hidden',
-          width: 0
-        }}
-        aria-hidden="true"
-      >
-        {preRenderedExpandedContent}
-      </div>
-
       <AnimatePresence>
         {isExpanded && (
           <motion.div
@@ -114,7 +97,7 @@ export const ExpandableCard: React.FC<ExpandableCardProps> = ({
         )}
       </AnimatePresence>
       
-      <AnimatePresence mode="wait">
+      <AnimatePresence>
         {isExpanded && (
           <div 
             className="fixed inset-0 grid place-items-center z-[100] pointer-events-none"
@@ -123,6 +106,10 @@ export const ExpandableCard: React.FC<ExpandableCardProps> = ({
               layoutId={`card-${cardId}-${uniqueId}`}
               ref={ref}
               data-modal-content
+              layout
+              transition={{ 
+                layout: { duration: 0.25, ease: [0.4, 0, 0.2, 1] }
+              }}
               className={cn(
                 "relative w-full max-w-2xl h-full md:h-fit md:max-h-[90%] flex flex-col",
                 "bg-white dark:bg-gray-950 rounded-lg overflow-hidden",
@@ -133,7 +120,21 @@ export const ExpandableCard: React.FC<ExpandableCardProps> = ({
                 <div className="sticky top-0 z-10 flex items-center justify-between p-6 border-b-2 border-sky-300 dark:border-sky-600 bg-white dark:bg-gray-950">
                   <motion.h2
                     layoutId={`title-${cardId}-${uniqueId}`}
-                    className="text-2xl font-bold text-gray-900 dark:text-gray-100"
+                    layout="position"
+                    transition={{ 
+                      layout: { duration: 0.25, ease: [0.4, 0, 0.2, 1] },
+                      fontSize: { duration: 0.25, ease: [0.4, 0, 0.2, 1] },
+                      fontWeight: { duration: 0.25, ease: [0.4, 0, 0.2, 1] }
+                    }}
+                    className="text-gray-900 dark:text-gray-100"
+                    animate={{
+                      fontSize: "1.5rem",
+                      fontWeight: 700,
+                    }}
+                    initial={{
+                      fontSize: "1rem",
+                      fontWeight: 600,
+                    }}
                   >
                     {title}
                   </motion.h2>
@@ -152,11 +153,27 @@ export const ExpandableCard: React.FC<ExpandableCardProps> = ({
                 </div>
 
                 {/* Content - Usar contenido pre-renderizado */}
-                <div 
+                <motion.div 
+                  layoutId={`description-${cardId}-${uniqueId}`}
+                  layout
+                  transition={{ 
+                    layout: { duration: 0.25, ease: [0.4, 0, 0.2, 1] }
+                  }}
                   className="p-6 overflow-y-auto max-h-[calc(90vh-80px)] select-text"
                 >
-                  {preRenderedExpandedContent}
-                </div>
+                  <AnimatePresence mode="wait">
+                    {isExpanded && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        transition={{ duration: 0.2, delay: 0.1 }}
+                      >
+                        {preRenderedExpandedContent}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </motion.div>
             </motion.div>
           </div>
         )}
@@ -164,60 +181,76 @@ export const ExpandableCard: React.FC<ExpandableCardProps> = ({
 
       <motion.div
         layoutId={`card-${cardId}-${uniqueId}`}
-        onMouseUp={(e) => {
-          const selection = window.getSelection();
-          const hasSelection = selection && selection.rangeCount > 0 && selection.toString().length > 0;
-          if (hasSelection) {
-            e.stopPropagation();
-          }
+        layout
+        initial={false}
+        animate={{
+          opacity: isExpanded ? 0 : isOtherExpanded ? 0.6 : 1,
         }}
-        onClick={handleClick}
-        className={cn(
-          "relative rounded-lg bg-white dark:bg-gray-900 cursor-pointer",
-          isOtherExpanded && "pointer-events-none opacity-50",
-          isExpanded && "invisible",
-          className
-        )}
-        whileHover={!isOtherExpanded && !isExpanded ? { scale: 1.01 } : {}}
-        transition={{ duration: 0.2 }}
-        style={{ 
-          visibility: isExpanded ? 'hidden' : 'visible'
+        transition={{ 
+          opacity: { duration: 0.15 },
+          layout: { duration: 0.25, ease: [0.4, 0, 0.2, 1] }
+        }}
+        style={{
+          visibility: isExpanded ? "hidden" : "visible",
         }}
       >
-        <GlowingEffect
-          blur={0}
-          spread={40}
-          variant="default"
-          proximity={200}
-          inactiveZone={0.3}
-          movementDuration={2}
-          borderWidth={3}
-          glow={false}
-          disabled={false}
-          className="rounded-lg"
-        />
-        <div className="p-4 relative z-10 overflow-hidden rounded-lg">
-          <motion.h3
-            layoutId={`title-${cardId}-${uniqueId}`}
-            className="text-base font-semibold text-black dark:text-gray-100 pr-2 flex-1 mb-3"
-          >
-            {title}
-          </motion.h3>
-          
-          <motion.div
-            layoutId={`description-${cardId}-${uniqueId}`}
-            className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed line-clamp-3"
-          >
-            {description}
-          </motion.div>
-
-          {children && (
-            <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700 flex items-center gap-2">
-              {children}
-              <ChevronRight className="w-4 h-4 text-sky-600 dark:text-sky-400" />
-            </div>
+        <HoverBorderGradient
+          as={motion.div}
+          containerClassName={cn(
+            "relative rounded-lg cursor-pointer",
+            isOtherExpanded && "pointer-events-none",
+            className
           )}
-        </div>
+          className="p-4 overflow-hidden rounded-lg bg-white dark:bg-gray-900"
+          duration={0.5}
+          clockwise={true}
+          onMouseUp={(e) => {
+            const selection = window.getSelection();
+            const hasSelection = selection && selection.rangeCount > 0 && selection.toString().length > 0;
+            if (hasSelection) {
+              e.stopPropagation();
+            }
+          }}
+          onClick={handleClick}
+          whileHover={!isOtherExpanded && !isExpanded ? { scale: 1.01 } : {}}
+          transition={{ duration: 0.2 }}
+        >
+        <motion.h3
+          layoutId={`title-${cardId}-${uniqueId}`}
+          layout="position"
+          transition={{ 
+            layout: { duration: 0.25, ease: [0.4, 0, 0.2, 1] },
+            fontSize: { duration: 0.25, ease: [0.4, 0, 0.2, 1] },
+            fontWeight: { duration: 0.25, ease: [0.4, 0, 0.2, 1] }
+          }}
+          className="text-black dark:text-gray-100 pr-2 flex-1 mb-3"
+          animate={{
+            fontSize: isExpanded ? "1.5rem" : "1rem",
+            fontWeight: isExpanded ? 700 : 600,
+          }}
+          initial={false}
+        >
+          {title}
+        </motion.h3>
+        
+        <motion.div
+          layoutId={`description-${cardId}-${uniqueId}`}
+          layout
+          transition={{ 
+            layout: { duration: 0.25, ease: [0.4, 0, 0.2, 1] }
+          }}
+          className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed line-clamp-3"
+        >
+          {description}
+        </motion.div>
+
+        {children && (
+          <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700 flex items-center gap-2">
+            {children}
+            <ChevronRight className="w-4 h-4 text-sky-600 dark:text-sky-400" />
+          </div>
+        )}
+      </HoverBorderGradient>
       </motion.div>
     </>
   );

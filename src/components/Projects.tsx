@@ -2,6 +2,7 @@ import React from "react";
 import { useLanguage } from "../context/LanguageContext";
 import { translations } from "../translations/translations";
 import { FiPause, FiPlay, FiGithub, FiExternalLink } from "react-icons/fi";
+import { LinkPreview } from "./ui/link-preview";
 
 interface Project {
   title: string;
@@ -24,7 +25,7 @@ const Projects: React.FC = () => {
       status: t.blackjackStatus,
       icon: FiPlay,
       statusColor: "text-green-600 dark:text-green-400",
-      githubUrl: "https://github.com/Mariosos1/blackjack-calculator",
+      githubUrl: "https://github.com/Mariosos1/Blackjack_Calculator",
       demoUrl: null,
     },
     {
@@ -80,28 +81,28 @@ const Projects: React.FC = () => {
                 </p>
                 <div className="flex gap-3 flex-wrap">
                   {project.githubUrl && (
-                    <a
-                      href={project.githubUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                    <LinkPreview
+                      url={project.githubUrl}
                       className="flex items-center gap-1.5 text-xs text-gray-700 dark:text-gray-300 hover:text-sky-600 dark:hover:text-sky-400 transition-colors"
-                      aria-label={`Ver código de ${project.title} en GitHub`}
+                      title={`${project.title} - GitHub`}
+                      description={`Repositorio del proyecto ${project.title}. Ver código fuente y documentación.`}
+                      icon={<FiGithub size={20} />}
                     >
                       <FiGithub size={14} />
                       <span>GitHub</span>
-                    </a>
+                    </LinkPreview>
                   )}
                   {project.demoUrl && (
-                    <a
-                      href={project.demoUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                    <LinkPreview
+                      url={project.demoUrl}
                       className="flex items-center gap-1.5 text-xs text-gray-700 dark:text-gray-300 hover:text-sky-600 dark:hover:text-sky-400 transition-colors"
-                      aria-label={`Ver demo de ${project.title}`}
+                      title={`${project.title} - Demo`}
+                      description={`Demo en vivo del proyecto ${project.title}. Prueba la aplicación.`}
+                      icon={<FiExternalLink size={20} />}
                     >
                       <FiExternalLink size={14} />
                       <span>Demo</span>
-                    </a>
+                    </LinkPreview>
                   )}
                 </div>
               </div>

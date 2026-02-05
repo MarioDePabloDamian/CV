@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { motion } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
 import { HiLocationMarker } from "react-icons/hi";
 import { BsTelephone } from "react-icons/bs";
 import { HiMail } from "react-icons/hi";
@@ -10,6 +10,7 @@ import { cn } from "../lib/utils";
 import { ContactModal } from "./ui/contact-modal";
 import { LayoutTextFlip } from "./ui/layout-text-flip";
 import { AnimatedGradientText } from "./ui/animated-gradient-text";
+import { LinkPreview } from "./ui/link-preview";
 import emailjs from "@emailjs/browser";
 import { EMAILJS_CONFIG } from "../config/emailjs";
 
@@ -18,6 +19,7 @@ const Contact: React.FC = () => {
   const t = translations[language];
   const [isMobile, setIsMobile] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isHoveringEmail, setIsHoveringEmail] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [formData, setFormData] = useState({
@@ -101,8 +103,11 @@ const Contact: React.FC = () => {
     }
   };
 
-  const handleEmailClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
+  const handleEmailClick = (e?: React.MouseEvent<HTMLElement>) => {
+    if (e) {
+      e.preventDefault();
+    }
+    setIsHoveringEmail(false);
     setIsModalOpen(true);
   };
 
@@ -115,6 +120,213 @@ const Contact: React.FC = () => {
     });
   };
 
+  const renderFormContent = () => (
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+    >
+      <div className="text-center mb-8 pb-6 border-b border-gray-200 dark:border-gray-700">
+        <p className="text-sm text-gray-500 dark:text-gray-400 italic">
+          <LayoutTextFlip
+            text={language === "es" ? "Mi pasión está en el backend, pero puedo trabajar en " : "My passion is backend development, but I can work in "}
+            words={language === "es" 
+              ? ["Frontend", "Backend", "Fullstack", "DevOps"]
+              : ["Frontend", "Backend", "Fullstack", "DevOps"]
+            }
+            duration={2500}
+            className="text-sky-600 dark:text-sky-400 font-semibold not-italic"
+          />
+        </p>
+        <p className="text-sm text-gray-500 dark:text-gray-400 italic mt-2">
+          {language === "es" ? "Te responderé lo antes posible" : "I'll get back to you as soon as possible"}
+        </p>
+      </div>
+
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.3, delay: 0.1 }}
+        >
+          <label
+            htmlFor="modal-fullName"
+            className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+          >
+            {t.fullName}
+          </label>
+          <input
+            type="text"
+            id="modal-fullName"
+            name="fullName"
+            value={formData.fullName}
+            onChange={handleChange}
+            required
+            disabled={isSubmitting}
+            className={cn(
+              "w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700",
+              "bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100",
+              "focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent",
+              "transition-all duration-200",
+              isSubmitting && "opacity-50 cursor-not-allowed"
+            )}
+          />
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.3, delay: 0.2 }}
+        >
+          <label
+            htmlFor="modal-email"
+            className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+          >
+            {t.emailAddress}
+          </label>
+          <input
+            type="email"
+            id="modal-email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            required
+            disabled={isSubmitting}
+            className={cn(
+              "w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700",
+              "bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100",
+              "focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent",
+              "transition-all duration-200",
+              isSubmitting && "opacity-50 cursor-not-allowed"
+            )}
+          />
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.3, delay: 0.3 }}
+        >
+          <label
+            htmlFor="modal-company"
+            className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+          >
+            {t.company}
+          </label>
+          <input
+            type="text"
+            id="modal-company"
+            name="company"
+            value={formData.company}
+            onChange={handleChange}
+            disabled={isSubmitting}
+            className={cn(
+              "w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700",
+              "bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100",
+              "focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent",
+              "transition-all duration-200",
+              isSubmitting && "opacity-50 cursor-not-allowed"
+            )}
+          />
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.3, delay: 0.4 }}
+        >
+          <label
+            htmlFor="modal-message"
+            className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+          >
+            {t.message}
+          </label>
+          <textarea
+            id="modal-message"
+            name="message"
+            value={formData.message}
+            onChange={handleChange}
+            required
+            rows={4}
+            disabled={isSubmitting}
+            className={cn(
+              "w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700",
+              "bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100",
+              "focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent",
+              "transition-all duration-200 resize-none",
+              isSubmitting && "opacity-50 cursor-not-allowed"
+            )}
+          />
+        </motion.div>
+
+        {/* Mensajes de estado */}
+        {submitStatus === 'success' && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="p-4 rounded-lg bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800"
+          >
+            <p className="text-sm text-green-800 dark:text-green-200">
+              {t.sendSuccess}
+            </p>
+          </motion.div>
+        )}
+
+        {submitStatus === 'error' && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="p-4 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800"
+          >
+            <p className="text-sm text-red-800 dark:text-red-200 mb-2">
+              {t.sendError}
+            </p>
+            <button
+              type="button"
+              onClick={() => setSubmitStatus('idle')}
+              className="text-sm text-red-600 dark:text-red-400 hover:underline"
+            >
+              {t.tryAgain}
+            </button>
+          </motion.div>
+        )}
+
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, delay: 0.5 }}
+        >
+          <motion.button
+            type="submit"
+            disabled={isSubmitting || submitStatus === 'success'}
+            whileHover={!isSubmitting && !submitStatus ? { scale: 1.02 } : {}}
+            whileTap={!isSubmitting && !submitStatus ? { scale: 0.98 } : {}}
+            className={cn(
+              "w-full px-6 py-3 rounded-lg font-semibold",
+              "bg-gradient-to-r from-sky-500 to-sky-600 hover:from-sky-600 hover:to-sky-700",
+              "text-white shadow-lg shadow-sky-500/50",
+              "transition-all duration-200",
+              "focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2",
+              (isSubmitting || submitStatus === 'success') && "opacity-50 cursor-not-allowed"
+            )}
+          >
+            {isSubmitting ? (
+              <span className="flex items-center justify-center gap-2">
+                <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                {t.sending}
+              </span>
+            ) : (
+              t.submit
+            )}
+          </motion.button>
+        </motion.div>
+      </form>
+    </motion.div>
+  );
+
   return (
     <div className="space-y-6">
       <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4 pb-2 border-b-2 border-sky-300 dark:border-sky-600">
@@ -126,32 +338,42 @@ const Contact: React.FC = () => {
         <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
           {t.contactInfo}
         </h4>
-        <div className="text-gray-800 dark:text-gray-300 text-sm leading-relaxed space-y-3">
-          <a
-            href="https://www.google.com/maps/search/?api=1&query=28521+Rivas-Vaciamadrid+Madrid+España"
-            target="_blank"
-            rel="noopener noreferrer"
+        <div className="text-gray-800 dark:text-gray-300 text-sm leading-relaxed space-y-3 relative">
+          <LinkPreview
+            url="https://www.google.com/maps/place/28521+Rivas-Vaciamadrid,+Madrid/@40.3412778,-3.50334105,12z"
             className="flex items-center gap-2 hover:text-sky-600 dark:hover:text-sky-400 transition-colors cursor-pointer"
-            aria-label="Abrir ubicación en Google Maps"
+            title="28521, Rivas-Vaciamadrid"
+            description="Ubicación en Madrid, España. Haz clic para ver en Google Maps."
+            icon={<HiLocationMarker size={20} />}
           >
             <HiLocationMarker
               className="text-sky-600 dark:text-sky-400 shrink-0"
               size={16}
             />
             <span className="underline">28521, Rivas-Vaciamadrid (Madrid)</span>
-          </a>
-          <div className="flex items-center gap-2">
-            <HiMail
-              className="text-sky-600 dark:text-sky-400 shrink-0"
-              size={16}
-            />
-            <button
-              onClick={handleEmailClick}
-              className="break-all hover:text-sky-600 dark:hover:text-sky-400 transition-colors underline text-left cursor-pointer"
-              aria-label="Abrir formulario de contacto"
-            >
-              mariodepablo2005@gmail.com
-            </button>
+          </LinkPreview>
+          <div
+            className="relative inline-block"
+            onMouseEnter={() => setIsHoveringEmail(true)}
+            onMouseLeave={() => {
+              if (!isModalOpen) {
+                setIsHoveringEmail(false);
+              }
+            }}
+          >
+            <div className="flex items-center gap-2">
+              <HiMail
+                className="text-sky-600 dark:text-sky-400 shrink-0"
+                size={16}
+              />
+              <button
+                onClick={handleEmailClick}
+                className="break-all hover:text-sky-600 dark:hover:text-sky-400 transition-colors underline text-left cursor-pointer"
+                aria-label="Abrir formulario de contacto"
+              >
+                mariodepablo2005@gmail.com
+              </button>
+            </div>
           </div>
           {isMobile ? (
             <a
@@ -177,12 +399,12 @@ const Contact: React.FC = () => {
 
           {/* Social Links */}
           <div className="flex items-center gap-4 mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
-            <a
-              href="https://github.com/Mariosos1"
-              target="_blank"
-              rel="noopener noreferrer"
+            <LinkPreview
+              url="https://github.com/Mariosos1"
               className="flex items-center gap-2 text-gray-800 dark:text-gray-300 transition-colors"
-              aria-label="GitHub de Mario de Pablo Damián"
+              title="GitHub"
+              description="Perfil de GitHub con proyectos y repositorios de código"
+              icon={<FaGithub size={20} />}
             >
               <FaGithub
                 className="text-sky-600 dark:text-sky-400 shrink-0"
@@ -191,13 +413,13 @@ const Contact: React.FC = () => {
               <AnimatedGradientText className="text-sm" spread={20}>
                 GitHub
               </AnimatedGradientText>
-            </a>
-            <a
-              href="https://www.linkedin.com/in/mario-de-pablo-damian/"
-              target="_blank"
-              rel="noopener noreferrer"
+            </LinkPreview>
+            <LinkPreview
+              url="https://www.linkedin.com/in/mario-de-pablo-damian/"
               className="flex items-center gap-2 text-gray-800 dark:text-gray-300 transition-colors"
-              aria-label="LinkedIn de Mario de Pablo Damián"
+              title="LinkedIn"
+              description="Perfil profesional en LinkedIn"
+              icon={<FaLinkedin size={20} />}
             >
               <FaLinkedin
                 className="text-sky-600 dark:text-sky-400 shrink-0"
@@ -206,222 +428,27 @@ const Contact: React.FC = () => {
               <AnimatedGradientText className="text-sm" spread={20}>
                 LinkedIn
               </AnimatedGradientText>
-            </a>
+            </LinkPreview>
           </div>
         </div>
       </div>
 
-      {/* Contact Modal */}
-      <ContactModal 
-        isOpen={isModalOpen} 
-        onClose={() => setIsModalOpen(false)}
-        title={t.contactFormTitle}
-      >
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3 }}
-        >
-          <div className="text-center mb-8 pb-6 border-b border-gray-200 dark:border-gray-700">
-            <p className="text-sm text-gray-500 dark:text-gray-400 italic">
-              <LayoutTextFlip
-                text={language === "es" ? "Mi pasión está en el backend, pero puedo trabajar en " : "My passion is backend development, but I can work in "}
-                words={language === "es" 
-                  ? ["Frontend", "Backend", "Fullstack", "DevOps"]
-                  : ["Frontend", "Backend", "Fullstack", "DevOps"]
-                }
-                duration={2500}
-                className="text-sky-600 dark:text-sky-400 font-semibold not-italic"
-              />
-            </p>
-            <p className="text-sm text-gray-500 dark:text-gray-400 italic mt-2">
-              {language === "es" ? "Te responderé lo antes posible" : "I'll get back to you as soon as possible"}
-            </p>
-          </div>
-
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.3, delay: 0.1 }}
-            >
-              <label
-                htmlFor="modal-fullName"
-                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
-              >
-                {t.fullName}
-              </label>
-              <input
-                type="text"
-                id="modal-fullName"
-                name="fullName"
-                value={formData.fullName}
-                onChange={handleChange}
-                required
-                disabled={isSubmitting}
-                className={cn(
-                  "w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700",
-                  "bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100",
-                  "focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent",
-                  "transition-all duration-200",
-                  isSubmitting && "opacity-50 cursor-not-allowed"
-                )}
-              />
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.3, delay: 0.2 }}
-            >
-              <label
-                htmlFor="modal-email"
-                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
-              >
-                {t.emailAddress}
-              </label>
-              <input
-                type="email"
-                id="modal-email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                required
-                disabled={isSubmitting}
-                className={cn(
-                  "w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700",
-                  "bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100",
-                  "focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent",
-                  "transition-all duration-200",
-                  isSubmitting && "opacity-50 cursor-not-allowed"
-                )}
-              />
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.3, delay: 0.3 }}
-            >
-              <label
-                htmlFor="modal-company"
-                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
-              >
-                {t.company}
-              </label>
-              <input
-                type="text"
-                id="modal-company"
-                name="company"
-                value={formData.company}
-                onChange={handleChange}
-                disabled={isSubmitting}
-                className={cn(
-                  "w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700",
-                  "bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100",
-                  "focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent",
-                  "transition-all duration-200",
-                  isSubmitting && "opacity-50 cursor-not-allowed"
-                )}
-              />
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.3, delay: 0.4 }}
-            >
-              <label
-                htmlFor="modal-message"
-                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
-              >
-                {t.message}
-              </label>
-              <textarea
-                id="modal-message"
-                name="message"
-                value={formData.message}
-                onChange={handleChange}
-                required
-                rows={4}
-                disabled={isSubmitting}
-                className={cn(
-                  "w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700",
-                  "bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100",
-                  "focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent",
-                  "transition-all duration-200 resize-none",
-                  isSubmitting && "opacity-50 cursor-not-allowed"
-                )}
-              />
-            </motion.div>
-
-            {/* Mensajes de estado */}
-            {submitStatus === 'success' && (
-              <motion.div
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="p-4 rounded-lg bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800"
-              >
-                <p className="text-sm text-green-800 dark:text-green-200">
-                  {t.sendSuccess}
-                </p>
-              </motion.div>
-            )}
-
-            {submitStatus === 'error' && (
-              <motion.div
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="p-4 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800"
-              >
-                <p className="text-sm text-red-800 dark:text-red-200 mb-2">
-                  {t.sendError}
-                </p>
-                <button
-                  type="button"
-                  onClick={() => setSubmitStatus('idle')}
-                  className="text-sm text-red-600 dark:text-red-400 hover:underline"
-                >
-                  {t.tryAgain}
-                </button>
-              </motion.div>
-            )}
-
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3, delay: 0.5 }}
-            >
-              <motion.button
-                type="submit"
-                disabled={isSubmitting || submitStatus === 'success'}
-                whileHover={!isSubmitting && !submitStatus ? { scale: 1.02 } : {}}
-                whileTap={!isSubmitting && !submitStatus ? { scale: 0.98 } : {}}
-                className={cn(
-                  "w-full px-6 py-3 rounded-lg font-semibold",
-                  "bg-gradient-to-r from-sky-500 to-sky-600 hover:from-sky-600 hover:to-sky-700",
-                  "text-white shadow-lg shadow-sky-500/50",
-                  "transition-all duration-200",
-                  "focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2",
-                  (isSubmitting || submitStatus === 'success') && "opacity-50 cursor-not-allowed"
-                )}
-              >
-                {isSubmitting ? (
-                  <span className="flex items-center justify-center gap-2">
-                    <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    {t.sending}
-                  </span>
-                ) : (
-                  t.submit
-                )}
-              </motion.button>
-            </motion.div>
-          </form>
-        </motion.div>
-      </ContactModal>
+      {/* Contact Modal (on hover or click) */}
+      <AnimatePresence>
+        {(isHoveringEmail || isModalOpen) && (
+          <ContactModal 
+            isOpen={true} 
+            onClose={() => {
+              setIsModalOpen(false);
+              setIsHoveringEmail(false);
+            }}
+            title={t.contactFormTitle}
+            isPreview={isHoveringEmail && !isModalOpen}
+          >
+            {renderFormContent()}
+          </ContactModal>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
