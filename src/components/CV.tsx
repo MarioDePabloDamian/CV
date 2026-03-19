@@ -12,14 +12,17 @@ import Certifications from "./Certifications";
 import Languages from "./Languages";
 import LanguageSelector from "./LanguageSelector";
 import ThemeToggle from "./ThemeToggle";
+import SEO from "./SEO";
 import { useTheme } from "../context/ThemeContext";
+import { ExpandableCardProvider } from "../context/ExpandableCardContext";
 
 const CV: React.FC = () => {
   const { theme } = useTheme();
 
   return (
     <div className="min-h-screen relative">
-      {/* Vortex as Full Background */}
+      <SEO />
+      {/* Vortex as Full Background - Lazy loaded for performance */}
       <Vortex
         backgroundColor={theme === "dark" ? "#000000" : "#ffffff"}
         particleCount={700}
@@ -32,10 +35,19 @@ const CV: React.FC = () => {
         className="w-full h-full"
         containerClassName="fixed inset-0 -z-10"
         isDarkMode={theme === "dark"}
+        aria-hidden={true}
       />
 
       {/* All content on top */}
+      <ExpandableCardProvider>
       <div className="relative z-10">
+        {/* Skip to main content link for accessibility */}
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-sky-600 focus:text-white focus:rounded-md"
+        >
+          Saltar al contenido principal
+        </a>
         {/* Hero Section */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
@@ -53,7 +65,7 @@ const CV: React.FC = () => {
         </motion.div>
 
         {/* Main Content */}
-        <div className="max-w-7xl mx-auto px-6 py-12">
+        <main id="main-content" className="max-w-7xl mx-auto px-6 py-12">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-8 items-stretch">
             {/* Sidebar - Left Column */}
             <div className="lg:col-span-1 flex flex-col h-full">
@@ -146,7 +158,7 @@ const CV: React.FC = () => {
           >
             <Projects />
           </motion.div>
-        </div>
+        </main>
 
         {/* Footer */}
         <motion.div
@@ -163,6 +175,7 @@ const CV: React.FC = () => {
           </div>
         </motion.div>
       </div>
+      </ExpandableCardProvider>
     </div>
   );
 };

@@ -15,6 +15,7 @@ interface VortexProps {
   rangeRadius?: number;
   backgroundColor?: string;
   isDarkMode?: boolean;
+  "aria-hidden"?: boolean;
 }
 
 export const Vortex = (props: VortexProps) => {
@@ -259,7 +260,7 @@ export const Vortex = (props: VortexProps) => {
   ]);
 
   return (
-    <div className={cn("relative h-full w-full", props.containerClassName)}>
+    <div className={cn("relative h-full w-full", props.containerClassName)} aria-hidden={props["aria-hidden"] || false}>
       <div
         ref={containerRef}
         className="absolute inset-0 z-0"
@@ -268,6 +269,7 @@ export const Vortex = (props: VortexProps) => {
         <canvas
           ref={canvasRef}
           className="absolute inset-0 w-full h-full"
+          aria-hidden="true"
         ></canvas>
       </div>
 

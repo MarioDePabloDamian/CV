@@ -172,6 +172,19 @@
   }
 }
 
+@keyframes gradient-shift {
+  0% {
+    background-position: 200% center;
+  }
+  100% {
+    background-position: -100% center;
+  }
+}
+
+@theme {
+  --animate-gradient-shift: gradient-shift 6s linear infinite;
+}
+
 @layer base {
   * {
     @apply border-border;
