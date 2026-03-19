@@ -4,7 +4,6 @@ import { Briefcase, Calendar, Building2 } from "lucide-react";
 import { useLanguage } from "../context/LanguageContext";
 import { translations } from "../translations/translations";
 import { ExpandableCard } from "./ui/expandable-card";
-import { cn } from "../lib/utils";
 
 const Experience: React.FC = () => {
   const { language } = useLanguage();

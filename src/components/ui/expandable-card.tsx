@@ -183,6 +183,7 @@ export const ExpandableCard: React.FC<ExpandableCardProps> = ({
         layoutId={`card-${cardId}-${uniqueId}`}
         layout
         initial={false}
+        whileHover={!isOtherExpanded && !isExpanded ? { scale: 1.01 } : undefined}
         animate={{
           opacity: isExpanded ? 0 : isOtherExpanded ? 0.6 : 1,
         }}
@@ -212,8 +213,6 @@ export const ExpandableCard: React.FC<ExpandableCardProps> = ({
             }
           }}
           onClick={handleClick}
-          whileHover={!isOtherExpanded && !isExpanded ? { scale: 1.01 } : {}}
-          transition={{ duration: 0.2 }}
         >
         <motion.h3
           layoutId={`title-${cardId}-${uniqueId}`}
