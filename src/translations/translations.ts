@@ -1,7 +1,6 @@
 export interface TranslationKeys {
   title: string;
   subtitle: string;
-  contact: string;
   education: string;
   skills: string;
   certifications: string;
@@ -14,10 +13,13 @@ export interface TranslationKeys {
   experiencePeriod: string;
   project1: string;
   project1Desc: string;
+  project1Designation: string;
   project2: string;
   project2Desc: string;
+  project2Designation: string;
   project3: string;
   project3Desc: string;
+  project3Designation: string;
   resp1: string;
   resp2: string;
   resp3: string;
@@ -33,6 +35,10 @@ export interface TranslationKeys {
   resp14: string;
   resp15: string;
   resp16: string;
+  resp17: string;
+  resp18: string;
+  resp19: string;
+  resp20: string;
   educationTitle: string;
   educationSchool: string;
   educationCity: string;
@@ -53,6 +59,12 @@ export interface TranslationKeys {
   certFastAPI: string;
   certOdoo: string;
   personalProjects: string;
+  pilatesTitle: string;
+  pilatesDesc: string;
+  pilatesStatus: string;
+  openclawTitle: string;
+  openclawDesc: string;
+  openclawStatus: string;
   blackjackTitle: string;
   blackjackDesc: string;
   blackjackStatus: string;
@@ -62,19 +74,35 @@ export interface TranslationKeys {
   description: string;
   responsibilities: string;
   viewDetails: string;
-  contactFormTitle: string;
-  contactFormSubtitle: string;
-  fullName: string;
-  emailAddress: string;
-  company: string;
-  message: string;
-  submit: string;
-  contactInfo: string;
-  closeModal: string;
-  sending: string;
-  sendSuccess: string;
-  sendError: string;
-  tryAgain: string;
+  project3Card1Title: string;
+  project3Card1Content: string;
+  project3Card1Designation: string;
+  project3Card2Title: string;
+  project3Card2Content: string;
+  project3Card2Designation: string;
+  techStackHint: string;
+  skipToContent: string;
+  statTechnologies: string;
+  statCertifications: string;
+  statProjects: string;
+  certCambridge: string;
+  certElastic: string;
+  github: string;
+  demo: string;
+  viewRepo: string;
+  footerRole: string;
+  themeToDark: string;
+  themeToLight: string;
+  availableBadge: string;
+  contactMe: string;
+  downloadCv: string;
+  hireFooterCta: string;
+  skillsTechnical: string;
+  skillsSoft: string;
+  techCategoryDevelopment: string;
+  techCategoryInfrastructure: string;
+  techCategoryObservability: string;
+  viewLinkedIn: string;
 }
 
 export type Translations = {
@@ -89,7 +117,6 @@ export const translations: Translations = {
     subtitle: "Fullstack Developer & DevOps Engineer",
 
     // Sections
-    contact: "Contacto",
     education: "Formación",
     skills: "Aptitudes",
     certifications: "Diplomas",
@@ -99,7 +126,7 @@ export const translations: Translations = {
 
     // Summary
     summary:
-      "Profesional de software con experiencia en <strong>desarrollo web, móvil e integración de sistemas</strong>, incluyendo proyectos industriales y personales. Utilizo <strong>herramientas de inteligencia artificial</strong> para acelerar el desarrollo, aplicando <strong>validación y revisión crítica</strong> para garantizar la calidad del código. Mi enfoque se centra en la <strong>práctica real</strong> y la <strong>comprensión profunda</strong> de las tecnologías, más allá de certificaciones formales. Me mantengo constantemente actualizado con las <strong>últimas innovaciones y metodologías</strong> del sector para aplicar las mejores prácticas en cada proyecto.",
+      "<strong>DevOps & Fullstack Developer</strong> en CIVIR (mar 2025 – actual). Construyo y despliego sistemas con <strong>React, Python/FastAPI, Docker y automatización (n8n)</strong>, con foco en observabilidad industrial, integraciones entre sistemas y CI/CD. Busco oportunidades en <strong>backend, DevOps o fullstack</strong>.",
 
     // Experience
     experienceTitle: "DevOps Engineer | Fullstack Developer",
@@ -107,45 +134,56 @@ export const translations: Translations = {
     experiencePeriod: "Mar 2025 - Actual",
     project1: "Proyecto de Observabilidad Industrial",
     project1Desc:
-      "Participación activa en el desarrollo e integración de múltiples plataformas orientadas a la observabilidad de entornos industriales.",
+      "Unifiqué <strong>observabilidad industrial de extremo a extremo</strong> para Telefónica, <strong>cubriendo captura de red, métricas y entrega continua</strong>, mediante desarrollo fullstack, proxy-sniffer propio, Docker y GitHub Actions.",
+    project1Designation: "Cliente: Telefónica",
     project2: "Proyecto HORECA - CRM + asistente de IA",
+    project2Designation: "Cliente: Vincci Hoteles",
     project2Desc:
-      "Comencé como QA Tester, encargado de la validación funcional y detección de errores en la plataforma.",
+      "Estabilicé el <strong>CRM con asistente de IA</strong> de Vincci Hoteles, <strong>recortando incidencias críticas de QA y mejorando usabilidad</strong>, pasando de QA a desarrollo activo en frontend y backend con pruebas automatizadas.",
     project3: "Migración de Salesforce a Odoo",
     project3Desc:
-      "Proyecto de migración de CRM desde Salesforce a Odoo. <strong>Responsable único del proyecto</strong>, desarrollándolo de forma completamente independiente según los requerimientos del cliente.",
+      "Migré el <strong>CRM de Salesforce a Odoo</strong> como responsable único, <strong>conservando el 100% de los campos sin pérdida de datos</strong>, mediante módulo Odoo personalizado, mapeo entre sistemas y despliegue en VPS.",
+    project3Designation: "Proyecto de reducción de costes",
 
     // Responsibilities ES
     resp1:
-      "Colaboración en la <strong>definición de la arquitectura</strong>, configuración de entornos y puesta en marcha del desarrollo.",
+      "Senté las <strong>bases de arquitectura escalable</strong> del proyecto, <strong>habilitando el arranque coordinado de varios servicios</strong>, mediante definición de entornos y coordinación del stack.",
     resp2:
-      "Desarrollo de <strong>pantallas del frontend</strong> y <strong>endpoints del backend</strong>.",
+      "Puse en marcha <strong>pantallas de frontend y APIs de backend</strong>, <strong>acortando el time-to-market de funcionalidades clave</strong>, mediante desarrollo iterativo en React y FastAPI.",
     resp3:
-      "Implementación de un <strong>proxy-sniffer propio</strong> para la captura y análisis de tráfico.",
+      "Aumenté la <strong>visibilidad del tráfico industrial en tiempo real</strong>, <strong>incorporando captura de red en la plataforma</strong>, mediante un proxy-sniffer propio integrado en el stack.",
     resp4:
-      "<strong>Diseño y creación de tablas</strong> en la base de datos, garantizando integridad y eficiencia.",
+      "Estructuré el <strong>almacenamiento de métricas</strong>, <strong>garantizando integridad y consultas eficientes</strong>, mediante modelado relacional y validación de esquemas en PostgreSQL.",
     resp5:
-      "<strong>Despliegue de servicios con Docker</strong> y configuración de entornos y contenedores.",
+      "Estandaricé <strong>entornos de desarrollo y producción</strong>, <strong>eliminando divergencias entre local y servidor</strong>.",
     resp6:
-      "<strong>Instalación y configuración de Raspberry Pi y switches de red</strong>, integrando hardware con la infraestructura del proyecto.",
+      "Amplié la <strong>cobertura de monitorización en planta</strong>, <strong>incorporando captura en perímetro de red</strong>, mediante Raspberry Pi y switches configurados en campo.",
     resp7:
-      "Configuración de <strong>pipelines de CI/CD con GitHub Actions</strong> para automatizar pruebas y despliegues.",
+      "Reduje <strong>pasos manuales en pruebas y despliegues</strong>, <strong>automatizando el ciclo de entrega del proyecto</strong>, mediante pipelines de CI/CD en GitHub Actions.",
     resp8:
-      "<strong>Refactorización de código</strong> y propuesta de <strong>mejoras técnicas y arquitectónicas</strong> para optimizar rendimiento y mantenibilidad.",
+      "Mejoré <strong>rendimiento y mantenibilidad del código</strong>, <strong>elevando la calidad técnica del sistema</strong>, mediante refactorización y mejoras de arquitectura.",
     resp9:
-      "Desarrollo de un entorno <strong>multitenant</strong>, permitiendo gestionar múltiples clientes en una misma infraestructura de forma segura y aislada, <strong>ofreciendo soluciones personalizadas y adaptadas a las necesidades específicas de cada uno</strong>.",
+      "Habilité la <strong>gestión de varios clientes en un mismo despliegue</strong>, <strong>con aislamiento seguro por tenant</strong>, mediante personalización multitenant sobre infraestructura compartida.",
     resp11:
-      "Tras identificar deficiencias críticas, asumí un rol activo en el <strong>desarrollo de soluciones</strong>, participando tanto en <strong>frontend como backend</strong>.",
+      "Corregí <strong>deficiencias críticas detectadas en QA</strong>, <strong>acelerando la salida de fixes a producción</strong>, mediante desarrollo directo en frontend y backend del CRM.",
     resp12:
-      "Contribuí a <strong>mejorar la estabilidad, usabilidad y rendimiento</strong> general del sistema.",
+      "Mejoré <strong>estabilidad y rendimiento del CRM</strong>, <strong>reduciendo fricción en flujos del asistente de IA</strong>, mediante corrección de bugs y optimización de pantallas clave.",
     resp13:
-      "Participación en la <strong>automatización de pruebas</strong>, documentación de incidencias y colaboración directa con el equipo de desarrollo para aplicar mejoras continuas.",
+      "Recorté <strong>regresiones en entregas sucesivas</strong>, <strong>documentando incidencias y cubriendo flujos con pruebas</strong>, mediante automatización de tests y seguimiento con el equipo.",
     resp14:
-      "Desarrollo de un <strong>módulo personalizado en Odoo</strong> para mantener todos los campos del CRM de Salesforce y garantizar la compatibilidad de datos.",
+      "Completé en <strong>media jornada</strong> la migración que CIVIR México estimó en <strong>un mes</strong>, <strong>reduciendo el plazo de entrega en órdenes de magnitud</strong>, mediante el MCP de n8n y workflows automatizados.",
     resp15:
-      "Configuración de <strong>entornos de desarrollo y producción en un VPS</strong>, incluyendo la configuración de <strong>firewall y certificados SSL</strong>.",
+      "Preservé <strong>el 100% de los campos del CRM de Salesforce</strong> en Odoo, <strong>sin pérdida de datos en la migración</strong>, mediante mapeo validado campo a campo entre sistemas.",
     resp16:
-      "Análisis y <strong>mapeo de datos</strong> entre Salesforce y Odoo, identificando correspondencias y transformaciones necesarias para garantizar la integridad de la información.",
+      "Dejé operativos <strong>entornos de desarrollo y producción en VPS</strong>, <strong>con despliegue endurecido frente a acceso no autorizado</strong>, mediante firewall en servidor y en la capa del proveedor cloud.",
+    resp17:
+      "Centralicé <strong>gestión empresarial y soporte IT de LEDEC</strong>, <strong>unificando operación en dos plataformas</strong>, mediante implementación conjunta de Odoo y GLPI.",
+    resp18:
+      "Cubrí <strong>procesos de negocio y ticketing del cliente</strong>, <strong>adaptando ERP y soporte a su operativa real</strong>, mediante configuración, integración y personalización a medida.",
+    resp19:
+      "Puse en marcha <strong>control horario conforme a normativa</strong>, <strong>con registro fiable de entradas, salidas y horarios</strong>, mediante fichajes y gestión de jornada en producción.",
+    resp20:
+      "Dejé el <strong>sistema de registro horario listo para auditoría</strong>, <strong>cumpliendo requisitos legales de trazabilidad</strong>, mediante despliegue en producción y validación de flujos normativos.",
 
     // Education
     educationTitle:
@@ -177,13 +215,23 @@ export const translations: Translations = {
     certFastAPI: "Formación certificada en FastAPI",
     certOdoo: "Formación certificada en Odoo",
 
-    // Personal Projects
-    personalProjects: "Proyectos Personales",
-    blackjackTitle: "Calculadora de EV - Blackjack",
+    // Projects
+    personalProjects: "Proyectos personales",
+    pilatesTitle: "Studio Pilates Lucía Lotero",
+    pilatesDesc:
+      "CRM completo para gestionar clientes, reservas, pagos y la operativa del estudio en Rivas-Vaciamadrid, con web pública orientada a conversión.",
+    pilatesStatus:
+      "Posicionamiento #1 en Google para «pilates en rivas»",
+    openclawTitle: "OpenClaw self-hosted",
+    openclawDesc:
+      "Monté un gateway personal para ganar productividad y quitarme tareas tediosas o repetitivas — por ejemplo, análisis SEO y GEO periódicos sobre las URLs que configuro, ejecutados por agentes y automatizaciones.",
+    openclawStatus:
+      "Uso personal: en la demo solo verás el login, no el interior de la app",
+    blackjackTitle: "Blackjack For All",
     blackjackDesc:
-      "Aplicación móvil que calcula matemáticamente las probabilidades de ganar, perder o empatar en cada mano de blackjack, así como la mejor jugada según las condiciones del momento. Utiliza algoritmos de probabilidad avanzados para optimizar la estrategia de juego.",
+      "Calcula las probabilidades de ganar, perder o empatar en cada mano y recomienda la mejor jugada según las condiciones del momento, con algoritmos de probabilidad para optimizar la estrategia.",
     blackjackStatus:
-      "Funcional en fase alpha, pendiente de implementar sistema de anuncios",
+      "Alpha funcional · pendiente tutorial y marketing",
     emberizeTitle: "Emberize - Red Social Deportiva",
     emberizeDesc:
       "Plataforma social tipo Instagram enfocada en deportistas, con funcionalidad de match (similar a Tinder) para encontrar compañeros de entrenamiento. Permite organizar y unirse a eventos deportivos y crear comunidades alrededor del deporte.",
@@ -194,21 +242,40 @@ export const translations: Translations = {
     description: "Descripción",
     responsibilities: "Responsabilidades",
     viewDetails: "Ver detalles",
-    
-    // Contact Form
-    contactFormTitle: "Contáctame",
-    contactFormSubtitle: "Mi pasión está en el backend, pero puedo trabajar en Frontend, Backend, Fullstack o DevOps. Te responderé lo antes posible.",
-    fullName: "Nombre completo",
-    emailAddress: "Correo electrónico",
-    company: "Empresa",
-    message: "Mensaje",
-    submit: "Enviar",
-    contactInfo: "Información de contacto",
-    closeModal: "Cerrar modal",
-    sending: "Enviando...",
-    sendSuccess: "¡Mensaje enviado con éxito! Te responderé pronto.",
-    sendError: "Error al enviar el mensaje. Por favor, inténtalo de nuevo.",
-    tryAgain: "Intentar de nuevo",
+
+    // Project 3 Cards
+    project3Card1Title: "Implementación Odoo + GLPI",
+    project3Card1Content:
+      "Desplegué <strong>Odoo y GLPI para LEDEC</strong>, <strong>centralizando ERP y soporte IT en una sola operación</strong>, mediante configuración completa, integración entre sistemas y personalización a medida.",
+    project3Card1Designation: "Cliente: LEDEC · Proyecto de implementación",
+    project3Card2Title: "Control Horario",
+    project3Card2Content:
+      "Entregué <strong>control horario legal</strong>, <strong>con registro de jornada auditable y conforme a normativa</strong>, mediante fichajes, gestión de horarios y despliegue en producción.",
+    project3Card2Designation: "Proyecto de Cumplimiento Normativo",
+    techStackHint: "Arrastra o haz clic en un icono para explorar",
+    skipToContent: "Saltar al contenido principal",
+    statTechnologies: "Tecnologías",
+    statCertifications: "Certificaciones",
+    statProjects: "Proyectos",
+    certCambridge:
+      "Cambridge English Level 1 Certificate in ESOL International (First)",
+    certElastic: "Elastic Observability Engineer (On-Demand)",
+    github: "GitHub",
+    demo: "Demo",
+    viewRepo: "Ver repositorio",
+    footerRole: "Fullstack Developer & DevOps Engineer",
+    themeToDark: "Cambiar a modo oscuro",
+    themeToLight: "Cambiar a modo claro",
+    availableBadge: "Disponible para nuevas oportunidades",
+    contactMe: "Contactar",
+    downloadCv: "Descargar CV",
+    hireFooterCta: "¿Te encaja mi perfil? Escríbeme y hablamos.",
+    skillsTechnical: "Stack técnico",
+    skillsSoft: "Competencias",
+    techCategoryDevelopment: "Desarrollo",
+    techCategoryInfrastructure: "Infraestructura",
+    techCategoryObservability: "Observabilidad",
+    viewLinkedIn: "LinkedIn",
   },
   en: {
     // Header
@@ -216,7 +283,6 @@ export const translations: Translations = {
     subtitle: "Fullstack Developer & DevOps Engineer",
 
     // Sections
-    contact: "Contact",
     education: "Education",
     skills: "Skills",
     certifications: "Certifications",
@@ -226,7 +292,7 @@ export const translations: Translations = {
 
     // Summary
     summary:
-      "Software professional with experience in <strong>web, mobile development and systems integration</strong>, including industrial and personal projects. I leverage <strong>artificial intelligence tools</strong> to accelerate development, applying <strong>validation and critical review</strong> to ensure code quality. My approach focuses on <strong>real-world practice</strong> and <strong>deep understanding</strong> of technologies, beyond formal certifications. I continuously stay updated with the <strong>latest innovations and methodologies</strong> in the industry to apply best practices in every project.",
+      "<strong>DevOps & Fullstack Developer</strong> at CIVIR (Mar 2025 – present). I build and deploy systems with <strong>React, Python/FastAPI, Docker, and automation (n8n)</strong>, focused on industrial observability, system integrations, and CI/CD. Open to <strong>backend, DevOps, or fullstack</strong> roles.",
 
     // Experience
     experienceTitle: "DevOps Engineer | Fullstack Developer",
@@ -234,45 +300,56 @@ export const translations: Translations = {
     experiencePeriod: "Mar 2025 - Present",
     project1: "Industrial Observability Project",
     project1Desc:
-      "Active participation in the development and integration of multiple platforms oriented to the observability of industrial environments.",
+      "Unified <strong>end-to-end industrial observability</strong> for Telefónica, <strong>covering network capture, metrics, and continuous delivery</strong>, by building fullstack features, a custom proxy-sniffer, Docker, and GitHub Actions.",
+    project1Designation: "Client: Telefónica",
     project2: "HORECA Project - CRM + AI assistant",
+    project2Designation: "Client: Vincci Hoteles",
     project2Desc:
-      "I started as a QA Tester, responsible for functional validation and error detection in the platform.",
+      "Stabilized Vincci Hoteles' <strong>CRM with AI assistant</strong>, <strong>cutting critical QA defects and improving usability</strong>, by moving from QA to active frontend and backend development with automated testing.",
     project3: "Salesforce to Odoo Migration",
     project3Desc:
-      "CRM migration project from Salesforce to Odoo. <strong>Sole project lead</strong>, developing it completely independently according to client requirements.",
+      "Migrated the <strong>CRM from Salesforce to Odoo</strong> as sole project lead, <strong>preserving 100% of fields with zero data loss</strong>, with a custom Odoo module, data mapping, and VPS deployment.",
+    project3Designation: "Cost reduction project",
 
     // Responsibilities EN
     resp1:
-      "Collaboration in the <strong>definition of the architecture</strong>, environment configuration and development startup.",
+      "Established <strong>scalable architecture foundations</strong>, <strong>enabling coordinated kickoff of multiple services</strong>, by defining environments and coordinating the technical stack.",
     resp2:
-      "Development of <strong>frontend screens</strong> and <strong>backend endpoints</strong>.",
+      "Shipped <strong>frontend screens and backend APIs</strong>, <strong>shortening time-to-market for key features</strong>, by iterative development in React and FastAPI.",
     resp3:
-      "Implementation of a <strong>custom proxy-sniffer</strong> for traffic capture and analysis.",
+      "Increased <strong>real-time industrial traffic visibility</strong>, <strong>adding network capture to the platform</strong>, by building and integrating a custom proxy-sniffer.",
     resp4:
-      "<strong>Design and creation of tables</strong> in the database, ensuring integrity and efficiency.",
+      "Structured <strong>metrics storage</strong>, <strong>ensuring integrity and efficient queries</strong>, by relational modeling and schema validation in PostgreSQL.",
     resp5:
-      "<strong>Docker service deployment</strong> and environment and container configuration.",
+      "Standardized <strong>dev and production environments</strong>, <strong>removing drift between local and server setups</strong>.",
     resp6:
-      "<strong>Installation and configuration of Raspberry Pi and network switches</strong>, integrating hardware with the project infrastructure.",
+      "Extended <strong>on-site monitoring coverage</strong>, <strong>adding perimeter network capture</strong>, by deploying and configuring Raspberry Pi and switches in the field.",
     resp7:
-      "Configuration of <strong>CI/CD pipelines with GitHub Actions</strong> to automate tests and deployments.",
+      "Cut <strong>manual steps in testing and deployments</strong>, <strong>automating the project delivery cycle</strong>, by configuring CI/CD pipelines in GitHub Actions.",
     resp8:
-      "<strong>Code refactoring</strong> and proposal of <strong>technical and architectural improvements</strong> to optimize performance and maintainability.",
+      "Improved <strong>performance and code maintainability</strong>, <strong>raising overall technical quality</strong>, by refactoring and architectural improvements.",
     resp9:
-      "Development of a <strong>multitenant</strong> environment, allowing management of multiple clients in the same infrastructure in a secure and isolated way, <strong>offering personalized solutions adapted to the specific needs of each one</strong>.",
+      "Enabled <strong>multiple clients on a shared deployment</strong>, <strong>with secure per-tenant isolation</strong>, by multitenant customization on shared infrastructure.",
     resp11:
-      "After identifying critical deficiencies, I took an active role in <strong>solution development</strong>, participating in both <strong>frontend and backend</strong>.",
+      "Fixed <strong>critical defects found in QA</strong>, <strong>accelerating production fixes</strong>, by taking on direct frontend and backend development on the CRM.",
     resp12:
-      "I contributed to <strong>improve stability, usability and performance</strong> of the system.",
+      "Improved <strong>CRM stability and performance</strong>, <strong>reducing friction in AI assistant workflows</strong>, by fixing bugs and optimizing key screens.",
     resp13:
-      "Participation in <strong>test automation</strong>, incident documentation and direct collaboration with the development team to apply continuous improvements.",
+      "Reduced <strong>regressions across releases</strong>, <strong>documenting incidents and covering flows with tests</strong>, by test automation and close collaboration with the team.",
     resp14:
-      "Development of a <strong>custom Odoo module</strong> to maintain all Salesforce CRM fields and ensure data compatibility.",
+      "Completed in <strong>half a day</strong> a migration <strong>CIVIR Mexico had scoped at one month</strong>, <strong>cutting delivery time by orders of magnitude</strong>, using the n8n MCP and automated workflows.",
     resp15:
-      "Configuration of <strong>development and production environments on a VPS</strong>, including <strong>firewall and SSL certificates</strong> setup.",
+      "Preserved <strong>100% of Salesforce CRM fields</strong> in Odoo, <strong>with zero data loss in the migration</strong>, by validated field-by-field mapping between systems.",
     resp16:
-      "Analysis and <strong>data mapping</strong> between Salesforce and Odoo, identifying correspondences and necessary transformations to ensure data integrity.",
+      "Stood up <strong>dev and production environments on a VPS</strong>, <strong>hardening deployment against unauthorized access</strong>, with firewalls at server and cloud provider level.",
+    resp17:
+      "Centralized <strong>LEDEC business management and IT support</strong>, <strong>unifying operations across two platforms</strong>, by jointly implementing Odoo and GLPI.",
+    resp18:
+      "Covered <strong>client business processes and ticketing</strong>, <strong>aligning ERP and support to real operations</strong>, by configuration, integration, and tailored customization.",
+    resp19:
+      "Launched <strong>legally compliant time tracking</strong>, <strong>with reliable check-in, check-out, and schedule records</strong>, by attendance flows and schedule management in production.",
+    resp20:
+      "Left the <strong>time-tracking system audit-ready</strong>, <strong>meeting legal traceability requirements</strong>, by production deployment and validation of compliance workflows.",
 
     // Education
     educationTitle: "Higher Technician: Multi-platform Application Development",
@@ -303,13 +380,23 @@ export const translations: Translations = {
     certFastAPI: "Certified Training in FastAPI",
     certOdoo: "Certified Training in Odoo",
 
-    // Personal Projects
-    personalProjects: "Personal Projects",
-    blackjackTitle: "Blackjack EV Calculator",
+    // Projects
+    personalProjects: "Personal projects",
+    pilatesTitle: "Studio Pilates Lucía Lotero",
+    pilatesDesc:
+      "Full CRM to manage clients, bookings, payments, and studio operations in Rivas-Vaciamadrid, with a public conversion-focused website.",
+    pilatesStatus:
+      "#1 Google ranking for «pilates en rivas»",
+    openclawTitle: "OpenClaw self-hosted",
+    openclawDesc:
+      "Built a personal gateway to boost productivity and offload tedious or repetitive tasks — for example, periodic SEO and GEO analysis on URLs I configure, run by agents and automations.",
+    openclawStatus:
+      "Personal use: the demo stops at login, the app interior isn't public",
+    blackjackTitle: "Blackjack For All",
     blackjackDesc:
-      "Mobile application that mathematically calculates the probabilities of winning, losing, or tying in each blackjack hand, as well as the best play according to current conditions. Uses advanced probability algorithms to optimize playing strategy.",
+      "Calculates win, loss, and tie probabilities for each hand and recommends the best play based on current conditions, using probability algorithms to optimize strategy.",
     blackjackStatus:
-      "Functional in alpha phase, pending ad system implementation",
+      "Working alpha · tutorial and marketing pending",
     emberizeTitle: "Emberize - Sports Social Network",
     emberizeDesc:
       "Instagram-like social platform focused on athletes, with match functionality (similar to Tinder) to find training partners. Allows organizing and joining sports events and creating communities around sports.",
@@ -319,20 +406,39 @@ export const translations: Translations = {
     description: "Description",
     responsibilities: "Responsibilities",
     viewDetails: "View details",
-    
-    // Contact Form
-    contactFormTitle: "Contact Me",
-    contactFormSubtitle: "My passion is backend development, but I can work in Frontend, Backend, Fullstack, or DevOps. I'll get back to you as soon as possible.",
-    fullName: "Full Name",
-    emailAddress: "Email Address",
-    company: "Company",
-    message: "Message",
-    submit: "Submit",
-    contactInfo: "Contact Information",
-    closeModal: "Close modal",
-    sending: "Sending...",
-    sendSuccess: "Message sent successfully! I'll get back to you soon.",
-    sendError: "Error sending message. Please try again.",
-    tryAgain: "Try again",
+
+    // Project 3 Cards
+    project3Card1Title: "Odoo + GLPI Implementation",
+    project3Card1Content:
+      "Deployed <strong>Odoo and GLPI for LEDEC</strong>, <strong>centralizing ERP and IT support in one operation</strong>, by full configuration, system integration, and tailored customization.",
+    project3Card1Designation: "Client: LEDEC · Implementation project",
+    project3Card2Title: "Time Control System",
+    project3Card2Content:
+      "Delivered <strong>legally compliant time tracking</strong>, <strong>with auditable work-hour records</strong>, by check-in/out flows, schedule management, and production deployment.",
+    project3Card2Designation: "Regulatory Compliance Project",
+    techStackHint: "Drag or click an icon to explore",
+    skipToContent: "Skip to main content",
+    statTechnologies: "Technologies",
+    statCertifications: "Certifications",
+    statProjects: "Projects",
+    certCambridge:
+      "Cambridge English Level 1 Certificate in ESOL International (First)",
+    certElastic: "Elastic Observability Engineer (On-Demand)",
+    github: "GitHub",
+    demo: "Demo",
+    viewRepo: "View repository",
+    footerRole: "Fullstack Developer & DevOps Engineer",
+    themeToDark: "Switch to dark mode",
+    themeToLight: "Switch to light mode",
+    availableBadge: "Open to new opportunities",
+    contactMe: "Contact me",
+    downloadCv: "Download CV",
+    hireFooterCta: "Interested in my profile? Get in touch.",
+    skillsTechnical: "Technical stack",
+    skillsSoft: "Core strengths",
+    techCategoryDevelopment: "Development",
+    techCategoryInfrastructure: "Infrastructure",
+    techCategoryObservability: "Observability",
+    viewLinkedIn: "LinkedIn",
   },
 };

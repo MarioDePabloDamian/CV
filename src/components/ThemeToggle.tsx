@@ -1,23 +1,24 @@
 import React from "react";
 import { useTheme } from "../context/ThemeContext";
-import { FiSun, FiMoon } from "react-icons/fi";
+import { useLanguage } from "../context/LanguageContext";
+import { translations } from "../translations/translations";
+import { AnimatedThemeToggler } from "./ui/animated-theme-toggler";
 
 const ThemeToggle: React.FC = () => {
-  const { theme, toggleTheme } = useTheme();
+  const { theme, setTheme } = useTheme();
+  const { language } = useLanguage();
+  const t = translations[language];
 
   return (
-    <button
-      onClick={toggleTheme}
-      className="flex items-center justify-center h-10 w-10 rounded-lg bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors duration-200 shadow-md focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2"
-      aria-label={theme === "light" ? "Cambiar a modo oscuro" : "Cambiar a modo claro"}
+    <AnimatedThemeToggler
+      theme={theme}
+      onThemeChange={setTheme}
+      variant="circle"
+      duration={450}
+      className="touch-target flex items-center justify-center rounded-md bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 active:bg-gray-300 dark:active:bg-gray-600 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2"
+      aria-label={theme === "light" ? t.themeToDark : t.themeToLight}
       aria-pressed={theme === "dark"}
-    >
-      {theme === "light" ? (
-        <FiMoon className="w-5 h-5 text-gray-700 dark:text-gray-300" />
-      ) : (
-        <FiSun className="w-5 h-5 text-yellow-500" />
-      )}
-    </button>
+    />
   );
 };
 

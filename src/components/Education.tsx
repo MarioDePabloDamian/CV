@@ -2,6 +2,7 @@ import React from "react";
 import { BsBook } from "react-icons/bs";
 import { useLanguage } from "../context/LanguageContext";
 import { translations } from "../translations/translations";
+import { SectionHeading } from "./ui/section-heading";
 
 const Education: React.FC = () => {
   const { language } = useLanguage();
@@ -9,9 +10,7 @@ const Education: React.FC = () => {
 
   return (
     <div>
-      <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4 pb-2 border-b-2 border-sky-300 dark:border-sky-600">
-        {t.education}
-      </h3>
+      <SectionHeading as="h3" animated={false}>{t.education}</SectionHeading>
       <div className="space-y-3">
         <div className="flex items-start gap-2 text-gray-800 dark:text-gray-300 text-sm leading-relaxed">
           <BsBook

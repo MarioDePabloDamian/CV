@@ -7,7 +7,12 @@ interface Language {
   name: string;
 }
 
-const LanguageSelector: React.FC = () => {
+interface LanguageSelectorProps {
+  compact?: boolean;
+}
+
+const LanguageSelector: React.FC<LanguageSelectorProps> = ({ compact = false }) => {
+
   const { language, setLanguage } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -22,20 +27,26 @@ const LanguageSelector: React.FC = () => {
     <div className="relative">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center justify-center gap-2 px-4 h-10 bg-white dark:bg-gray-950 border-2 border-sky-400 dark:border-sky-500 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 hover:bg-sky-50 dark:hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2"
+        className={`flex items-center justify-center gap-1 bg-white dark:bg-gray-950 border border-sky-300 dark:border-sky-600 rounded-md hover:bg-sky-50 dark:hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2 transition-colors ${
+          compact ? "touch-target px-2.5 text-xs font-bold" : "gap-2 px-4 h-10 border-2 border-sky-400 dark:border-sky-500 rounded-lg shadow-md hover:shadow-lg"
+        }`}
+
         aria-label="Seleccionar idioma"
         aria-expanded={isOpen}
         aria-haspopup="true"
       >
         <span className="font-semibold text-sky-600 dark:text-sky-400 text-sm">
-          {currentLang?.name}
+          {compact ? currentLang?.code.toUpperCase() : currentLang?.name}
         </span>
-        <HiChevronDown
-          className={`transition-transform text-sky-600 dark:text-sky-400 ${
-            isOpen ? "rotate-180" : ""
-          }`}
-          size={18}
-        />
+        {!compact && (
+          <HiChevronDown
+            className={`transition-transform text-sky-600 dark:text-sky-400 ${
+              isOpen ? "rotate-180" : ""
+            }`}
+            size={18}
+          />
+        )}
+
       </button>
 
       {isOpen && (

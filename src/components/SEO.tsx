@@ -1,25 +1,37 @@
 import { useEffect } from "react";
 import { useLanguage } from "../context/LanguageContext";
+import { profile } from "../data/profile";
+
+const KNOWS_ABOUT = [
+  "React",
+  "Python",
+  "FastAPI",
+  "Docker",
+  "Apigee",
+  "n8n",
+  "DevOps",
+  "PostgreSQL",
+  "Elasticsearch",
+  "Zabbix",
+  "CI/CD",
+];
 
 const SEO: React.FC = () => {
   const { language } = useLanguage();
 
   useEffect(() => {
-    const baseUrl = "https://mariodepablo.es";
-    const currentUrl = `${baseUrl}/?lang=${language}`;
+    const currentUrl = `${profile.siteUrl}/?lang=${language}`;
     const title =
       language === "es"
-        ? "Mario de Pablo Damián - Fullstack Developer & DevOps Engineer"
-        : "Mario de Pablo Damián - Fullstack Developer & DevOps Engineer";
+        ? `${profile.fullName} | DevOps & Fullstack Developer — CV`
+        : `${profile.fullName} | DevOps & Fullstack Developer — Resume`;
     const description =
       language === "es"
-        ? "CV de Mario de Pablo Damián - Desarrollador Fullstack y DevOps Engineer con experiencia en React, FastAPI, Docker, y sistemas de observabilidad industrial."
-        : "CV of Mario de Pablo Damián - Fullstack Developer and DevOps Engineer with experience in React, FastAPI, Docker, and industrial observability systems.";
+        ? `CV de ${profile.fullName}: DevOps & Fullstack en ${profile.employer.name}. React, FastAPI, Docker, n8n. Madrid.`
+        : `Resume of ${profile.fullName}: DevOps & Fullstack at ${profile.employer.name}. React, FastAPI, Docker, n8n. Madrid.`;
 
-    // Update title
     document.title = title;
 
-    // Update or create meta tags
     const updateMetaTag = (name: string, content: string, isProperty = false) => {
       const attribute = isProperty ? "property" : "name";
       let meta = document.querySelector(`meta[${attribute}="${name}"]`);
@@ -31,27 +43,26 @@ const SEO: React.FC = () => {
       meta.setAttribute("content", content);
     };
 
-    // Basic meta tags
     updateMetaTag("description", description);
-    updateMetaTag("author", "Mario de Pablo Damián");
-    updateMetaTag("keywords", "Fullstack Developer, DevOps Engineer, React, FastAPI, Docker, TypeScript, CV, Portfolio");
+    updateMetaTag("author", profile.fullName);
+    updateMetaTag(
+      "keywords",
+      "DevOps Engineer, Fullstack Developer, React, FastAPI, Docker, n8n, Kubernetes, Madrid, CV"
+    );
 
-    // Open Graph tags
     updateMetaTag("og:title", title, true);
     updateMetaTag("og:description", description, true);
     updateMetaTag("og:url", currentUrl, true);
-    updateMetaTag("og:type", "website", true);
-    updateMetaTag("og:site_name", "Mario de Pablo Damián", true);
+    updateMetaTag("og:type", "profile", true);
+    updateMetaTag("og:site_name", profile.fullName, true);
     updateMetaTag("og:locale", language === "es" ? "es_ES" : "en_US", true);
-    updateMetaTag("og:image", `${baseUrl}/FotoCV.jpg`, true);
+    updateMetaTag("og:image", `${profile.siteUrl}/FotoCV.jpg`, true);
 
-    // Twitter Card tags
     updateMetaTag("twitter:card", "summary_large_image");
     updateMetaTag("twitter:title", title);
     updateMetaTag("twitter:description", description);
-    updateMetaTag("twitter:image", `${baseUrl}/FotoCV.jpg`);
+    updateMetaTag("twitter:image", `${profile.siteUrl}/FotoCV.jpg`);
 
-    // Canonical URL
     let canonical = document.querySelector('link[rel="canonical"]');
     if (!canonical) {
       canonical = document.createElement("link");
@@ -60,7 +71,6 @@ const SEO: React.FC = () => {
     }
     canonical.setAttribute("href", currentUrl);
 
-    // Language alternates with query parameters
     const updateAlternate = (lang: string) => {
       let alternate = document.querySelector(`link[rel="alternate"][hreflang="${lang}"]`);
       if (!alternate) {
@@ -69,17 +79,15 @@ const SEO: React.FC = () => {
         alternate.setAttribute("hreflang", lang);
         document.head.appendChild(alternate);
       }
-      alternate.setAttribute("href", `${baseUrl}/?lang=${lang}`);
+      alternate.setAttribute("href", `${profile.siteUrl}/?lang=${lang}`);
     };
 
     updateAlternate("es");
     updateAlternate("en");
     updateAlternate("x-default");
 
-    // Update html lang attribute
     document.documentElement.lang = language;
 
-    // JSON-LD structured data
     let jsonLd = document.querySelector('script[type="application/ld+json"]');
     if (!jsonLd) {
       jsonLd = document.createElement("script");
@@ -90,26 +98,36 @@ const SEO: React.FC = () => {
     const structuredData = {
       "@context": "https://schema.org",
       "@type": "Person",
-      name: "Mario de Pablo Damián",
-      jobTitle: "Fullstack Developer & DevOps Engineer",
-      url: baseUrl,
-      sameAs: [
-        "https://github.com/Mariosos1",
-        "https://www.linkedin.com/in/mario-de-pablo-damian/",
-      ],
-      email: "mariodepablo2005@gmail.com",
+      name: profile.fullName,
+      jobTitle: "DevOps Engineer & Fullstack Developer",
+      url: profile.siteUrl,
+      email: `mailto:${profile.email}`,
+      telephone: profile.phone.tel,
+      sameAs: [profile.links.github, profile.links.linkedin],
+      knowsAbout: KNOWS_ABOUT,
+      worksFor: {
+        "@type": "Organization",
+        name: profile.employer.name,
+      },
       address: {
         "@type": "PostalAddress",
-        addressLocality: "Rivas-Vaciamadrid",
-        addressRegion: "Madrid",
-        postalCode: "28521",
-        addressCountry: "ES",
+        addressLocality: profile.address.locality,
+        addressRegion: profile.address.region,
+        postalCode: profile.address.postalCode,
+        addressCountry: profile.address.country,
       },
-      knowsLanguage: ["Spanish", "English"],
+      knowsLanguage: ["es", "en"],
       alumniOf: {
         "@type": "EducationalOrganization",
         name: "Davante MEDAC Albalá",
       },
+      hasCredential: [
+        { "@type": "EducationalOccupationalCredential", name: "Cambridge English First" },
+        { "@type": "EducationalOccupationalCredential", name: "Elastic Observability Engineer" },
+        { "@type": "EducationalOccupationalCredential", name: "React Certification" },
+        { "@type": "EducationalOccupationalCredential", name: "FastAPI Certification" },
+        { "@type": "EducationalOccupationalCredential", name: "Odoo Certification" },
+      ],
     };
 
     jsonLd.textContent = JSON.stringify(structuredData);

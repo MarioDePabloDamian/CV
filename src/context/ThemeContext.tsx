@@ -11,6 +11,7 @@ type Theme = "light" | "dark";
 interface ThemeContextType {
   theme: Theme;
   toggleTheme: () => void;
+  setTheme: (theme: Theme) => void;
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
@@ -58,8 +59,12 @@ export const ThemeProvider = ({ children }: ThemeProviderProps) => {
     setTheme((prev) => (prev === "light" ? "dark" : "light"));
   };
 
+  const setThemeValue = (value: Theme) => {
+    setTheme(value);
+  };
+
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+    <ThemeContext.Provider value={{ theme, toggleTheme, setTheme: setThemeValue }}>
       {children}
     </ThemeContext.Provider>
   );
