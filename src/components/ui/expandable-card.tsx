@@ -185,6 +185,7 @@ export const ExpandableCard: React.FC<ExpandableCardProps> = ({
         layoutId={`card-${cardId}-${uniqueId}`}
         layout
         initial={false}
+        whileHover={!isOtherExpanded && !isExpanded ? { scale: 1.01 } : undefined}
         animate={{
           opacity: isExpanded ? 0 : isOtherExpanded ? 0.6 : 1,
         }}
