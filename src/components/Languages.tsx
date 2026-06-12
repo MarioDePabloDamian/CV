@@ -2,6 +2,7 @@ import React from "react";
 import { HiLanguage } from "react-icons/hi2";
 import { useLanguage } from "../context/LanguageContext";
 import { translations } from "../translations/translations";
+import { SectionHeading } from "./ui/section-heading";
 
 const Languages: React.FC = () => {
   const { language } = useLanguage();
@@ -9,9 +10,7 @@ const Languages: React.FC = () => {
 
   return (
     <div>
-      <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4 pb-2 border-b-2 border-sky-300 dark:border-sky-600">
-        {t.languages}
-      </h3>
+      <SectionHeading as="h3" animated={false}>{t.languages}</SectionHeading>
       <div className="text-gray-800 dark:text-gray-300 text-sm space-y-3">
         <div className="flex items-center gap-2">
           <HiLanguage
@@ -46,13 +45,13 @@ const Languages: React.FC = () => {
                 style={{ width: "50%" }}
               ></div>
               <div
-                className="absolute inset-0 bg-gray-300 right-0"
+                className="absolute inset-0 bg-gray-300 dark:bg-gray-600 right-0"
                 style={{ width: "50%", left: "50%" }}
               ></div>
             </div>
 
             {/* 6th completely empty (gray) */}
-            <div className="h-3 flex-1 bg-gray-300 rounded-sm" />
+            <div className="h-3 flex-1 bg-gray-300 dark:bg-gray-600 rounded-sm" />
           </div>
 
           <div className="text-xs">{t.levelDescription}</div>

@@ -2,8 +2,9 @@ import React from "react";
 import { FiAward } from "react-icons/fi";
 import { useLanguage } from "../context/LanguageContext";
 import { translations } from "../translations/translations";
+import { SectionHeading } from "./ui/section-heading";
 
-const Skills: React.FC = () => {
+const SoftSkills: React.FC = () => {
   const { language } = useLanguage();
   const t = translations[language];
 
@@ -11,18 +12,16 @@ const Skills: React.FC = () => {
 
   return (
     <div>
-      <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4 pb-2 border-b-2 border-sky-300 dark:border-sky-600">
-        {t.skills}
-      </h3>
-      <ul className="space-y-1.5 text-gray-800 dark:text-gray-300 list-none">
+      <SectionHeading as="h3" animated={false}>
+        {t.skillsSoft}
+      </SectionHeading>
+      <ul className="space-y-2 text-gray-800 dark:text-gray-300 list-none">
         {skills.map((skill, idx) => (
-          <li
-            key={idx}
-            className="flex items-start gap-2 text-sm leading-relaxed"
-          >
+          <li key={idx} className="flex items-start gap-2 text-sm leading-relaxed">
             <FiAward
-              className="text-sky-600 dark:text-sky-400 shrink-0 mt-1"
+              className="text-sky-600 dark:text-sky-400 shrink-0 mt-0.5"
               size={14}
+              aria-hidden
             />
             <span>{skill}</span>
           </li>
@@ -32,4 +31,4 @@ const Skills: React.FC = () => {
   );
 };
 
-export default Skills;
+export default SoftSkills;

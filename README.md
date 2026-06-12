@@ -25,7 +25,7 @@ Aplicación moderna e interactiva de CV desarrollada con React 19, TypeScript y 
 1. Instala las dependencias:
 
 ```bash
-npm install
+pnpm install
 ```
 
 ## 🏃 Ejecución
@@ -33,7 +33,7 @@ npm install
 Para ejecutar el proyecto en modo desarrollo:
 
 ```bash
-npm run dev
+pnpm dev
 ```
 
 Abre [http://localhost:5173](http://localhost:5173) en tu navegador.
@@ -43,7 +43,7 @@ Abre [http://localhost:5173](http://localhost:5173) en tu navegador.
 Para crear una versión de producción:
 
 ```bash
-npm run build
+pnpm build
 ```
 
 Los archivos de producción se generarán en la carpeta `dist/`.
@@ -53,7 +53,7 @@ Los archivos de producción se generarán en la carpeta `dist/`.
 Para previsualizar la construcción de producción:
 
 ```bash
-npm run preview
+pnpm preview
 ```
 
 ## ✨ Características Principales

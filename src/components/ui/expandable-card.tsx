@@ -14,6 +14,7 @@ interface ExpandableCardProps {
   className?: string;
   children?: React.ReactNode;
   id?: string;
+  visibleContent?: React.ReactNode;
 }
 
 export const ExpandableCard: React.FC<ExpandableCardProps> = ({
@@ -23,6 +24,7 @@ export const ExpandableCard: React.FC<ExpandableCardProps> = ({
   className,
   children,
   id,
+  visibleContent,
 }) => {
   const { expandedCardId, setExpandedCardId } = useExpandableCard();
   const cardId = id || `card-${title}`;
@@ -100,7 +102,7 @@ export const ExpandableCard: React.FC<ExpandableCardProps> = ({
       <AnimatePresence>
         {isExpanded && (
           <div 
-            className="fixed inset-0 grid place-items-center z-[100] pointer-events-none"
+            className="fixed inset-0 grid place-items-center z-[100] pointer-events-none p-3 sm:p-4 pt-[max(0.75rem,env(safe-area-inset-top))] pb-[max(0.75rem,env(safe-area-inset-bottom))]"
           >
             <motion.div
               layoutId={`card-${cardId}-${uniqueId}`}
@@ -111,13 +113,13 @@ export const ExpandableCard: React.FC<ExpandableCardProps> = ({
                 layout: { duration: 0.25, ease: [0.4, 0, 0.2, 1] }
               }}
               className={cn(
-                "relative w-full max-w-2xl h-full md:h-fit md:max-h-[90%] flex flex-col",
+                "relative w-full max-w-2xl h-full md:h-fit md:max-h-[90vh] flex flex-col",
                 "bg-white dark:bg-gray-950 rounded-lg overflow-hidden",
                 "pointer-events-auto shadow-2xl"
               )}
             >
                 {/* Header */}
-                <div className="sticky top-0 z-10 flex items-center justify-between p-6 border-b-2 border-sky-300 dark:border-sky-600 bg-white dark:bg-gray-950">
+                <div className="sticky top-0 z-10 flex items-center justify-between gap-3 p-4 sm:p-6 border-b-2 border-sky-300 dark:border-sky-600 bg-white dark:bg-gray-950">
                   <motion.h2
                     layoutId={`title-${cardId}-${uniqueId}`}
                     layout="position"
@@ -145,7 +147,7 @@ export const ExpandableCard: React.FC<ExpandableCardProps> = ({
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.05 }}
                     onClick={() => setExpandedCardId(null)}
-                    className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                    className="touch-target p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors shrink-0"
                     aria-label="Cerrar"
                   >
                     <ChevronLeft className="w-5 h-5 text-gray-700 dark:text-gray-300" />
@@ -159,7 +161,7 @@ export const ExpandableCard: React.FC<ExpandableCardProps> = ({
                   transition={{ 
                     layout: { duration: 0.25, ease: [0.4, 0, 0.2, 1] }
                   }}
-                  className="p-6 overflow-y-auto max-h-[calc(90vh-80px)] select-text"
+                  className="p-4 sm:p-6 overflow-y-auto max-h-[calc(100dvh-5rem-env(safe-area-inset-top,0px)-env(safe-area-inset-bottom,0px))] md:max-h-[calc(90vh-80px)] select-text"
                 >
                   <AnimatePresence mode="wait">
                     {isExpanded && (
@@ -212,8 +214,6 @@ export const ExpandableCard: React.FC<ExpandableCardProps> = ({
             }
           }}
           onClick={handleClick}
-          whileHover={!isOtherExpanded && !isExpanded ? { scale: 1.01 } : {}}
-          transition={{ duration: 0.2 }}
         >
         <motion.h3
           layoutId={`title-${cardId}-${uniqueId}`}
@@ -243,6 +243,12 @@ export const ExpandableCard: React.FC<ExpandableCardProps> = ({
         >
           {description}
         </motion.div>
+
+        {visibleContent && (
+          <div className="mt-4">
+            {visibleContent}
+          </div>
+        )}
 
         {children && (
           <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700 flex items-center gap-2">

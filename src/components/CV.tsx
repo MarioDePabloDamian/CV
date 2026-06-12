@@ -1,181 +1,98 @@
 import React from "react";
-import { motion } from "motion/react";
-import { Vortex } from "./ui/vortex";
+import { SectionCard } from "./ui/section-card";
 import Header from "./Header";
-import Contact from "./Contact";
 import Summary from "./Summary";
 import Experience from "./Experience";
 import Projects from "./Projects";
 import Education from "./Education";
-import Skills from "./Skills";
+import TechStack from "./TechStack";
+import SoftSkills from "./SoftSkills";
 import Certifications from "./Certifications";
 import Languages from "./Languages";
-import LanguageSelector from "./LanguageSelector";
-import ThemeToggle from "./ThemeToggle";
 import SEO from "./SEO";
+import { ContactCtas } from "./ContactCtas";
+import { useLanguage } from "../context/LanguageContext";
 import { useTheme } from "../context/ThemeContext";
-import { ExpandableCardProvider } from "../context/ExpandableCardContext";
+import { translations } from "../translations/translations";
+import { profile } from "../data/profile";
+import AnimatedShaderBackground from "./ui/animated-shader-background";
 
 const CV: React.FC = () => {
+  const { language } = useLanguage();
   const { theme } = useTheme();
+  const t = translations[language];
+  const year = new Date().getFullYear();
+  const isDark = theme === "dark";
 
   return (
-    <div className="min-h-screen relative">
-      <SEO />
-      {/* Vortex as Full Background - Lazy loaded for performance */}
-      <Vortex
-        backgroundColor={theme === "dark" ? "#000000" : "#ffffff"}
-        particleCount={700}
-        rangeY={100}
-        baseHue={theme === "dark" ? 210 : 200}
-        baseSpeed={0.0}
-        rangeSpeed={1.5}
-        baseRadius={1}
-        rangeRadius={2}
-        className="w-full h-full"
-        containerClassName="fixed inset-0 -z-10"
-        isDarkMode={theme === "dark"}
-        aria-hidden={true}
-      />
+    <div className="relative min-h-screen w-full">
+      <div
+        className={`no-print fixed inset-0 z-0 h-dvh w-full ${
+          isDark ? "bg-black" : "bg-gray-50"
+        }`}
+      >
+        <AnimatedShaderBackground variant={isDark ? "dark" : "light"} />
+      </div>
 
-      {/* All content on top */}
-      <ExpandableCardProvider>
-      <div className="relative z-10">
-        {/* Skip to main content link for accessibility */}
+      <div className="relative z-10 min-h-screen">
+        <SEO />
         <a
           href="#main-content"
           className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-sky-600 focus:text-white focus:rounded-md"
         >
-          Saltar al contenido principal
+          {t.skipToContent}
         </a>
-        {/* Hero Section */}
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="bg-white dark:bg-gray-950 shadow-md border-b-4 border-sky-400 dark:border-sky-500 relative transition-colors duration-300"
-        >
-          <div className="max-w-7xl mx-auto px-6 py-8">
-            <div className="flex justify-end gap-3 mb-6">
-              <ThemeToggle />
-              <LanguageSelector />
+
+        <Header />
+
+        <main id="main-content" className="page-container py-4 sm:py-6 lg:py-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 lg:gap-8">
+            <div className="lg:col-span-8 space-y-4 sm:space-y-6 min-w-0">
+              <SectionCard id="about" padding="lg" beam={false} interactive={false}>
+                <Summary />
+              </SectionCard>
+
+              <SectionCard id="experience" padding="lg" beam={false} interactive={false}>
+                <Experience />
+              </SectionCard>
+
+              <SectionCard id="projects" padding="lg" beam={false} interactive={false}>
+                <Projects />
+              </SectionCard>
             </div>
-            <Header />
+
+            <aside className="lg:col-span-4 space-y-4 sm:space-y-6 min-w-0 lg:sticky lg:top-[calc(4.25rem+env(safe-area-inset-top,0px))] lg:self-start">
+              <SectionCard id="skills" padding="md" beam={false} interactive={false}>
+                <TechStack />
+              </SectionCard>
+              <SectionCard padding="md" beam={false} interactive={false}>
+                <SoftSkills />
+              </SectionCard>
+              <SectionCard padding="md" beam={false} interactive={false}>
+                <Education />
+              </SectionCard>
+              <SectionCard padding="md" beam={false} interactive={false}>
+                <Certifications />
+              </SectionCard>
+              <SectionCard padding="md" beam={false} interactive={false}>
+                <Languages />
+              </SectionCard>
+            </aside>
           </div>
-        </motion.div>
-
-        {/* Main Content */}
-        <main id="main-content" className="max-w-7xl mx-auto px-6 py-12">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-8 items-stretch">
-            {/* Sidebar - Left Column */}
-            <div className="lg:col-span-1 flex flex-col h-full">
-              <div className="flex flex-col justify-between h-full gap-2 lg:gap-3">
-                <motion.div
-                  initial={{ opacity: 0, x: -20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true, margin: "-50px" }}
-                  transition={{ duration: 0.5 }}
-                  className="bg-white dark:bg-gray-950 rounded-lg shadow-lg p-7 border-l-4 border-sky-400 dark:border-sky-500 hover:shadow-xl transition-all duration-300"
-                >
-                  <Contact />
-                </motion.div>
-
-                <motion.div
-                  initial={{ opacity: 0, x: -20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true, margin: "-50px" }}
-                  transition={{ duration: 0.5, delay: 0.1 }}
-                  className="bg-white dark:bg-gray-950 rounded-lg shadow-lg p-7 border-l-4 border-sky-400 dark:border-sky-500 hover:shadow-xl transition-all duration-300"
-                >
-                  <Education />
-                </motion.div>
-
-                <motion.div
-                  initial={{ opacity: 0, x: -20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true, margin: "-50px" }}
-                  transition={{ duration: 0.5, delay: 0.2 }}
-                  className="bg-white dark:bg-gray-950 rounded-lg shadow-lg p-7 border-l-4 border-sky-400 dark:border-sky-500 hover:shadow-xl transition-all duration-300"
-                >
-                  <Skills />
-                </motion.div>
-
-                <motion.div
-                  initial={{ opacity: 0, x: -20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true, margin: "-50px" }}
-                  transition={{ duration: 0.5, delay: 0.3 }}
-                  className="bg-white dark:bg-gray-950 rounded-lg shadow-lg p-7 border-l-4 border-sky-400 dark:border-sky-500 hover:shadow-xl transition-all duration-300"
-                >
-                  <Certifications />
-                </motion.div>
-
-                <motion.div
-                  initial={{ opacity: 0, x: -20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true, margin: "-50px" }}
-                  transition={{ duration: 0.5, delay: 0.4 }}
-                  className="bg-white dark:bg-gray-950 rounded-lg shadow-lg p-7 border-l-4 border-sky-400 dark:border-sky-500 hover:shadow-xl transition-all duration-300"
-                >
-                  <Languages />
-                </motion.div>
-              </div>
-            </div>
-
-            {/* Main Column - Right Side */}
-            <div className="lg:col-span-2 flex flex-col h-full">
-              <div className="flex flex-col justify-between h-full gap-4 lg:gap-6">
-                <motion.div
-                  initial={{ opacity: 0, x: 20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true, margin: "-50px" }}
-                  transition={{ duration: 0.5 }}
-                  className="bg-white dark:bg-gray-950 rounded-lg shadow-lg p-8 border-l-4 border-sky-400 dark:border-sky-500 hover:shadow-xl transition-all duration-300"
-                >
-                  <Summary />
-                </motion.div>
-
-                <motion.div
-                  initial={{ opacity: 0, x: 20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true, margin: "-50px" }}
-                  transition={{ duration: 0.5, delay: 0.1 }}
-                  className="bg-white dark:bg-gray-950 rounded-lg shadow-lg p-8 border-l-4 border-sky-400 dark:border-sky-500 hover:shadow-xl transition-all duration-300"
-                >
-                  <Experience />
-                </motion.div>
-              </div>
-            </div>
-          </div>
-
-          {/* Personal Projects - Full Width */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-50px" }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-            className="mt-12"
-          >
-            <Projects />
-          </motion.div>
         </main>
 
-        {/* Footer */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.3 }}
-          className="bg-gray-900 dark:bg-black text-white mt-16 py-8 transition-colors duration-300"
-        >
-          <div className="max-w-7xl mx-auto px-6 text-center">
-            <p className="text-gray-400 dark:text-gray-500">
-              © 2025 Mario de Pablo Damián
+        <footer className="mt-8 sm:mt-12 py-8 sm:py-10 pb-[max(2rem,env(safe-area-inset-bottom))] border-t bg-white/95 dark:bg-black/70 supports-[backdrop-filter]:backdrop-blur-md text-gray-700 dark:text-white border-gray-200 dark:border-white/10">
+          <div className="page-container text-center space-y-4 px-1">
+            <p className="text-gray-600 dark:text-gray-300 text-sm sm:text-base leading-relaxed">
+              {t.hireFooterCta}
+            </p>
+            <ContactCtas layout="footer" />
+            <p className="text-gray-500 dark:text-gray-500 text-sm pt-2">
+              © {year} {profile.fullName} — {t.footerRole}
             </p>
           </div>
-        </motion.div>
+        </footer>
       </div>
-      </ExpandableCardProvider>
     </div>
   );
 };

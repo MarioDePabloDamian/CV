@@ -20,9 +20,7 @@ function CVWithLanguage() {
 
   return (
     <LanguageProvider initialLanguage={validLanguage}>
-      <div className="min-h-screen">
-        <CV />
-      </div>
+      <CV />
     </LanguageProvider>
   );
 }

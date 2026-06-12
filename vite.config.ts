@@ -16,6 +16,7 @@ export default defineConfig({
         manualChunks: {
           vendor: ["react", "react-dom"],
           animations: ["motion"],
+          three: ["three"],
         },
       },
     },
