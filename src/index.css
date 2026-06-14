@@ -205,6 +205,69 @@
   }
 }
 
+/* --- Portfolio bold tokens --------------------------------------------- */
+
+@keyframes aurora-drift {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(4%, -3%, 0) scale(1.08);
+  }
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes text-sheen {
+  to {
+    background-position: 200% center;
+  }
+}
+
+/* Animated brand gradient text */
+@utility text-gradient-brand {
+  background-image: linear-gradient(
+    100deg,
+    #0ea5e9 0%,
+    #6366f1 35%,
+    #06b6d4 60%,
+    #0ea5e9 100%
+  );
+  background-size: 200% auto;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  animation: text-sheen 6s linear infinite;
+}
+
+/* Subtle technical grid for hero / background */
+@utility bg-grid-soft {
+  background-image: linear-gradient(
+      to right,
+      rgba(14, 165, 233, 0.07) 1px,
+      transparent 1px
+    ),
+    linear-gradient(to bottom, rgba(14, 165, 233, 0.07) 1px, transparent 1px);
+  background-size: 38px 38px;
+}
+
+/* Soft glowing aurora blob */
+@utility aurora-blob {
+  filter: blur(64px);
+  animation: aurora-drift 18s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .text-gradient-brand {
+    animation: none;
+  }
+  .aurora-blob {
+    animation: none;
+  }
+}
+
 @keyframes gradient-shift {
   0% {
     background-position: 200% center;
@@ -346,8 +409,38 @@
   mix-blend-mode: normal;
 }
 
-html[data-magicui-theme-vt="active"]::view-transition-group(root) {
-  animation-duration: var(--magicui-theme-toggle-vt-duration);
+/* The incoming (dark/light) snapshot is revealed above the old one via the
+   JS clip-path animation, so keep it on top. */
+::view-transition-new(root) {
+  z-index: 1;
+}
+::view-transition-old(root) {
+  z-index: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* Offset for the sticky header so anchored sections aren't hidden underneath. */
+#experience,
+#projects,
+#contact {
+  scroll-margin-top: 4.75rem;
+}
+
+@media (min-width: 1024px) {
+  #experience,
+  #projects,
+  #contact {
+    scroll-margin-top: 5.5rem;
+  }
 }
 
 @media print {

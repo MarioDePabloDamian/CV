@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import { renderToString } from "react-dom/server";
 
 import { cn } from "@/lib/utils";
@@ -10,6 +10,15 @@ interface Icon {
   scale: number;
   opacity: number;
   id: number;
+}
+
+interface TargetRotation {
+  x: number;
+  y: number;
+  startX: number;
+  startY: number;
+  startTime: number;
+  duration: number;
 }
 
 export interface IconCloudItem {
@@ -60,34 +69,27 @@ export function IconCloud({
   size = 400,
 }: IconCloudProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [iconPositions, setIconPositions] = useState<Icon[]>([]);
-  const [isDragging, setIsDragging] = useState(false);
-  const [lastPointerPos, setLastPointerPos] = useState({ x: 0, y: 0 });
-  const [pointerPos, setPointerPos] = useState({ x: size / 2, y: size / 2 });
-  const [targetRotation, setTargetRotation] = useState<{
-    x: number;
-    y: number;
-    startX: number;
-    startY: number;
-    distance: number;
-    startTime: number;
-    duration: number;
-  } | null>(null);
-  const [, setLoadTick] = useState(0);
   const animationFrameRef = useRef<number>(0);
   const reduceMotionRef = useRef(false);
+  const coarsePointerRef = useRef(false);
   const rotationRef = useRef({ x: 0, y: 0 });
   const iconCanvasesRef = useRef<HTMLCanvasElement[]>([]);
   const imagesLoadedRef = useRef<boolean[]>([]);
   const labelsRef = useRef<string[]>([]);
-
-  const bumpLoad = () => setLoadTick((tick) => tick + 1);
+  const iconPositionsRef = useRef<Icon[]>([]);
+  const pointerPosRef = useRef({ x: size / 2, y: size / 2 });
+  const isDraggingRef = useRef(false);
+  const lastPointerPosRef = useRef({ x: 0, y: 0 });
+  const targetRotationRef = useRef<TargetRotation | null>(null);
+  const activePointerIdRef = useRef<number | null>(null);
 
   useEffect(() => {
     reduceMotionRef.current = window.matchMedia(
       "(prefers-reduced-motion: reduce)"
     ).matches;
-  }, []);
+    coarsePointerRef.current = window.matchMedia("(pointer: coarse)").matches;
+    pointerPosRef.current = { x: size / 2, y: size / 2 };
+  }, [size]);
 
   useEffect(() => {
     const resolvedItems: IconCloudItem[] =
@@ -118,7 +120,6 @@ export function IconCloud({
             drawFallbackIcon(offCtx, labelsRef.current[index] ?? "?", true);
           }
           imagesLoadedRef.current[index] = true;
-          bumpLoad();
         }
       };
 
@@ -176,7 +177,10 @@ export function IconCloud({
 
   useEffect(() => {
     const count = icons?.length ?? items?.length ?? images?.length ?? 0;
-    if (count === 0) return;
+    if (count === 0) {
+      iconPositionsRef.current = [];
+      return;
+    }
 
     const newIcons: Icon[] = [];
     const offset = 2 / count;
@@ -198,109 +202,41 @@ export function IconCloud({
         id: i,
       });
     }
-    setIconPositions(newIcons);
+    iconPositionsRef.current = newIcons;
   }, [icons, images, items]);
-
-  const focusIcon = (clientX: number, clientY: number) => {
-    const rect = canvasRef.current?.getBoundingClientRect();
-    if (!rect || !canvasRef.current) return false;
-
-    const x = ((clientX - rect.left) / rect.width) * canvasRef.current.width;
-    const y = ((clientY - rect.top) / rect.height) * canvasRef.current.height;
-
-    for (const icon of iconPositions) {
-      const cosX = Math.cos(rotationRef.current.x);
-      const sinX = Math.sin(rotationRef.current.x);
-      const cosY = Math.cos(rotationRef.current.y);
-      const sinY = Math.sin(rotationRef.current.y);
-
-      const rotatedX = icon.x * cosY - icon.z * sinY;
-      const rotatedZ = icon.x * sinY + icon.z * cosY;
-      const rotatedY = icon.y * cosX + rotatedZ * sinX;
-
-      const screenX = canvasRef.current.width / 2 + rotatedX;
-      const screenY = canvasRef.current.height / 2 + rotatedY;
-      const scale = (rotatedZ + 200) / 300;
-      const radius = 20 * scale;
-      const dx = x - screenX;
-      const dy = y - screenY;
-
-      if (dx * dx + dy * dy < radius * radius) {
-        const targetX = -Math.atan2(
-          icon.y,
-          Math.sqrt(icon.x * icon.x + icon.z * icon.z)
-        );
-        const targetY = Math.atan2(icon.x, icon.z);
-        const currentX = rotationRef.current.x;
-        const currentY = rotationRef.current.y;
-        const distance = Math.sqrt(
-          Math.pow(targetX - currentX, 2) + Math.pow(targetY - currentY, 2)
-        );
-        const duration = Math.min(2000, Math.max(800, distance * 1000));
-
-        setTargetRotation({
-          x: targetX,
-          y: targetY,
-          startX: currentX,
-          startY: currentY,
-          distance,
-          startTime: performance.now(),
-          duration,
-        });
-        return true;
-      }
-    }
-    return false;
-  };
-
-  const updatePointer = (clientX: number, clientY: number) => {
-    const rect = canvasRef.current?.getBoundingClientRect();
-    if (!rect || !canvasRef.current) return;
-
-    setPointerPos({
-      x: ((clientX - rect.left) / rect.width) * canvasRef.current.width,
-      y: ((clientY - rect.top) / rect.height) * canvasRef.current.height,
-    });
-  };
-
-  const handlePointerDown = (clientX: number, clientY: number) => {
-    if (!focusIcon(clientX, clientY)) {
-      setIsDragging(true);
-      setLastPointerPos({ x: clientX, y: clientY });
-    }
-    updatePointer(clientX, clientY);
-  };
-
-  const handlePointerMove = (clientX: number, clientY: number) => {
-    updatePointer(clientX, clientY);
-    if (isDragging) {
-      const deltaX = clientX - lastPointerPos.x;
-      const deltaY = clientY - lastPointerPos.y;
-      rotationRef.current = {
-        x: rotationRef.current.x + deltaY * 0.002,
-        y: rotationRef.current.y + deltaX * 0.002,
-      };
-      setLastPointerPos({ x: clientX, y: clientY });
-    }
-  };
-
-  const handlePointerUp = () => setIsDragging(false);
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    const ctx = canvas?.getContext("2d");
-    if (!canvas || !ctx) return;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext("2d", {
+      alpha: true,
+      desynchronized: true,
+    });
+    if (!ctx) return;
+
+    let running = true;
 
     const animate = () => {
+      if (!running) return;
+
+      const iconPositions = iconPositionsRef.current;
+      if (iconPositions.length === 0) {
+        animationFrameRef.current = requestAnimationFrame(animate);
+        return;
+      }
+
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       const centerX = canvas.width / 2;
       const centerY = canvas.height / 2;
+      const pointerPos = pointerPosRef.current;
       const maxDistance = Math.sqrt(centerX * centerX + centerY * centerY);
       const dx = pointerPos.x - centerX;
       const dy = pointerPos.y - centerY;
       const distance = Math.sqrt(dx * dx + dy * dy);
       const speed = 0.003 + (distance / maxDistance) * 0.01;
+      const targetRotation = targetRotationRef.current;
 
       if (targetRotation) {
         const elapsed = performance.now() - targetRotation.startTime;
@@ -316,76 +252,186 @@ export function IconCloud({
             (targetRotation.y - targetRotation.startY) * easedProgress,
         };
 
-        if (progress >= 1) setTargetRotation(null);
-      } else if (!isDragging && !reduceMotionRef.current) {
+        if (progress >= 1) {
+          targetRotationRef.current = null;
+        }
+      } else if (!isDraggingRef.current && !reduceMotionRef.current) {
+        const autoRotateX = 0.001;
+        const autoRotateY = 0.003;
         rotationRef.current = {
-          x: rotationRef.current.x + (dy / canvas.height) * speed,
-          y: rotationRef.current.y + (dx / canvas.width) * speed,
+          x: rotationRef.current.x + autoRotateX + (dy / canvas.height) * speed,
+          y: rotationRef.current.y + autoRotateY + (dx / canvas.width) * speed,
         };
       }
 
-      iconPositions.forEach((icon, index) => {
-        const cosX = Math.cos(rotationRef.current.x);
-        const sinX = Math.sin(rotationRef.current.x);
-        const cosY = Math.cos(rotationRef.current.y);
-        const sinY = Math.sin(rotationRef.current.y);
+      const cosX = Math.cos(rotationRef.current.x);
+      const sinX = Math.sin(rotationRef.current.x);
+      const cosY = Math.cos(rotationRef.current.y);
+      const sinY = Math.sin(rotationRef.current.y);
+      const halfW = canvas.width / 2;
+      const halfH = canvas.height / 2;
 
+      for (let index = 0; index < iconPositions.length; index++) {
+        const icon = iconPositions[index];
         const rotatedX = icon.x * cosY - icon.z * sinY;
         const rotatedZ = icon.x * sinY + icon.z * cosY;
         const rotatedY = icon.y * cosX + rotatedZ * sinX;
         const scale = (rotatedZ + 200) / 300;
         const opacity = Math.max(0.45, Math.min(1, (rotatedZ + 150) / 200));
 
-        ctx.save();
-        ctx.translate(canvas.width / 2 + rotatedX, canvas.height / 2 + rotatedY);
-        ctx.scale(scale, scale);
-        ctx.globalAlpha = opacity;
-
         if (
-          iconCanvasesRef.current[index] &&
-          imagesLoadedRef.current[index]
+          !iconCanvasesRef.current[index] ||
+          !imagesLoadedRef.current[index]
         ) {
-          ctx.drawImage(iconCanvasesRef.current[index], -20, -20, 40, 40);
+          continue;
         }
 
-        ctx.restore();
-      });
+        ctx.globalAlpha = opacity;
+        ctx.drawImage(
+          iconCanvasesRef.current[index],
+          halfW + rotatedX - 20 * scale,
+          halfH + rotatedY - 20 * scale,
+          40 * scale,
+          40 * scale
+        );
+      }
 
+      ctx.globalAlpha = 1;
       animationFrameRef.current = requestAnimationFrame(animate);
     };
 
     animate();
 
     return () => {
+      running = false;
       if (animationFrameRef.current) {
         cancelAnimationFrame(animationFrameRef.current);
       }
     };
-  }, [iconPositions, isDragging, pointerPos, targetRotation, icons, images, items]);
+  }, [size]);
+
+  const updatePointer = (clientX: number, clientY: number) => {
+    const canvas = canvasRef.current;
+    const rect = canvas?.getBoundingClientRect();
+    if (!rect || !canvas) return;
+
+    pointerPosRef.current = {
+      x: ((clientX - rect.left) / rect.width) * canvas.width,
+      y: ((clientY - rect.top) / rect.height) * canvas.height,
+    };
+  };
+
+  const focusIcon = (clientX: number, clientY: number) => {
+    const canvas = canvasRef.current;
+    const rect = canvas?.getBoundingClientRect();
+    if (!rect || !canvas) return false;
+
+    const x = ((clientX - rect.left) / rect.width) * canvas.width;
+    const y = ((clientY - rect.top) / rect.height) * canvas.height;
+
+    for (const icon of iconPositionsRef.current) {
+      const cosX = Math.cos(rotationRef.current.x);
+      const sinX = Math.sin(rotationRef.current.x);
+      const cosY = Math.cos(rotationRef.current.y);
+      const sinY = Math.sin(rotationRef.current.y);
+
+      const rotatedX = icon.x * cosY - icon.z * sinY;
+      const rotatedZ = icon.x * sinY + icon.z * cosY;
+      const rotatedY = icon.y * cosX + rotatedZ * sinX;
+
+      const screenX = canvas.width / 2 + rotatedX;
+      const screenY = canvas.height / 2 + rotatedY;
+      const scale = (rotatedZ + 200) / 300;
+      const radius = 20 * scale;
+      const hitDx = x - screenX;
+      const hitDy = y - screenY;
+
+      if (hitDx * hitDx + hitDy * hitDy < radius * radius) {
+        const targetX = -Math.atan2(
+          icon.y,
+          Math.sqrt(icon.x * icon.x + icon.z * icon.z)
+        );
+        const targetY = Math.atan2(icon.x, icon.z);
+        const currentX = rotationRef.current.x;
+        const currentY = rotationRef.current.y;
+        const rotDistance = Math.hypot(targetX - currentX, targetY - currentY);
+        const duration = Math.min(2000, Math.max(800, rotDistance * 1000));
+
+        targetRotationRef.current = {
+          x: targetX,
+          y: targetY,
+          startX: currentX,
+          startY: currentY,
+          startTime: performance.now(),
+          duration,
+        };
+        return true;
+      }
+    }
+    return false;
+  };
+
+  const dragSensitivity = () =>
+    coarsePointerRef.current ? 0.0035 : 0.002;
+
+  const handlePointerDown = (event: React.PointerEvent<HTMLCanvasElement>) => {
+    if (event.pointerType === "mouse" && event.button !== 0) return;
+
+    activePointerIdRef.current = event.pointerId;
+    event.currentTarget.setPointerCapture(event.pointerId);
+
+    if (!focusIcon(event.clientX, event.clientY)) {
+      isDraggingRef.current = true;
+      lastPointerPosRef.current = { x: event.clientX, y: event.clientY };
+    }
+    updatePointer(event.clientX, event.clientY);
+  };
+
+  const handlePointerMove = (event: React.PointerEvent<HTMLCanvasElement>) => {
+    if (activePointerIdRef.current !== event.pointerId) return;
+
+    updatePointer(event.clientX, event.clientY);
+
+    if (isDraggingRef.current) {
+      const deltaX = event.clientX - lastPointerPosRef.current.x;
+      const deltaY = event.clientY - lastPointerPosRef.current.y;
+      rotationRef.current = {
+        x: rotationRef.current.x + deltaY * dragSensitivity(),
+        y: rotationRef.current.y + deltaX * dragSensitivity(),
+      };
+      lastPointerPosRef.current = { x: event.clientX, y: event.clientY };
+    }
+  };
+
+  const endPointer = (event: React.PointerEvent<HTMLCanvasElement>) => {
+    if (activePointerIdRef.current !== event.pointerId) return;
+
+    isDraggingRef.current = false;
+    activePointerIdRef.current = null;
+
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+      event.currentTarget.releasePointerCapture(event.pointerId);
+    }
+  };
 
   return (
     <canvas
       ref={canvasRef}
       width={size}
       height={size}
-      onMouseDown={(e) => handlePointerDown(e.clientX, e.clientY)}
-      onMouseMove={(e) => handlePointerMove(e.clientX, e.clientY)}
-      onMouseUp={handlePointerUp}
-      onMouseLeave={handlePointerUp}
-      onTouchStart={(e) => {
-        const touch = e.touches[0];
-        if (touch) handlePointerDown(touch.clientX, touch.clientY);
-      }}
-      onTouchMove={(e) => {
-        const touch = e.touches[0];
-        if (touch) {
-          e.preventDefault();
-          handlePointerMove(touch.clientX, touch.clientY);
-        }
-      }}
-      onTouchEnd={handlePointerUp}
+      onPointerDown={handlePointerDown}
+      onPointerMove={handlePointerMove}
+      onPointerUp={endPointer}
+      onPointerCancel={endPointer}
+      onPointerLeave={endPointer}
       className={cn("max-w-full touch-none rounded-lg", className)}
-      style={{ width: "100%", height: "auto", maxWidth: size, aspectRatio: "1 / 1" }}
+      style={{
+        width: "100%",
+        height: "auto",
+        maxWidth: size,
+        aspectRatio: "1 / 1",
+        touchAction: "none",
+      }}
       aria-label="Nube interactiva de tecnologías"
       role="img"
     />

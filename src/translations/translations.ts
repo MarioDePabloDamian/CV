@@ -1,13 +1,23 @@
 export interface TranslationKeys {
   title: string;
   subtitle: string;
+  heroTagline: string;
+  heroViewProjects: string;
+  heroOpenTo: string;
+  metricsProjects: string;
+  metricsClients: string;
+  metricsData: string;
+  howIBuildTitle: string;
+  howIBuildCaption: string;
+  howIBuildAlways: string;
+  howIBuildDepends: string;
   education: string;
   skills: string;
   certifications: string;
   languages: string;
-  about: string;
   experience: string;
   summary: string;
+  heroLocation: string;
   experienceTitle: string;
   experienceCompany: string;
   experiencePeriod: string;
@@ -59,6 +69,8 @@ export interface TranslationKeys {
   certFastAPI: string;
   certOdoo: string;
   personalProjects: string;
+  projectFeatured: string;
+  projectLive: string;
   pilatesTitle: string;
   pilatesDesc: string;
   pilatesStatus: string;
@@ -94,6 +106,10 @@ export interface TranslationKeys {
   themeToDark: string;
   themeToLight: string;
   availableBadge: string;
+  navMenu: string;
+  navExperience: string;
+  navProjects: string;
+  navContact: string;
   contactMe: string;
   downloadCv: string;
   hireFooterCta: string;
@@ -115,26 +131,35 @@ export const translations: Translations = {
     // Header
     title: "Mario de Pablo Damián",
     subtitle: "Fullstack Developer & DevOps Engineer",
+    heroTagline:
+      "Uso herramientas de IA en el día a día para iterar y entregar más rápido, sin bajar el listón técnico.",
+    heroViewProjects: "Ver proyectos",
+    heroOpenTo: "Especializado en",
+    metricsProjects: "Proyectos entregados",
+    metricsClients: "Clientes",
+    metricsData: "Datos migrados sin pérdida",
+    howIBuildTitle: "Arquitectura habitual",
+    howIBuildCaption:
+      "Casi siempre React, FastAPI, Nginx, PostgreSQL y Docker. Según el proyecto añado Redis, n8n, Keycloak, Rust u otras piezas.",
+    howIBuildAlways: "Casi siempre",
+    howIBuildDepends: "Según el proyecto",
 
     // Sections
     education: "Formación",
     skills: "Aptitudes",
     certifications: "Diplomas",
     languages: "Idiomas",
-    about: "Sobre Mí",
     experience: "Experiencia Profesional",
 
-    // Summary
     summary:
-      "<strong>DevOps & Fullstack Developer</strong> en CIVIR (mar 2025 – actual). Construyo y despliego sistemas con <strong>React, Python/FastAPI, Docker y automatización (n8n)</strong>, con foco en observabilidad industrial, integraciones entre sistemas y CI/CD. Busco oportunidades en <strong>backend, DevOps o fullstack</strong>.",
-
-    // Experience
+      "<strong>DevOps & Fullstack Developer</strong> en CIVIR. Construyo aplicaciones web, APIs e integraciones entre sistemas.",
+    heroLocation: "Rivas-Vaciamadrid · Remoto",
     experienceTitle: "DevOps Engineer | Fullstack Developer",
     experienceCompany: "CIVIR",
     experiencePeriod: "Mar 2025 - Actual",
-    project1: "Proyecto de Observabilidad Industrial",
+    project1: "Plataforma fullstack — Telefónica",
     project1Desc:
-      "Unifiqué <strong>observabilidad industrial de extremo a extremo</strong> para Telefónica, <strong>cubriendo captura de red, métricas y entrega continua</strong>, mediante desarrollo fullstack, proxy-sniffer propio, Docker y GitHub Actions.",
+      "Desarrollé la <strong>plataforma de extremo a extremo</strong> para Telefónica, <strong>entregando frontend, APIs, persistencia y pipelines de despliegue</strong>, mediante React, FastAPI, Docker, PostgreSQL y GitHub Actions.",
     project1Designation: "Cliente: Telefónica",
     project2: "Proyecto HORECA - CRM + asistente de IA",
     project2Designation: "Cliente: Vincci Hoteles",
@@ -151,13 +176,13 @@ export const translations: Translations = {
     resp2:
       "Puse en marcha <strong>pantallas de frontend y APIs de backend</strong>, <strong>acortando el time-to-market de funcionalidades clave</strong>, mediante desarrollo iterativo en React y FastAPI.",
     resp3:
-      "Aumenté la <strong>visibilidad del tráfico industrial en tiempo real</strong>, <strong>incorporando captura de red en la plataforma</strong>, mediante un proxy-sniffer propio integrado en el stack.",
+      "Desarrollé e integré un <strong>módulo de captura de red en tiempo real</strong>, <strong>ampliando las capacidades del backend</strong>, mediante un proxy-sniffer propio.",
     resp4:
-      "Estructuré el <strong>almacenamiento de métricas</strong>, <strong>garantizando integridad y consultas eficientes</strong>, mediante modelado relacional y validación de esquemas en PostgreSQL.",
+      "Estructuré el <strong>modelo de datos y la persistencia</strong>, <strong>garantizando integridad y consultas eficientes</strong>, mediante modelado relacional y validación de esquemas en PostgreSQL.",
     resp5:
       "Estandaricé <strong>entornos de desarrollo y producción</strong>, <strong>eliminando divergencias entre local y servidor</strong>.",
     resp6:
-      "Amplié la <strong>cobertura de monitorización en planta</strong>, <strong>incorporando captura en perímetro de red</strong>, mediante Raspberry Pi y switches configurados en campo.",
+      "Extendí la <strong>plataforma a despliegues en planta</strong>, <strong>con servicios edge en entornos de red reales</strong>, mediante configuración de Raspberry Pi y switches en campo.",
     resp7:
       "Reduje <strong>pasos manuales en pruebas y despliegues</strong>, <strong>automatizando el ciclo de entrega del proyecto</strong>, mediante pipelines de CI/CD en GitHub Actions.",
     resp8:
@@ -217,6 +242,8 @@ export const translations: Translations = {
 
     // Projects
     personalProjects: "Proyectos personales",
+    projectFeatured: "Destacado",
+    projectLive: "En producción",
     pilatesTitle: "Studio Pilates Lucía Lotero",
     pilatesDesc:
       "CRM completo para gestionar clientes, reservas, pagos y la operativa del estudio en Rivas-Vaciamadrid, con web pública orientada a conversión.",
@@ -247,7 +274,7 @@ export const translations: Translations = {
     project3Card1Title: "Implementación Odoo + GLPI",
     project3Card1Content:
       "Desplegué <strong>Odoo y GLPI para LEDEC</strong>, <strong>centralizando ERP y soporte IT en una sola operación</strong>, mediante configuración completa, integración entre sistemas y personalización a medida.",
-    project3Card1Designation: "Cliente: LEDEC · Proyecto de implementación",
+    project3Card1Designation: "Cliente: LEDEC",
     project3Card2Title: "Control Horario",
     project3Card2Content:
       "Entregué <strong>control horario legal</strong>, <strong>con registro de jornada auditable y conforme a normativa</strong>, mediante fichajes, gestión de horarios y despliegue en producción.",
@@ -266,7 +293,11 @@ export const translations: Translations = {
     footerRole: "Fullstack Developer & DevOps Engineer",
     themeToDark: "Cambiar a modo oscuro",
     themeToLight: "Cambiar a modo claro",
-    availableBadge: "Disponible para nuevas oportunidades",
+    availableBadge: "DevOps & Fullstack · CIVIR",
+    navMenu: "Menú",
+    navExperience: "Experiencia",
+    navProjects: "Proyectos",
+    navContact: "Contacto",
     contactMe: "Contactar",
     downloadCv: "Descargar CV",
     hireFooterCta: "¿Te encaja mi perfil? Escríbeme y hablamos.",
@@ -281,26 +312,36 @@ export const translations: Translations = {
     // Header
     title: "Mario de Pablo Damián",
     subtitle: "Fullstack Developer & DevOps Engineer",
+    heroTagline:
+      "I use AI tools day to day to iterate and ship faster, without lowering the technical bar.",
+    heroViewProjects: "View projects",
+    heroOpenTo: "Specialized in",
+    metricsProjects: "Projects shipped",
+    metricsClients: "Clients",
+    metricsData: "Data migrated, zero loss",
+    howIBuildTitle: "Usual architecture",
+    howIBuildCaption:
+      "Almost always React, FastAPI, Nginx, PostgreSQL and Docker. Depending on the project I add Redis, n8n, Keycloak, Rust or other pieces.",
+    howIBuildAlways: "Almost always",
+    howIBuildDepends: "Depends on the project",
 
     // Sections
     education: "Education",
     skills: "Skills",
     certifications: "Certifications",
     languages: "Languages",
-    about: "About Me",
     experience: "Professional Experience",
 
-    // Summary
     summary:
-      "<strong>DevOps & Fullstack Developer</strong> at CIVIR (Mar 2025 – present). I build and deploy systems with <strong>React, Python/FastAPI, Docker, and automation (n8n)</strong>, focused on industrial observability, system integrations, and CI/CD. Open to <strong>backend, DevOps, or fullstack</strong> roles.",
+      "<strong>DevOps & Fullstack Developer</strong> at CIVIR. I build web applications, APIs, and system integrations.",
+    heroLocation: "Rivas-Vaciamadrid · Remote",
 
-    // Experience
     experienceTitle: "DevOps Engineer | Fullstack Developer",
     experienceCompany: "CIVIR",
     experiencePeriod: "Mar 2025 - Present",
-    project1: "Industrial Observability Project",
+    project1: "Fullstack platform — Telefónica",
     project1Desc:
-      "Unified <strong>end-to-end industrial observability</strong> for Telefónica, <strong>covering network capture, metrics, and continuous delivery</strong>, by building fullstack features, a custom proxy-sniffer, Docker, and GitHub Actions.",
+      "Built the <strong>end-to-end platform</strong> for Telefónica, <strong>delivering frontend, APIs, data persistence, and deployment pipelines</strong>, using React, FastAPI, Docker, PostgreSQL, and GitHub Actions.",
     project1Designation: "Client: Telefónica",
     project2: "HORECA Project - CRM + AI assistant",
     project2Designation: "Client: Vincci Hoteles",
@@ -317,13 +358,13 @@ export const translations: Translations = {
     resp2:
       "Shipped <strong>frontend screens and backend APIs</strong>, <strong>shortening time-to-market for key features</strong>, by iterative development in React and FastAPI.",
     resp3:
-      "Increased <strong>real-time industrial traffic visibility</strong>, <strong>adding network capture to the platform</strong>, by building and integrating a custom proxy-sniffer.",
+      "Built and integrated a <strong>real-time network capture module</strong>, <strong>extending backend capabilities</strong>, with a custom proxy-sniffer.",
     resp4:
-      "Structured <strong>metrics storage</strong>, <strong>ensuring integrity and efficient queries</strong>, by relational modeling and schema validation in PostgreSQL.",
+      "Structured the <strong>data model and persistence layer</strong>, <strong>ensuring integrity and efficient queries</strong>, by relational modeling and schema validation in PostgreSQL.",
     resp5:
       "Standardized <strong>dev and production environments</strong>, <strong>removing drift between local and server setups</strong>.",
     resp6:
-      "Extended <strong>on-site monitoring coverage</strong>, <strong>adding perimeter network capture</strong>, by deploying and configuring Raspberry Pi and switches in the field.",
+      "Extended the <strong>platform to on-site deployments</strong>, <strong>with edge services in real network environments</strong>, by configuring Raspberry Pi and switches in the field.",
     resp7:
       "Cut <strong>manual steps in testing and deployments</strong>, <strong>automating the project delivery cycle</strong>, by configuring CI/CD pipelines in GitHub Actions.",
     resp8:
@@ -382,6 +423,8 @@ export const translations: Translations = {
 
     // Projects
     personalProjects: "Personal projects",
+    projectFeatured: "Featured",
+    projectLive: "Live",
     pilatesTitle: "Studio Pilates Lucía Lotero",
     pilatesDesc:
       "Full CRM to manage clients, bookings, payments, and studio operations in Rivas-Vaciamadrid, with a public conversion-focused website.",
@@ -411,7 +454,7 @@ export const translations: Translations = {
     project3Card1Title: "Odoo + GLPI Implementation",
     project3Card1Content:
       "Deployed <strong>Odoo and GLPI for LEDEC</strong>, <strong>centralizing ERP and IT support in one operation</strong>, by full configuration, system integration, and tailored customization.",
-    project3Card1Designation: "Client: LEDEC · Implementation project",
+    project3Card1Designation: "Client: LEDEC",
     project3Card2Title: "Time Control System",
     project3Card2Content:
       "Delivered <strong>legally compliant time tracking</strong>, <strong>with auditable work-hour records</strong>, by check-in/out flows, schedule management, and production deployment.",
@@ -430,7 +473,11 @@ export const translations: Translations = {
     footerRole: "Fullstack Developer & DevOps Engineer",
     themeToDark: "Switch to dark mode",
     themeToLight: "Switch to light mode",
-    availableBadge: "Open to new opportunities",
+    availableBadge: "DevOps & Fullstack · CIVIR",
+    navMenu: "Menu",
+    navExperience: "Experience",
+    navProjects: "Projects",
+    navContact: "Contact",
     contactMe: "Contact me",
     downloadCv: "Download CV",
     hireFooterCta: "Interested in my profile? Get in touch.",

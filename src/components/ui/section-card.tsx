@@ -36,7 +36,8 @@ export function SectionCard({
     <div
       id={id}
       className={cn(
-        "relative overflow-hidden rounded-lg border-l-4 border-sky-400 dark:border-sky-500 shadow-lg transition-shadow duration-300 hover:shadow-xl",
+        "relative overflow-hidden rounded-xl",
+        "before:absolute before:inset-y-0 before:left-0 before:w-1 before:bg-gradient-to-b before:from-sky-400 before:via-indigo-500 before:to-cyan-400 before:content-[''] print:before:bg-sky-500",
         paddingMap[padding],
         className
       )}
@@ -57,9 +58,17 @@ export function SectionCard({
   return (
     <BlurFade inView delay={delay} direction={direction}>
       {interactive ? (
-        <MagicCard className="rounded-lg">{inner}</MagicCard>
+        <MagicCard className="rounded-xl">{inner}</MagicCard>
       ) : (
-        <div className="relative rounded-lg bg-white/95 dark:bg-gray-950/88 supports-[backdrop-filter]:backdrop-blur-sm border border-gray-200/80 dark:border-white/10 shadow-md dark:shadow-lg dark:shadow-black/20">
+        <div
+          className={cn(
+            "group relative rounded-xl bg-white dark:bg-gray-900/95",
+            "[box-shadow:0_0_0_1px_rgba(0,0,0,.04),0_2px_4px_rgba(0,0,0,.05),0_12px_24px_rgba(0,0,0,.05)]",
+            "dark:[border:1px_solid_rgba(255,255,255,.08)] dark:[box-shadow:0_-20px_80px_-20px_#ffffff1f_inset]",
+            "transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_24px_60px_-28px_rgba(14,165,233,0.45)] dark:hover:shadow-[0_24px_60px_-28px_rgba(56,189,248,0.35)]",
+            "print:translate-y-0 print:rounded-lg print:border print:border-gray-300 print:shadow-none print:[box-shadow:none]"
+          )}
+        >
           {inner}
         </div>
       )}

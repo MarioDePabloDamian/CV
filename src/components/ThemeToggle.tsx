@@ -13,8 +13,7 @@ const ThemeToggle: React.FC = () => {
     <AnimatedThemeToggler
       theme={theme}
       onThemeChange={setTheme}
-      variant="circle"
-      duration={450}
+      duration={700}
       className="touch-target flex items-center justify-center rounded-md bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 active:bg-gray-300 dark:active:bg-gray-600 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2"
       aria-label={theme === "light" ? t.themeToDark : t.themeToLight}
       aria-pressed={theme === "dark"}

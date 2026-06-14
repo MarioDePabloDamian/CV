@@ -1,7 +1,9 @@
 import React from "react";
 import { SectionCard } from "./ui/section-card";
 import Header from "./Header";
-import Summary from "./Summary";
+import Hero from "./Hero";
+import HowIBuild from "./HowIBuild";
+import { ScrollProgress } from "./ui/scroll-progress";
 import Experience from "./Experience";
 import Projects from "./Projects";
 import Education from "./Education";
@@ -12,27 +14,26 @@ import Languages from "./Languages";
 import SEO from "./SEO";
 import { ContactCtas } from "./ContactCtas";
 import { useLanguage } from "../context/LanguageContext";
-import { useTheme } from "../context/ThemeContext";
 import { translations } from "../translations/translations";
 import { profile } from "../data/profile";
-import AnimatedShaderBackground from "./ui/animated-shader-background";
 
 const CV: React.FC = () => {
   const { language } = useLanguage();
-  const { theme } = useTheme();
   const t = translations[language];
   const year = new Date().getFullYear();
-  const isDark = theme === "dark";
 
   return (
-    <div className="relative min-h-screen w-full">
+    <div className="relative min-h-screen w-full bg-gray-50 dark:bg-gray-950">
       <div
-        className={`no-print fixed inset-0 z-0 h-dvh w-full ${
-          isDark ? "bg-black" : "bg-gray-50"
-        }`}
+        aria-hidden
+        className="no-print pointer-events-none fixed inset-0 z-0 h-dvh w-full bg-gray-50 dark:bg-gray-950"
       >
-        <AnimatedShaderBackground variant={isDark ? "dark" : "light"} />
+        <div className="absolute inset-0 bg-[radial-gradient(60rem_60rem_at_12%_-12%,rgba(56,189,248,0.16),transparent_60%),radial-gradient(55rem_55rem_at_100%_8%,rgba(99,102,241,0.13),transparent_55%),radial-gradient(45rem_45rem_at_50%_120%,rgba(6,182,212,0.10),transparent_60%)] dark:bg-[radial-gradient(60rem_60rem_at_12%_-12%,rgba(56,189,248,0.14),transparent_60%),radial-gradient(55rem_55rem_at_100%_8%,rgba(99,102,241,0.14),transparent_55%),radial-gradient(45rem_45rem_at_50%_120%,rgba(6,182,212,0.10),transparent_60%)]" />
+        <div className="absolute inset-0 bg-grid-soft opacity-[0.5] [mask-image:radial-gradient(80%_60%_at_50%_0%,black,transparent)] dark:opacity-30" />
+        <div className="absolute inset-x-0 bottom-0 h-64 bg-gradient-to-t from-gray-50 to-transparent dark:from-gray-950" />
       </div>
+
+      <ScrollProgress />
 
       <div className="relative z-10 min-h-screen">
         <SEO />
@@ -45,12 +46,24 @@ const CV: React.FC = () => {
 
         <Header />
 
-        <main id="main-content" className="page-container py-4 sm:py-6 lg:py-8">
+        <Hero />
+
+        <main className="page-container py-4 sm:py-6 lg:py-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 lg:gap-8">
             <div className="lg:col-span-8 space-y-4 sm:space-y-6 min-w-0">
-              <SectionCard id="about" padding="lg" beam={false} interactive={false}>
-                <Summary />
-              </SectionCard>
+              {/* En móvil mostramos el stack justo tras el hero (versión ligera sin nube) */}
+              <div className="lg:hidden">
+                <SectionCard padding="md" beam={false} interactive={false}>
+                  <TechStack showCloud={false} />
+                </SectionCard>
+              </div>
+
+              {/* Diagrama "cómo construyo" — solo pantalla (decorativo) */}
+              <div className="no-print">
+                <SectionCard padding="lg" beam={false} interactive={false}>
+                  <HowIBuild />
+                </SectionCard>
+              </div>
 
               <SectionCard id="experience" padding="lg" beam={false} interactive={false}>
                 <Experience />
@@ -61,12 +74,14 @@ const CV: React.FC = () => {
               </SectionCard>
             </div>
 
-            <aside className="lg:col-span-4 space-y-4 sm:space-y-6 min-w-0 lg:sticky lg:top-[calc(4.25rem+env(safe-area-inset-top,0px))] lg:self-start">
-              <SectionCard id="skills" padding="md" beam={false} interactive={false}>
-                <TechStack />
-              </SectionCard>
+            <aside className="lg:col-span-4 space-y-4 sm:space-y-6 min-w-0 lg:sticky lg:top-[calc(7.5rem+env(safe-area-inset-top,0px))] lg:self-start">
+              <div className="hidden lg:block">
+                <SectionCard id="skills" padding="md" beam={false} interactive={false}>
+                  <TechStack />
+                </SectionCard>
+              </div>
               <SectionCard padding="md" beam={false} interactive={false}>
-                <SoftSkills />
+                <Languages />
               </SectionCard>
               <SectionCard padding="md" beam={false} interactive={false}>
                 <Education />
@@ -75,19 +90,28 @@ const CV: React.FC = () => {
                 <Certifications />
               </SectionCard>
               <SectionCard padding="md" beam={false} interactive={false}>
-                <Languages />
+                <SoftSkills />
               </SectionCard>
             </aside>
           </div>
         </main>
 
-        <footer className="mt-8 sm:mt-12 py-8 sm:py-10 pb-[max(2rem,env(safe-area-inset-bottom))] border-t bg-white/95 dark:bg-black/70 supports-[backdrop-filter]:backdrop-blur-md text-gray-700 dark:text-white border-gray-200 dark:border-white/10">
-          <div className="page-container text-center space-y-4 px-1">
-            <p className="text-gray-600 dark:text-gray-300 text-sm sm:text-base leading-relaxed">
+        <footer
+          id="contact"
+          className="relative mt-8 sm:mt-12 overflow-hidden border-t border-gray-200 bg-white py-12 sm:py-16 pb-[max(2rem,env(safe-area-inset-bottom))] text-gray-700 dark:border-white/10 dark:bg-gray-950 dark:text-gray-300"
+        >
+          <div
+            aria-hidden
+            className="no-print pointer-events-none absolute inset-0 bg-[radial-gradient(40rem_20rem_at_50%_-20%,rgba(56,189,248,0.18),transparent_70%)]"
+          />
+          <div className="page-container relative text-center">
+            <p className="mx-auto max-w-[34ch] bg-gradient-to-r from-sky-600 to-indigo-600 bg-clip-text text-xl font-extrabold leading-tight text-transparent sm:text-2xl dark:from-sky-400 dark:to-indigo-400 print:text-gray-900">
               {t.hireFooterCta}
             </p>
-            <ContactCtas layout="footer" />
-            <p className="text-gray-500 dark:text-gray-500 text-sm pt-2">
+            <div className="mt-6 flex justify-center">
+              <ContactCtas layout="footer" />
+            </div>
+            <p className="mt-8 text-sm text-gray-500 dark:text-gray-500">
               © {year} {profile.fullName} — {t.footerRole}
             </p>
           </div>

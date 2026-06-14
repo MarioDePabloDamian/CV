@@ -43,11 +43,12 @@ export const techStackCategories: TechStackCategory[] = [
       { name: "Cloudflare", url: "https://www.cloudflare.com", icon: "https://cdn.simpleicons.org/cloudflare/F38020" },
       { name: "Traefik", url: "https://traefik.io", icon: "/icons/traefik.svg" },
       { name: "Nginx", url: "https://nginx.org", icon: "https://cdn.simpleicons.org/nginx/009639" },
+      { name: "Redis", url: "https://redis.io", icon: "https://cdn.simpleicons.org/redis/FF4438" },
       { name: "n8n", url: "https://n8n.io", icon: "https://cdn.simpleicons.org/n8n/EA4B71" },
       { name: "Apigee", url: "https://cloud.google.com/apigee", icon: "/icons/apigee.svg" },
       { name: "Keycloak", url: "https://www.keycloak.org", icon: "https://cdn.simpleicons.org/keycloak/4D4D4D" },
       { name: "Stripe", url: "https://stripe.com", icon: "https://cdn.simpleicons.org/stripe/635BFF" },
-      { name: "OpenClaw", url: "https://nemoclaw.mariodepablo.es", icon: "/icons/openclaw.svg" },
+      { name: "OpenClaw", url: "https://openclaw.ai", icon: "/icons/openclaw.svg" },
     ],
   },
 ];
@@ -60,6 +61,19 @@ export interface TechStackCloudItem {
 export const techStackCloudItems: TechStackCloudItem[] = techStackCategories.flatMap(
   (category) => category.items.map((item) => ({ name: item.name, icon: item.icon }))
 );
+
+const extraStackIcons: Record<string, string> = {
+  "Next.js": "https://cdn.simpleicons.org/nextdotjs/000000",
+  Cloudflare: "https://cdn.simpleicons.org/cloudflare/F38020",
+};
+
+export function getTechStackIcon(name: string): string | undefined {
+  for (const category of techStackCategories) {
+    const item = category.items.find((i) => i.name === name);
+    if (item) return item.icon;
+  }
+  return extraStackIcons[name];
+}
 
 /** @deprecated Use techStackCloudItems */
 export const techStackImages = techStackCloudItems.map((item) => item.icon);
