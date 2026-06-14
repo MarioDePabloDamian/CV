@@ -5,8 +5,52 @@ import { useLanguage } from "../context/LanguageContext";
 import { translations } from "../translations/translations";
 import { profile, mailto } from "../data/profile";
 import { parseRichText } from "../lib/parse-rich-text";
+import { cn } from "@/lib/utils";
 import { BlurFade } from "./ui/blur-fade";
 import { LayoutTextFlip } from "./ui/layout-text-flip";
+
+function HeroPortrait({
+  title,
+  className,
+  size = "lg",
+}: {
+  title: string;
+  className?: string;
+  size?: "md" | "lg";
+}) {
+  return (
+    <div
+      className={cn(
+        "relative mx-auto w-full",
+        size === "lg" ? "max-w-[300px]" : "max-w-[220px] sm:max-w-[240px]",
+        className
+      )}
+    >
+      <div
+        aria-hidden
+        className="absolute -inset-4 rounded-[2rem] bg-gradient-to-br from-sky-400/40 via-indigo-400/30 to-cyan-400/40 opacity-70 blur-2xl"
+      />
+      <div className="relative rounded-[1.75rem] border border-white/40 bg-gradient-to-br from-sky-400 to-indigo-600 p-[2px] shadow-2xl shadow-indigo-500/20 dark:border-white/10">
+        <div className="overflow-hidden rounded-[1.65rem] bg-white dark:bg-gray-950">
+          <img
+            src={profilePhoto}
+            alt={title}
+            className="aspect-square w-full object-cover"
+            width="300"
+            height="300"
+            loading="eager"
+            decoding="async"
+          />
+        </div>
+      </div>
+
+      <div className="absolute -bottom-4 -left-4 z-10 inline-flex items-center gap-2 rounded-xl border border-gray-200 bg-white/90 px-3 py-2 text-xs font-semibold text-gray-800 shadow-lg backdrop-blur-sm dark:border-gray-700 dark:bg-gray-900/90 dark:text-gray-100">
+        <Sparkles size={14} className="text-sky-500" aria-hidden />
+        {profile.employer.name}
+      </div>
+    </div>
+  );
+}
 
 const Hero: React.FC = () => {
   const { language } = useLanguage();
@@ -65,6 +109,10 @@ const Hero: React.FC = () => {
               >
                 <span className="text-gradient-brand">{t.subtitle}</span>
               </h1>
+            </BlurFade>
+
+            <BlurFade inView direction="up" delay={0.12} className="mt-6 lg:hidden">
+              <HeroPortrait title={t.title} size="md" />
             </BlurFade>
 
             <BlurFade inView direction="up" delay={0.16}>
@@ -136,30 +184,7 @@ const Hero: React.FC = () => {
             delay={0.12}
             className="hidden lg:block"
           >
-            <div className="relative mx-auto w-full max-w-[300px]">
-              <div
-                aria-hidden
-                className="absolute -inset-4 rounded-[2rem] bg-gradient-to-br from-sky-400/40 via-indigo-400/30 to-cyan-400/40 opacity-70 blur-2xl"
-              />
-              <div className="relative rounded-[1.75rem] border border-white/40 bg-gradient-to-br from-sky-400 to-indigo-600 p-[2px] shadow-2xl shadow-indigo-500/20 dark:border-white/10">
-                <div className="overflow-hidden rounded-[1.65rem] bg-white dark:bg-gray-950">
-                  <img
-                    src={profilePhoto}
-                    alt={t.title}
-                    className="aspect-square w-full object-cover"
-                    width="300"
-                    height="300"
-                    loading="eager"
-                    decoding="async"
-                  />
-                </div>
-              </div>
-
-              <div className="absolute -bottom-4 -left-4 z-10 inline-flex items-center gap-2 rounded-xl border border-gray-200 bg-white/90 px-3 py-2 text-xs font-semibold text-gray-800 shadow-lg backdrop-blur-sm dark:border-gray-700 dark:bg-gray-900/90 dark:text-gray-100">
-                <Sparkles size={14} className="text-sky-500" aria-hidden />
-                {profile.employer.name}
-              </div>
-            </div>
+            <HeroPortrait title={t.title} />
           </BlurFade>
         </div>
       </div>

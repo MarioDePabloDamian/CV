@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Github, Linkedin, Mail } from "lucide-react";
-import profilePhoto from "../assets/FotoCV.jpg";
 import { useLanguage } from "../context/LanguageContext";
 import { translations } from "../translations/translations";
 import { profile, mailto } from "../data/profile";
@@ -27,26 +26,23 @@ const Header: React.FC = () => {
   const navItems = [
     { name: t.navExperience, link: "#experience" },
     { name: t.navProjects, link: "#projects" },
-    { name: t.navContact, link: "#contact" },
   ];
 
   const Logo = (
     <a
       href="#main-content"
-      className="flex shrink-0 items-center gap-2 rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500"
+      aria-label={t.title}
+      className="flex shrink-0 items-center rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500"
     >
       <img
-        src={profilePhoto}
-        alt={t.title}
-        className="size-8 rounded-full border-2 border-sky-400 object-cover dark:border-sky-500"
-        width="32"
-        height="32"
+        src="/logo.png"
+        alt=""
+        className="size-9 object-contain sm:size-10"
+        width="40"
+        height="40"
         loading="eager"
         decoding="async"
       />
-      <span className="text-sm font-bold text-gray-900 dark:text-gray-100">
-        Mario de Pablo
-      </span>
     </a>
   );
 
@@ -96,7 +92,7 @@ const Header: React.FC = () => {
               <MobileNavToggle
                 isOpen={menuOpen}
                 onClick={() => setMenuOpen((v) => !v)}
-                label={menuOpen ? t.navContact : t.navMenu}
+                label={menuOpen ? t.navCloseMenu : t.navMenu}
               />
             </div>
           </MobileNavHeader>

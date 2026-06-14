@@ -107,9 +107,9 @@ export interface TranslationKeys {
   themeToLight: string;
   availableBadge: string;
   navMenu: string;
+  navCloseMenu: string;
   navExperience: string;
   navProjects: string;
-  navContact: string;
   contactMe: string;
   downloadCv: string;
   hireFooterCta: string;
@@ -295,9 +295,9 @@ export const translations: Translations = {
     themeToLight: "Cambiar a modo claro",
     availableBadge: "DevOps & Fullstack · CIVIR",
     navMenu: "Menú",
+    navCloseMenu: "Cerrar menú",
     navExperience: "Experiencia",
     navProjects: "Proyectos",
-    navContact: "Contacto",
     contactMe: "Contactar",
     downloadCv: "Descargar CV",
     hireFooterCta: "¿Te encaja mi perfil? Escríbeme y hablamos.",
@@ -475,9 +475,9 @@ export const translations: Translations = {
     themeToLight: "Switch to light mode",
     availableBadge: "DevOps & Fullstack · CIVIR",
     navMenu: "Menu",
+    navCloseMenu: "Close menu",
     navExperience: "Experience",
     navProjects: "Projects",
-    navContact: "Contact",
     contactMe: "Contact me",
     downloadCv: "Download CV",
     hireFooterCta: "Interested in my profile? Get in touch.",
