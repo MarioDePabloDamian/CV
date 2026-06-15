@@ -57,12 +57,6 @@ const CV: React.FC = () => {
                 </SectionCard>
               </div>
 
-              <div className="no-print">
-                <SectionCard padding="lg" beam={false} interactive={false}>
-                  <HowIBuild />
-                </SectionCard>
-              </div>
-
               <SectionCard id="experience" padding="lg" beam={false} interactive={false}>
                 <Experience />
               </SectionCard>
@@ -70,6 +64,12 @@ const CV: React.FC = () => {
               <SectionCard id="projects" padding="lg" beam={false} interactive={false}>
                 <Projects />
               </SectionCard>
+
+              <div className="no-print hidden lg:block">
+                <SectionCard padding="lg" beam={false} interactive={false}>
+                  <HowIBuild />
+                </SectionCard>
+              </div>
             </div>
 
             <aside className="lg:col-span-4 space-y-4 sm:space-y-6 min-w-0 lg:sticky lg:top-[calc(7.5rem+env(safe-area-inset-top,0px))] lg:self-start">
@@ -79,13 +79,13 @@ const CV: React.FC = () => {
                 </SectionCard>
               </div>
               <SectionCard padding="md" beam={false} interactive={false}>
-                <Languages />
-              </SectionCard>
-              <SectionCard padding="md" beam={false} interactive={false}>
                 <Education />
               </SectionCard>
               <SectionCard padding="md" beam={false} interactive={false}>
                 <Certifications />
+              </SectionCard>
+              <SectionCard padding="md" beam={false} interactive={false}>
+                <Languages />
               </SectionCard>
               <SectionCard padding="md" beam={false} interactive={false}>
                 <SoftSkills />

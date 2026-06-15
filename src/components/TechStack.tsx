@@ -36,6 +36,7 @@ const TechStack: React.FC<TechStackProps> = ({ showCloud = true }) => {
               label: item.name,
             }))}
             size={cloudSize}
+            ariaLabel={t.techStackHint}
             className="mx-auto w-full max-w-[min(100%,280px)] h-auto aspect-square"
           />
         </div>

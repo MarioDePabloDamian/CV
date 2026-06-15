@@ -27,6 +27,7 @@ const Header: React.FC = () => {
   const navItems = [
     { name: t.navExperience, link: "#experience" },
     { name: t.navProjects, link: "#projects" },
+    { name: t.navContact, link: "#contact" },
   ];
 
   const Logo = (

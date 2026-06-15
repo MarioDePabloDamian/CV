@@ -1,5 +1,5 @@
 import React from "react";
-import { ArrowRight, Briefcase, Mail, MapPin, Sparkles, Wifi } from "lucide-react";
+import { ArrowRight, Briefcase, Mail, MapPin, Printer, Sparkles, Wifi } from "lucide-react";
 import { FaGithub, FaLinkedin } from "react-icons/fa";
 const profilePhoto = "/FotoCV.jpg";
 import { useLanguage } from "../context/LanguageContext";
@@ -154,6 +154,14 @@ const Hero: React.FC = () => {
                     aria-hidden
                   />
                 </a>
+                <button
+                  type="button"
+                  onClick={() => window.print()}
+                  className="no-print inline-flex items-center gap-2 rounded-xl border border-gray-300 bg-white/70 px-5 py-3 text-sm font-semibold text-gray-800 backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-sky-400 hover:text-sky-700 dark:border-gray-700 dark:bg-gray-900/50 dark:text-gray-200 dark:hover:border-sky-600 dark:hover:text-sky-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-950"
+                >
+                  <Printer size={16} aria-hidden />
+                  {t.downloadCv}
+                </button>
 
                 <div className="flex items-center gap-2">
                   <a

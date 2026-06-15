@@ -12,6 +12,7 @@ export interface IconCloudProps {
   items?: IconCloudItem[];
   className?: string;
   size?: number;
+  ariaLabel?: string;
 }
 
 // ---------------------------------------------------------------------------
@@ -113,6 +114,7 @@ function IconCloudLegacy({
   items,
   className,
   size = 400,
+  ariaLabel = "Interactive technology icon cloud",
 }: IconCloudProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animationFrameRef = useRef<number>(0);
@@ -237,9 +239,31 @@ function IconCloudLegacy({
 
     let running = true;
     let isVisible = true;
+    let rafId: number | null = null;
+
+    const stopLoop = () => {
+      if (rafId !== null) {
+        cancelAnimationFrame(rafId);
+        rafId = null;
+        animationFrameRef.current = 0;
+      }
+    };
+
+    const scheduleLoop = () => {
+      if (!running || !isVisible || rafId !== null) return;
+      rafId = requestAnimationFrame(animate);
+      animationFrameRef.current = rafId;
+    };
 
     const observer = new IntersectionObserver(
-      ([entry]) => { isVisible = entry.isIntersecting; },
+      ([entry]) => {
+        isVisible = entry.isIntersecting;
+        if (isVisible) {
+          scheduleLoop();
+        } else {
+          stopLoop();
+        }
+      },
       { threshold: 0 }
     );
     observer.observe(canvas);
@@ -248,10 +272,15 @@ function IconCloudLegacy({
 
     const animate = () => {
       if (!running) return;
-      if (!isVisible) { animationFrameRef.current = requestAnimationFrame(animate); return; }
+      rafId = null;
+
+      if (!isVisible) return;
 
       const iconPositions = iconPositionsRef.current;
-      if (iconPositions.length === 0) { animationFrameRef.current = requestAnimationFrame(animate); return; }
+      if (iconPositions.length === 0) {
+        scheduleLoop();
+        return;
+      }
 
       ctx.clearRect(0, 0, size, size);
       const centerX = size / 2;
@@ -260,7 +289,7 @@ function IconCloudLegacy({
       const maxDistance = Math.sqrt(centerX * centerX + centerY * centerY);
       const dx = pointerPos.x - centerX;
       const dy = pointerPos.y - centerY;
-      const speed = 0.003 + (Math.sqrt(dx * dx + dy * dy) / maxDistance) * 0.01;
+      const speed = 0.006 + (Math.sqrt(dx * dx + dy * dy) / maxDistance) * 0.02;
       const targetRotation = targetRotationRef.current;
 
       if (targetRotation) {
@@ -274,8 +303,8 @@ function IconCloudLegacy({
         if (progress >= 1) targetRotationRef.current = null;
       } else if (!isDraggingRef.current && !reduceMotionRef.current) {
         rotationRef.current = {
-          x: rotationRef.current.x + 0.001 + (dy / size) * speed,
-          y: rotationRef.current.y + 0.003 + (dx / size) * speed,
+          x: rotationRef.current.x + 0.0025 + (dy / size) * speed,
+          y: rotationRef.current.y + 0.007 + (dx / size) * speed,
         };
       }
 
@@ -302,15 +331,15 @@ function IconCloudLegacy({
         );
       }
       ctx.globalAlpha = 1;
-      animationFrameRef.current = requestAnimationFrame(animate);
+      scheduleLoop();
     };
 
-    animate();
+    scheduleLoop();
 
     return () => {
       running = false;
       observer.disconnect();
-      if (animationFrameRef.current) cancelAnimationFrame(animationFrameRef.current);
+      stopLoop();
     };
   }, [size]);
 
@@ -413,7 +442,7 @@ function IconCloudLegacy({
         aspectRatio: "1 / 1",
         touchAction: "none",
       }}
-      aria-label="Nube interactiva de tecnologías"
+      aria-label={ariaLabel}
       role="img"
     />
   );

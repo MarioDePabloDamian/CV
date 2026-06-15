@@ -53,21 +53,48 @@ export interface TranslationKeys {
   educationSchool: string;
   educationCity: string;
   educationDate: string;
+  educationSubtitle: string;
+  educationDegreeBadge: string;
+  educationHighlight1: string;
+  educationHighlight2: string;
+  educationHighlight3: string;
   skill1: string;
   skill2: string;
   skill3: string;
   skill4: string;
   skill5: string;
   skill6: string;
+  skill1Short: string;
+  skill2Short: string;
+  skill3Short: string;
+  skill4Short: string;
+  skill5Short: string;
+  skill6Short: string;
   spanish: string;
   english: string;
   native: string;
-  level: string;
-  levelDescription: string;
+  languageLevelB2: string;
+  languageExamDate: string;
+  languageCurrentLevel: string;
   copyright: string;
   certReact: string;
   certFastAPI: string;
   certOdoo: string;
+  certReactShort: string;
+  certReactValue: string;
+  certFastAPIShort: string;
+  certFastAPIValue: string;
+  certOdooShort: string;
+  certOdooValue: string;
+  certCambridgeShort: string;
+  certCambridgeValue: string;
+  certElasticShort: string;
+  certElasticValue: string;
+  certCategoryDev: string;
+  certCategoryObservability: string;
+  certCategoryLanguage: string;
+  certCategoryErp: string;
+  certificationsSubtitle: string;
   personalProjects: string;
   projectFeatured: string;
   projectLive: string;
@@ -110,11 +137,13 @@ export interface TranslationKeys {
   navCloseMenu: string;
   navExperience: string;
   navProjects: string;
+  navContact: string;
   contactMe: string;
   downloadCv: string;
   hireFooterCta: string;
   skillsTechnical: string;
   skillsSoft: string;
+  skillsSoftSubtitle: string;
   techCategoryDevelopment: string;
   techCategoryInfrastructure: string;
   techCategoryObservability: string;
@@ -147,12 +176,12 @@ export const translations: Translations = {
     // Sections
     education: "Formación",
     skills: "Aptitudes",
-    certifications: "Diplomas",
+    certifications: "Certificaciones",
     languages: "Idiomas",
     experience: "Experiencia Profesional",
 
     summary:
-      "<strong>DevOps & Fullstack Developer</strong> en CIVIR. Construyo aplicaciones web, APIs e integraciones entre sistemas.",
+      "Construyo webs, APIs, automatizaciones e integraciones entre sistemas.",
     heroLocation: "Rivas-Vaciamadrid · Remoto",
     experienceTitle: "DevOps Engineer | Fullstack Developer",
     experienceCompany: "CIVIR",
@@ -216,6 +245,11 @@ export const translations: Translations = {
     educationSchool: "Davante MEDAC Albalá",
     educationCity: "Madrid",
     educationDate: "06/2025",
+    educationSubtitle: "Base académica alineada con mi stack actual",
+    educationDegreeBadge: "Titulación oficial",
+    educationHighlight1: "Desarrollo web, móvil y de escritorio con arquitectura multiplataforma",
+    educationHighlight2: "Bases de datos, APIs e integración entre sistemas",
+    educationHighlight3: "Metodologías ágiles y ciclo completo de entrega de software",
 
     // Skills
     skill1: "Alta capacidad de aprendizaje",
@@ -224,13 +258,20 @@ export const translations: Translations = {
     skill4: "Adaptabilidad y flexibilidad",
     skill5: "Trabajo en equipo",
     skill6: "Orientación a resultados",
+    skill1Short: "Aprendizaje",
+    skill2Short: "Lógica",
+    skill3Short: "Detalle",
+    skill4Short: "Flexibilidad",
+    skill5Short: "Equipo",
+    skill6Short: "Resultados",
 
     // Languages
     spanish: "Español",
     english: "Inglés",
     native: "Nativo",
-    level: "B2 - C1",
-    levelDescription: "Intermedio alto - Avanzado",
+    languageLevelB2: "B2",
+    languageExamDate: "11 jun 2022",
+    languageCurrentLevel: "Practico a diario con amigos ingleses",
 
     // Footer
     copyright: "© 2025 Mario de Pablo Damián - Fullstack Developer",
@@ -239,6 +280,21 @@ export const translations: Translations = {
     certReact: "Formación certificada en React",
     certFastAPI: "Formación certificada en FastAPI",
     certOdoo: "Formación certificada en Odoo",
+    certReactShort: "React",
+    certReactValue: "Interfaces de producción — hooks, estado y arquitectura de componentes",
+    certFastAPIShort: "FastAPI",
+    certFastAPIValue: "APIs tipadas, async y documentación OpenAPI lista para integrar",
+    certOdooShort: "Odoo",
+    certOdooValue: "ERP a medida — migraciones CRM y módulos personalizados",
+    certCambridgeShort: "Cambridge FCE",
+    certCambridgeValue: "Cambridge B2 — 11/06/2022",
+    certElasticShort: "Elastic Observability",
+    certElasticValue: "Logs, métricas y monitorización en entornos de producción",
+    certCategoryDev: "Desarrollo",
+    certCategoryObservability: "Observabilidad",
+    certCategoryLanguage: "Idiomas",
+    certCategoryErp: "ERP / CRM",
+    certificationsSubtitle: "Formación continua alineada con proyectos reales",
 
     // Projects
     personalProjects: "Proyectos personales",
@@ -298,11 +354,13 @@ export const translations: Translations = {
     navCloseMenu: "Cerrar menú",
     navExperience: "Experiencia",
     navProjects: "Proyectos",
+    navContact: "Contacto",
     contactMe: "Contactar",
     downloadCv: "Descargar CV",
     hireFooterCta: "¿Te encaja mi perfil? Escríbeme y hablamos.",
     skillsTechnical: "Stack técnico",
     skillsSoft: "Competencias",
+    skillsSoftSubtitle: "Fortalezas que aplico en cada entrega",
     techCategoryDevelopment: "Desarrollo",
     techCategoryInfrastructure: "Infraestructura",
     techCategoryObservability: "Observabilidad",
@@ -333,7 +391,7 @@ export const translations: Translations = {
     experience: "Professional Experience",
 
     summary:
-      "<strong>DevOps & Fullstack Developer</strong> at CIVIR. I build web applications, APIs, and system integrations.",
+      "I build websites, APIs, automations, and integrations between systems.",
     heroLocation: "Rivas-Vaciamadrid · Remote",
 
     experienceTitle: "DevOps Engineer | Fullstack Developer",
@@ -397,6 +455,11 @@ export const translations: Translations = {
     educationSchool: "Davante MEDAC Albalá",
     educationCity: "Madrid",
     educationDate: "06/2025",
+    educationSubtitle: "Academic foundation aligned with my current stack",
+    educationDegreeBadge: "Official degree",
+    educationHighlight1: "Web, mobile, and desktop development with multi-platform architecture",
+    educationHighlight2: "Databases, APIs, and system integration",
+    educationHighlight3: "Agile methods and full software delivery lifecycle",
 
     // Skills
     skill1: "Very fast learning ability",
@@ -405,13 +468,20 @@ export const translations: Translations = {
     skill4: "Adaptability and flexibility",
     skill5: "Teamwork",
     skill6: "Results-oriented",
+    skill1Short: "Learning",
+    skill2Short: "Logic",
+    skill3Short: "Detail",
+    skill4Short: "Flexibility",
+    skill5Short: "Teamwork",
+    skill6Short: "Results",
 
     // Languages
     spanish: "Spanish",
     english: "English",
     native: "Native",
-    level: "B2 - C1",
-    levelDescription: "Intermediate high - Advanced",
+    languageLevelB2: "B2",
+    languageExamDate: "Jun 11, 2022",
+    languageCurrentLevel: "Daily practice with English friends",
 
     // Footer
     copyright: "© 2025 Mario de Pablo Damián - Fullstack Developer",
@@ -420,6 +490,21 @@ export const translations: Translations = {
     certReact: "Certified Training in React",
     certFastAPI: "Certified Training in FastAPI",
     certOdoo: "Certified Training in Odoo",
+    certReactShort: "React",
+    certReactValue: "Production-grade UI — hooks, state, and component architecture",
+    certFastAPIShort: "FastAPI",
+    certFastAPIValue: "Typed async APIs with OpenAPI docs ready to integrate",
+    certOdooShort: "Odoo",
+    certOdooValue: "Custom ERP — CRM migrations and tailored modules",
+    certCambridgeShort: "Cambridge FCE",
+    certCambridgeValue: "Cambridge B2 — 11/06/2022",
+    certElasticShort: "Elastic Observability",
+    certElasticValue: "Logs, metrics, and monitoring in production environments",
+    certCategoryDev: "Development",
+    certCategoryObservability: "Observability",
+    certCategoryLanguage: "Languages",
+    certCategoryErp: "ERP / CRM",
+    certificationsSubtitle: "Continuous learning tied to real project work",
 
     // Projects
     personalProjects: "Personal projects",
@@ -478,11 +563,13 @@ export const translations: Translations = {
     navCloseMenu: "Close menu",
     navExperience: "Experience",
     navProjects: "Projects",
+    navContact: "Contact",
     contactMe: "Contact me",
     downloadCv: "Download CV",
     hireFooterCta: "Interested in my profile? Get in touch.",
     skillsTechnical: "Technical stack",
     skillsSoft: "Core strengths",
+    skillsSoftSubtitle: "Strengths I bring to every delivery",
     techCategoryDevelopment: "Development",
     techCategoryInfrastructure: "Infrastructure",
     techCategoryObservability: "Observability",
