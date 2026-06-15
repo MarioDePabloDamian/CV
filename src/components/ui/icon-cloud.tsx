@@ -19,16 +19,14 @@ export interface IconCloudProps {
 // ---------------------------------------------------------------------------
 
 const ICON_SIZE = 40;
-/** Extra resolution multiplier so icons stay sharp when downscaled */
-const ICON_SUPERSAMPLE = 3;
 
 function getDpr() {
   return window.devicePixelRatio || 1;
 }
 
+/** Native display resolution for each icon buffer */
 function getIconBufferSize() {
-  const dpr = getDpr();
-  return Math.max(128, Math.round(ICON_SIZE * dpr * ICON_SUPERSAMPLE));
+  return Math.round(ICON_SIZE * getDpr());
 }
 
 function configureCanvasQuality(ctx: CanvasRenderingContext2D) {
@@ -40,8 +38,8 @@ function easeOutCubic(t: number): number {
   return 1 - Math.pow(1 - t, 3);
 }
 
-/** Rasterize an image at full target resolution (critical for crisp SVG icons) */
-async function rasterizeIcon(
+/** Rasterize icon/SVG at exact pixel size (drawImage dest size drives SVG resolution) */
+function rasterizeIcon(
   ctx: CanvasRenderingContext2D,
   img: HTMLImageElement,
   pixelSize: number
@@ -50,37 +48,18 @@ async function rasterizeIcon(
 
   const center = pixelSize / 2;
   const drawSize = Math.round(pixelSize * 0.85);
+  const offset = (pixelSize - drawSize) / 2;
 
   ctx.save();
   ctx.beginPath();
   ctx.arc(center, center, center, 0, Math.PI * 2);
   ctx.clip();
-
-  try {
-    const bitmap = await createImageBitmap(img, {
-      resizeWidth: drawSize,
-      resizeHeight: drawSize,
-      resizeQuality: "high",
-    });
-    ctx.drawImage(
-      bitmap,
-      (pixelSize - drawSize) / 2,
-      (pixelSize - drawSize) / 2,
-      drawSize,
-      drawSize
-    );
-    bitmap.close();
-  } catch {
-    const scale = Math.min(
-      drawSize / (img.naturalWidth || drawSize),
-      drawSize / (img.naturalHeight || drawSize)
-    );
-    const w = (img.naturalWidth || drawSize) * scale;
-    const h = (img.naturalHeight || drawSize) * scale;
-    ctx.drawImage(img, (pixelSize - w) / 2, (pixelSize - h) / 2, w, h);
-  }
-
+  ctx.drawImage(img, offset, offset, drawSize, drawSize);
   ctx.restore();
+}
+
+function isExternalUrl(src: string) {
+  return /^https?:\/\//i.test(src);
 }
 
 function drawFallbackOn(
@@ -188,25 +167,30 @@ function IconCloudLegacy({
 
       const loadIcon = (img: HTMLImageElement) => {
         offCtx.clearRect(0, 0, offscreen.width, offscreen.height);
-        void rasterizeIcon(offCtx, img, iconPixelSize)
-          .then(() => markReady())
-          .catch(() => markReady(true));
+        try {
+          rasterizeIcon(offCtx, img, iconPixelSize);
+          markReady();
+        } catch {
+          markReady(true);
+        }
       };
 
       if (icons) {
         const el = icons[index] as React.ReactElement<Record<string, unknown>>;
         const img = new Image();
+        const src = (el.props?.src as string) ?? "";
+        if (isExternalUrl(src)) img.crossOrigin = "anonymous";
         img.onload = () => loadIcon(img);
         img.onerror = () => markReady(true);
         if (typeof el?.type === "string" && (el.type === "img" || el.type === "svg")) {
-          img.src = (el.props?.src as string) ?? "";
+          img.src = src;
         } else {
           markReady(true);
         }
       } else {
         const src = imageSources[index];
         const img = new Image();
-        if (src.includes("cdn.simpleicons.org")) img.crossOrigin = "anonymous";
+        if (isExternalUrl(src)) img.crossOrigin = "anonymous";
         img.onload = () => loadIcon(img);
         img.onerror = () => markReady(true);
         img.src = src;
