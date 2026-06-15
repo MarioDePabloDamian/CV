@@ -49,11 +49,17 @@ const CV: React.FC = () => {
         <Hero />
 
         <main className="page-container py-4 sm:py-6 lg:py-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 lg:gap-8">
-            <div className="lg:col-span-8 space-y-4 sm:space-y-6 min-w-0">
+          <div className="grid grid-cols-1 gap-4 sm:gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(17.5rem,22rem)] lg:gap-8 2xl:grid-cols-[minmax(0,1fr)_minmax(18rem,24rem)] 2xl:gap-10">
+            <div className="min-w-0 space-y-4 sm:space-y-6 2xl:space-y-8">
               <div className="lg:hidden">
                 <SectionCard padding="md" beam={false} interactive={false}>
                   <TechStack />
+                </SectionCard>
+              </div>
+
+              <div className="no-print">
+                <SectionCard padding="lg" beam={false} interactive={false}>
+                  <HowIBuild />
                 </SectionCard>
               </div>
 
@@ -64,15 +70,9 @@ const CV: React.FC = () => {
               <SectionCard id="projects" padding="lg" beam={false} interactive={false}>
                 <Projects />
               </SectionCard>
-
-              <div className="no-print hidden lg:block">
-                <SectionCard padding="lg" beam={false} interactive={false}>
-                  <HowIBuild />
-                </SectionCard>
-              </div>
             </div>
 
-            <aside className="lg:col-span-4 space-y-4 sm:space-y-6 min-w-0 lg:sticky lg:top-[calc(7.5rem+env(safe-area-inset-top,0px))] lg:self-start">
+            <aside className="min-w-0 space-y-4 sm:space-y-6 2xl:space-y-8 lg:sticky lg:top-[calc(7.5rem+env(safe-area-inset-top,0px))] lg:self-start">
               <div className="hidden lg:block">
                 <SectionCard id="skills" padding="md" beam={false} interactive={false}>
                   <TechStack />

@@ -81,11 +81,11 @@ const ProjectTimeline: React.FC<{ projects: TimelineProject[] }> = ({
                 </span>
               )}
 
-              <p className="max-w-[72ch] mt-3.5 text-sm text-gray-800 dark:text-gray-200 leading-relaxed">
+              <p className="max-w-[72ch] 2xl:max-w-none mt-3.5 text-sm text-gray-800 dark:text-gray-200 leading-relaxed">
                 {parseRichText(project.description)}
               </p>
 
-              <ul className="max-w-[72ch] mt-3.5 space-y-2.5 list-none border-t border-gray-200 dark:border-gray-700/70 pt-3.5">
+              <ul className="max-w-[72ch] 2xl:max-w-none mt-3.5 space-y-2.5 list-none border-t border-gray-200 dark:border-gray-700/70 pt-3.5">
                 {project.responsibilities.map((resp, rIdx) => (
                   <li
                     key={rIdx}

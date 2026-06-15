@@ -23,7 +23,9 @@ function HeroPortrait({
     <div
       className={cn(
         "relative mx-auto w-full",
-        size === "lg" ? "max-w-[300px]" : "max-w-[220px] sm:max-w-[240px]",
+        size === "lg"
+          ? "max-w-[300px] xl:max-w-[340px] 2xl:max-w-[380px]"
+          : "max-w-[220px] sm:max-w-[240px]",
         className
       )}
     >
@@ -82,7 +84,7 @@ const Hero: React.FC = () => {
       />
 
       <div className="page-container relative py-10 sm:py-14 lg:py-16">
-        <div className="grid items-center gap-8 lg:grid-cols-[1.4fr_1fr] lg:gap-12">
+        <div className="grid items-center gap-8 lg:grid-cols-[1.4fr_1fr] lg:gap-12 xl:grid-cols-[1.55fr_1fr] xl:gap-14 2xl:grid-cols-[1.65fr_1fr]">
           <div className="min-w-0">
             <BlurFade inView direction="up">
               <div className="flex flex-wrap items-center gap-2.5">
@@ -118,10 +120,10 @@ const Hero: React.FC = () => {
             </BlurFade>
 
             <BlurFade inView direction="up" delay={0.16}>
-              <p className="mt-5 max-w-[60ch] text-base leading-relaxed text-gray-700 sm:text-lg dark:text-gray-300">
+              <p className="mt-5 max-w-[60ch] text-base leading-relaxed text-gray-700 sm:text-lg 2xl:max-w-none dark:text-gray-300">
                 {parseRichText(t.summary)}
               </p>
-              <p className="mt-3 max-w-[56ch] text-sm leading-relaxed text-gray-500 dark:text-gray-400">
+              <p className="mt-3 max-w-[56ch] text-sm leading-relaxed text-gray-500 2xl:max-w-none dark:text-gray-400">
                 {t.heroTagline}
               </p>
               <p className="mt-3 text-sm font-semibold text-gray-500 dark:text-gray-400">

@@ -131,7 +131,7 @@ const Projects: React.FC = () => {
         {t.personalProjects}
       </SectionHeading>
 
-      <BentoGrid className="md:grid-cols-6">
+      <BentoGrid className="md:grid-cols-6 2xl:gap-6">
         {projects.map((project, idx) => {
           const IconComponent = project.icon;
           const styles = accentStyles[project.accent];

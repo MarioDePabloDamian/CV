@@ -58,13 +58,13 @@ const HowIBuild: React.FC = () => {
 
       <div
         ref={containerRef}
-        className="relative mt-4 flex h-[250px] w-full items-stretch justify-between px-1 sm:px-4"
+        className="relative mt-4 flex h-[250px] w-full items-stretch justify-between px-1 sm:px-4 xl:h-[280px] xl:px-8 2xl:h-[320px] 2xl:px-12"
       >
         {/* Casi siempre (rejilla 2x2) */}
         <div className="flex flex-col">
           <GroupLabel>{t.howIBuildAlways}</GroupLabel>
           <div className="flex flex-1 items-center">
-            <div className="grid grid-cols-2 gap-x-5 gap-y-6 sm:gap-x-7">
+            <div className="grid grid-cols-2 gap-x-5 gap-y-6 sm:gap-x-7 xl:gap-x-10 2xl:gap-x-14">
               <Node ref={reactRef} label="React">
                 <img src={icon("react", "61DAFB")} alt="" className="size-full" />
               </Node>
@@ -107,7 +107,7 @@ const HowIBuild: React.FC = () => {
         <div className="flex flex-col">
           <GroupLabel>{t.howIBuildDepends}</GroupLabel>
           <div className="flex flex-1 items-center">
-            <div className="grid grid-cols-2 gap-x-5 gap-y-6 sm:gap-x-7">
+            <div className="grid grid-cols-2 gap-x-5 gap-y-6 sm:gap-x-7 xl:gap-x-10 2xl:gap-x-14">
               <Node ref={redisRef} label="Redis">
                 <img src={icon("redis", "FF4438")} alt="" className="size-full" />
               </Node>

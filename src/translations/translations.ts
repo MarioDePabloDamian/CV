@@ -186,11 +186,11 @@ export const translations: Translations = {
     experienceTitle: "DevOps Engineer | Fullstack Developer",
     experienceCompany: "CIVIR",
     experiencePeriod: "Mar 2025 - Actual",
-    project1: "Plataforma fullstack — Telefónica",
+    project1: "Observabilidad Industrial",
     project1Desc:
       "Desarrollé la <strong>plataforma de extremo a extremo</strong> para Telefónica, <strong>entregando frontend, APIs, persistencia y pipelines de despliegue</strong>, mediante React, FastAPI, Docker, PostgreSQL y GitHub Actions.",
     project1Designation: "Cliente: Telefónica",
-    project2: "Proyecto HORECA - CRM + asistente de IA",
+    project2: "HORECA",
     project2Designation: "Cliente: Vincci Hoteles",
     project2Desc:
       "Estabilicé el <strong>CRM con asistente de IA</strong> de Vincci Hoteles, <strong>recortando incidencias críticas de QA y mejorando usabilidad</strong>, pasando de QA a desarrollo activo en frontend y backend con pruebas automatizadas.",
@@ -397,11 +397,11 @@ export const translations: Translations = {
     experienceTitle: "DevOps Engineer | Fullstack Developer",
     experienceCompany: "CIVIR",
     experiencePeriod: "Mar 2025 - Present",
-    project1: "Fullstack platform — Telefónica",
+    project1: "Industrial Observability",
     project1Desc:
       "Built the <strong>end-to-end platform</strong> for Telefónica, <strong>delivering frontend, APIs, data persistence, and deployment pipelines</strong>, using React, FastAPI, Docker, PostgreSQL, and GitHub Actions.",
     project1Designation: "Client: Telefónica",
-    project2: "HORECA Project - CRM + AI assistant",
+    project2: "HORECA",
     project2Designation: "Client: Vincci Hoteles",
     project2Desc:
       "Stabilized Vincci Hoteles' <strong>CRM with AI assistant</strong>, <strong>cutting critical QA defects and improving usability</strong>, by moving from QA to active frontend and backend development with automated testing.",

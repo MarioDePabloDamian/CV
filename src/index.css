@@ -55,6 +55,11 @@
   color utility to any element that depends on these defaults.
 */
 @layer base {
+  :root {
+    /* Suelo 90rem; en pantallas anchas escala con el viewport (~92vw) */
+    --layout-max-width: max(90rem, 92vw);
+  }
+
   *,
   ::after,
   ::before,
@@ -66,7 +71,7 @@
 
 @utility page-container {
   width: 100%;
-  max-width: min(100%, 90rem);
+  max-width: min(100%, var(--layout-max-width));
   margin-inline: auto;
   padding-left: max(clamp(1rem, 3vw, 2.5rem), env(safe-area-inset-left, 0px));
   padding-right: max(clamp(1rem, 3vw, 2.5rem), env(safe-area-inset-right, 0px));

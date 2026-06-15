@@ -74,7 +74,7 @@ export function NavBody({
   return (
     <div
       style={{
-        width: visible ? "min(100%, 60rem)" : "100%",
+        width: visible ? "min(100%, var(--layout-max-width))" : "100%",
         transform: visible ? "translateY(10px)" : "none",
         transition: ready && !reduceMotion ? NAV_SPRING : "none",
       }}
