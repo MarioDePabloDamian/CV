@@ -1,4 +1,3 @@
-import { FiCheck } from "react-icons/fi";
 import { useLanguage } from "../context/LanguageContext";
 import { translations } from "../translations/translations";
 import { certifications } from "../data/credentials";
