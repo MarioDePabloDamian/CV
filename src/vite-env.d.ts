@@ -1,5 +1,8 @@
 /// <reference types="vite/client" />
 
+// Side-effect-only font imports from @fontsource packages have no exports
+declare module "@fontsource-variable/montserrat";
+
 declare module "*.jpg" {
   const src: string;
   export default src;

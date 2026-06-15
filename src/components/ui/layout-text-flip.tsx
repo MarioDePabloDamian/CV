@@ -16,7 +16,7 @@ export const LayoutTextFlip: React.FC<LayoutTextFlipProps> = ({
 }) => {
   const [index, setIndex] = useState(0);
   const [phase, setPhase] = useState<"visible" | "exiting">("visible");
-  const timerRef = useRef<ReturnType<typeof setTimeout>>();
+  const timerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   useEffect(() => {
     const tick = setInterval(() => {

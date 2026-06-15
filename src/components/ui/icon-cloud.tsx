@@ -317,9 +317,7 @@ function IconCloudLegacy({
       };
 
       if (icons) {
-        // SVG icons path: needs react-dom/server only if this prop is used
-        const el = icons[index] as React.ReactElement;
-        const svgString = el?.props?.svg ?? el?.props?.children ?? "";
+        const el = icons[index] as React.ReactElement<Record<string, unknown>>;
         const img = new Image();
         img.onload = () => {
           offCtx.clearRect(0, 0, offscreen.width, offscreen.height);
@@ -329,7 +327,7 @@ function IconCloudLegacy({
         };
         img.onerror = () => markReady(true);
         if (typeof el?.type === "string" && (el.type === "img" || el.type === "svg")) {
-          img.src = el.props?.src ?? "";
+          img.src = (el.props?.src as string) ?? "";
         } else {
           markReady(true);
         }
