@@ -18,41 +18,83 @@ export interface IconCloudProps {
 // Shared helpers
 // ---------------------------------------------------------------------------
 
+const ICON_SIZE = 40;
+/** Extra resolution multiplier so icons stay sharp when downscaled */
+const ICON_SUPERSAMPLE = 3;
+
+function getDpr() {
+  return window.devicePixelRatio || 1;
+}
+
+function getIconBufferSize() {
+  const dpr = getDpr();
+  return Math.max(128, Math.round(ICON_SIZE * dpr * ICON_SUPERSAMPLE));
+}
+
+function configureCanvasQuality(ctx: CanvasRenderingContext2D) {
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = "high";
+}
+
 function easeOutCubic(t: number): number {
   return 1 - Math.pow(1 - t, 3);
 }
 
-/** Draw a circular clipped icon onto a 40×40 canvas element */
-function drawIconOnCanvas(
-  offCtx: CanvasRenderingContext2D,
+/** Rasterize an image at full target resolution (critical for crisp SVG icons) */
+async function rasterizeIcon(
+  ctx: CanvasRenderingContext2D,
   img: HTMLImageElement,
-  failed: boolean
+  pixelSize: number
 ) {
-  if (failed) {
-    // Silently leave blank — fallback drawn by caller
-    return;
+  configureCanvasQuality(ctx);
+
+  const center = pixelSize / 2;
+  const drawSize = Math.round(pixelSize * 0.85);
+
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(center, center, center, 0, Math.PI * 2);
+  ctx.clip();
+
+  try {
+    const bitmap = await createImageBitmap(img, {
+      resizeWidth: drawSize,
+      resizeHeight: drawSize,
+      resizeQuality: "high",
+    });
+    ctx.drawImage(
+      bitmap,
+      (pixelSize - drawSize) / 2,
+      (pixelSize - drawSize) / 2,
+      drawSize,
+      drawSize
+    );
+    bitmap.close();
+  } catch {
+    const scale = Math.min(
+      drawSize / (img.naturalWidth || drawSize),
+      drawSize / (img.naturalHeight || drawSize)
+    );
+    const w = (img.naturalWidth || drawSize) * scale;
+    const h = (img.naturalHeight || drawSize) * scale;
+    ctx.drawImage(img, (pixelSize - w) / 2, (pixelSize - h) / 2, w, h);
   }
-  offCtx.beginPath();
-  offCtx.arc(20, 20, 20, 0, Math.PI * 2);
-  offCtx.closePath();
-  offCtx.clip();
-  const maxSize = 34;
-  const scale = Math.min(
-    maxSize / (img.naturalWidth || maxSize),
-    maxSize / (img.naturalHeight || maxSize)
-  );
-  const w = (img.naturalWidth || maxSize) * scale;
-  const h = (img.naturalHeight || maxSize) * scale;
-  offCtx.drawImage(img, (40 - w) / 2, (40 - h) / 2, w, h);
+
+  ctx.restore();
 }
 
-function drawFallbackOn(ctx: CanvasRenderingContext2D, label: string) {
+function drawFallbackOn(
+  ctx: CanvasRenderingContext2D,
+  label: string,
+  pixelSize: number
+) {
+  const center = pixelSize / 2;
   ctx.fillStyle = "#64748b";
   ctx.beginPath();
-  ctx.arc(20, 20, 20, 0, Math.PI * 2);
+  ctx.arc(center, center, center, 0, Math.PI * 2);
   ctx.fill();
   ctx.fillStyle = "#ffffff";
-  ctx.font = "bold 11px system-ui, sans-serif";
+  ctx.font = `bold ${Math.round(pixelSize * 0.275)}px system-ui, sans-serif`;
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
   const text = label
@@ -61,12 +103,8 @@ function drawFallbackOn(ctx: CanvasRenderingContext2D, label: string) {
     .join("")
     .slice(0, 2)
     .toUpperCase();
-  ctx.fillText(text || "?", 20, 20);
+  ctx.fillText(text || "?", center, center);
 }
-
-// ---------------------------------------------------------------------------
-// Main-thread renderer
-// ---------------------------------------------------------------------------
 
 // ---------------------------------------------------------------------------
 // Main-thread canvas renderer
@@ -131,30 +169,34 @@ function IconCloudLegacy({
 
     const count = icons?.length ?? imageSources.length;
     imagesLoadedRef.current = new Array(count).fill(false);
+    const iconPixelSize = getIconBufferSize();
 
     const newIconCanvases = Array.from({ length: count }, (_, index) => {
       const offscreen = document.createElement("canvas");
-      offscreen.width = 40;
-      offscreen.height = 40;
+      offscreen.width = iconPixelSize;
+      offscreen.height = iconPixelSize;
       const offCtx = offscreen.getContext("2d");
       if (!offCtx) return offscreen;
+      configureCanvasQuality(offCtx);
 
       const markReady = (failed = false) => {
         if (!imagesLoadedRef.current[index]) {
-          if (failed) drawFallbackOn(offCtx, labelsRef.current[index] ?? "?");
+          if (failed) drawFallbackOn(offCtx, labelsRef.current[index] ?? "?", iconPixelSize);
           imagesLoadedRef.current[index] = true;
         }
+      };
+
+      const loadIcon = (img: HTMLImageElement) => {
+        offCtx.clearRect(0, 0, offscreen.width, offscreen.height);
+        void rasterizeIcon(offCtx, img, iconPixelSize)
+          .then(() => markReady())
+          .catch(() => markReady(true));
       };
 
       if (icons) {
         const el = icons[index] as React.ReactElement<Record<string, unknown>>;
         const img = new Image();
-        img.onload = () => {
-          offCtx.clearRect(0, 0, offscreen.width, offscreen.height);
-          offCtx.scale(0.4, 0.4);
-          offCtx.drawImage(img, 0, 0);
-          markReady();
-        };
+        img.onload = () => loadIcon(img);
         img.onerror = () => markReady(true);
         if (typeof el?.type === "string" && (el.type === "img" || el.type === "svg")) {
           img.src = (el.props?.src as string) ?? "";
@@ -165,11 +207,7 @@ function IconCloudLegacy({
         const src = imageSources[index];
         const img = new Image();
         if (src.includes("cdn.simpleicons.org")) img.crossOrigin = "anonymous";
-        img.onload = () => {
-          offCtx.clearRect(0, 0, offscreen.width, offscreen.height);
-          drawIconOnCanvas(offCtx, img, false);
-          markReady();
-        };
+        img.onload = () => loadIcon(img);
         img.onerror = () => markReady(true);
         img.src = src;
       }
@@ -206,6 +244,13 @@ function IconCloudLegacy({
     const ctx = canvas.getContext("2d", { alpha: true, desynchronized: true });
     if (!ctx) return;
 
+    const dpr = getDpr();
+    canvas.width = Math.round(size * dpr);
+    canvas.height = Math.round(size * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = "high";
+
     let running = true;
     let isVisible = true;
 
@@ -215,6 +260,8 @@ function IconCloudLegacy({
     );
     observer.observe(canvas);
 
+    const halfIcon = ICON_SIZE / 2;
+
     const animate = () => {
       if (!running) return;
       if (!isVisible) { animationFrameRef.current = requestAnimationFrame(animate); return; }
@@ -222,9 +269,9 @@ function IconCloudLegacy({
       const iconPositions = iconPositionsRef.current;
       if (iconPositions.length === 0) { animationFrameRef.current = requestAnimationFrame(animate); return; }
 
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      const centerX = canvas.width / 2;
-      const centerY = canvas.height / 2;
+      ctx.clearRect(0, 0, size, size);
+      const centerX = size / 2;
+      const centerY = size / 2;
       const pointerPos = pointerPosRef.current;
       const maxDistance = Math.sqrt(centerX * centerX + centerY * centerY);
       const dx = pointerPos.x - centerX;
@@ -243,8 +290,8 @@ function IconCloudLegacy({
         if (progress >= 1) targetRotationRef.current = null;
       } else if (!isDraggingRef.current && !reduceMotionRef.current) {
         rotationRef.current = {
-          x: rotationRef.current.x + 0.001 + (dy / canvas.height) * speed,
-          y: rotationRef.current.y + 0.003 + (dx / canvas.width) * speed,
+          x: rotationRef.current.x + 0.001 + (dy / size) * speed,
+          y: rotationRef.current.y + 0.003 + (dx / size) * speed,
         };
       }
 
@@ -252,8 +299,6 @@ function IconCloudLegacy({
       const sinX = Math.sin(rotationRef.current.x);
       const cosY = Math.cos(rotationRef.current.y);
       const sinY = Math.sin(rotationRef.current.y);
-      const halfW = canvas.width / 2;
-      const halfH = canvas.height / 2;
 
       for (let index = 0; index < iconPositions.length; index++) {
         const icon = iconPositions[index];
@@ -266,10 +311,10 @@ function IconCloudLegacy({
         ctx.globalAlpha = opacity;
         ctx.drawImage(
           iconCanvasesRef.current[index],
-          halfW + rotatedX - 20 * scale,
-          halfH + rotatedY - 20 * scale,
-          40 * scale,
-          40 * scale
+          centerX + rotatedX - halfIcon * scale,
+          centerY + rotatedY - halfIcon * scale,
+          ICON_SIZE * scale,
+          ICON_SIZE * scale
         );
       }
       ctx.globalAlpha = 1;
@@ -290,8 +335,8 @@ function IconCloudLegacy({
     const rect = canvas?.getBoundingClientRect();
     if (!rect || !canvas) return;
     pointerPosRef.current = {
-      x: ((clientX - rect.left) / rect.width) * canvas.width,
-      y: ((clientY - rect.top) / rect.height) * canvas.height,
+      x: ((clientX - rect.left) / rect.width) * size,
+      y: ((clientY - rect.top) / rect.height) * size,
     };
   };
 
@@ -299,8 +344,9 @@ function IconCloudLegacy({
     const canvas = canvasRef.current;
     const rect = canvas?.getBoundingClientRect();
     if (!rect || !canvas) return false;
-    const x = ((clientX - rect.left) / rect.width) * canvas.width;
-    const y = ((clientY - rect.top) / rect.height) * canvas.height;
+    const x = ((clientX - rect.left) / rect.width) * size;
+    const y = ((clientY - rect.top) / rect.height) * size;
+    const halfIcon = ICON_SIZE / 2;
 
     for (const icon of iconPositionsRef.current) {
       const cosX = Math.cos(rotationRef.current.x);
@@ -310,10 +356,10 @@ function IconCloudLegacy({
       const rotatedX = icon.x * cosY - icon.z * sinY;
       const rotatedZ = icon.x * sinY + icon.z * cosY;
       const rotatedY = icon.y * cosX + rotatedZ * sinX;
-      const screenX = canvas.width / 2 + rotatedX;
-      const screenY = canvas.height / 2 + rotatedY;
+      const screenX = size / 2 + rotatedX;
+      const screenY = size / 2 + rotatedY;
       const scale = (rotatedZ + 200) / 300;
-      const radius = 20 * scale;
+      const radius = halfIcon * scale;
       const hitDx = x - screenX;
       const hitDy = y - screenY;
       if (hitDx * hitDx + hitDy * hitDy < radius * radius) {
@@ -370,8 +416,6 @@ function IconCloudLegacy({
   return (
     <canvas
       ref={canvasRef}
-      width={size}
-      height={size}
       onPointerDown={handlePointerDown}
       onPointerMove={handlePointerMove}
       onPointerUp={endPointer}
