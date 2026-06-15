@@ -14,12 +14,6 @@ export interface IconCloudProps {
   size?: number;
 }
 
-// OffscreenCanvas + Worker supported in Chrome 69+, Firefox 105+, Safari 16.4+
-const SUPPORTS_OFFSCREEN =
-  typeof OffscreenCanvas !== "undefined" &&
-  typeof Worker !== "undefined" &&
-  typeof createImageBitmap !== "undefined";
-
 // ---------------------------------------------------------------------------
 // Shared helpers
 // ---------------------------------------------------------------------------
@@ -71,175 +65,11 @@ function drawFallbackOn(ctx: CanvasRenderingContext2D, label: string) {
 }
 
 // ---------------------------------------------------------------------------
-// Worker path: load images in main thread (handles CORS), transfer ImageBitmaps
+// Main-thread renderer
 // ---------------------------------------------------------------------------
 
-async function buildBitmaps(resolvedItems: IconCloudItem[]): Promise<ImageBitmap[]> {
-  const bitmaps = await Promise.all(
-    resolvedItems.map(
-      (item) =>
-        new Promise<ImageBitmap>((resolve) => {
-          const offscreen = document.createElement("canvas");
-          offscreen.width = 40;
-          offscreen.height = 40;
-          const ctx = offscreen.getContext("2d")!;
-
-          const fallback = async () => {
-            drawFallbackOn(ctx, item.label);
-            resolve(await createImageBitmap(offscreen));
-          };
-
-          const img = new Image();
-          if (item.src.includes("cdn.simpleicons.org")) img.crossOrigin = "anonymous";
-
-          img.onload = async () => {
-            try {
-              drawIconOnCanvas(ctx, img, false);
-              resolve(await createImageBitmap(offscreen));
-            } catch {
-              await fallback();
-            }
-          };
-          img.onerror = () => fallback();
-          img.src = item.src;
-        })
-    )
-  );
-  return bitmaps;
-}
-
 // ---------------------------------------------------------------------------
-// Worker-powered component
-// ---------------------------------------------------------------------------
-
-function IconCloudWorker({
-  images,
-  items,
-  className,
-  size = 400,
-}: Omit<IconCloudProps, "icons">) {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const workerRef = useRef<Worker | null>(null);
-  const activePointerIdRef = useRef<number | null>(null);
-
-  // Boot worker + transfer OffscreenCanvas
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    let offscreen: OffscreenCanvas;
-    try {
-      offscreen = canvas.transferControlToOffscreen();
-    } catch {
-      // Already transferred or not supported — bail out
-      return;
-    }
-
-    const worker = new Worker(
-      new URL("./icon-cloud.worker.ts", import.meta.url),
-      { type: "module" }
-    );
-    workerRef.current = worker;
-
-    worker.postMessage(
-      {
-        type: "init",
-        canvas: offscreen,
-        size,
-        reduceMotion: window.matchMedia("(prefers-reduced-motion: reduce)").matches,
-        coarsePointer: window.matchMedia("(pointer: coarse)").matches,
-      },
-      [offscreen]
-    );
-
-    const observer = new IntersectionObserver(
-      ([entry]) =>
-        worker.postMessage({ type: "setVisible", visible: entry.isIntersecting }),
-      { threshold: 0 }
-    );
-    observer.observe(canvas);
-
-    return () => {
-      worker.terminate();
-      workerRef.current = null;
-      observer.disconnect();
-    };
-  }, [size]);
-
-  // Re-send bitmaps when items change
-  useEffect(() => {
-    const worker = workerRef.current;
-    if (!worker) return;
-
-    const resolvedItems: IconCloudItem[] =
-      items ?? images?.map((src, i) => ({ src, label: `T${i + 1}` })) ?? [];
-    if (resolvedItems.length === 0) return;
-
-    buildBitmaps(resolvedItems).then((bitmaps) => {
-      if (!workerRef.current) return; // unmounted while loading
-      workerRef.current.postMessage({ type: "setBitmaps", bitmaps }, bitmaps);
-    });
-  }, [items, images]);
-
-  // Pointer helpers
-  const toCanvas = (clientX: number, clientY: number) => {
-    const rect = canvasRef.current?.getBoundingClientRect();
-    if (!rect) return null;
-    return {
-      x: ((clientX - rect.left) / rect.width) * size,
-      y: ((clientY - rect.top) / rect.height) * size,
-    };
-  };
-
-  const handlePointerDown = (e: React.PointerEvent<HTMLCanvasElement>) => {
-    if (e.pointerType === "mouse" && e.button !== 0) return;
-    activePointerIdRef.current = e.pointerId;
-    e.currentTarget.setPointerCapture(e.pointerId);
-    const pos = toCanvas(e.clientX, e.clientY);
-    if (pos) workerRef.current?.postMessage({ type: "pointerDown", ...pos });
-  };
-
-  const handlePointerMove = (e: React.PointerEvent<HTMLCanvasElement>) => {
-    if (activePointerIdRef.current !== e.pointerId) return;
-    const pos = toCanvas(e.clientX, e.clientY);
-    if (pos) workerRef.current?.postMessage({ type: "pointerMove", ...pos });
-  };
-
-  const endPointer = (e: React.PointerEvent<HTMLCanvasElement>) => {
-    if (activePointerIdRef.current !== e.pointerId) return;
-    activePointerIdRef.current = null;
-    if (e.currentTarget.hasPointerCapture(e.pointerId)) {
-      e.currentTarget.releasePointerCapture(e.pointerId);
-    }
-    workerRef.current?.postMessage({ type: "pointerUp" });
-  };
-
-  return (
-    <canvas
-      ref={canvasRef}
-      width={size}
-      height={size}
-      onPointerDown={handlePointerDown}
-      onPointerMove={handlePointerMove}
-      onPointerUp={endPointer}
-      onPointerCancel={endPointer}
-      onPointerLeave={endPointer}
-      className={cn("max-w-full touch-none rounded-lg", className)}
-      style={{
-        width: "100%",
-        height: "auto",
-        maxWidth: size,
-        aspectRatio: "1 / 1",
-        touchAction: "none",
-      }}
-      aria-label="Nube interactiva de tecnologías"
-      role="img"
-    />
-  );
-}
-
-// ---------------------------------------------------------------------------
-// Fallback: main-thread rendering (Safari < 16.4, or when icons[] are passed)
+// Main-thread canvas renderer
 // ---------------------------------------------------------------------------
 
 interface LegacyIcon {
@@ -562,14 +392,9 @@ function IconCloudLegacy({
 }
 
 // ---------------------------------------------------------------------------
-// Public export — picks the right implementation automatically
+// Public export
 // ---------------------------------------------------------------------------
 
 export function IconCloud(props: IconCloudProps) {
-  // If React nodes are passed, always use legacy (needs renderToString in browser)
-  // If browser lacks OffscreenCanvas, use legacy
-  if (props.icons || !SUPPORTS_OFFSCREEN) {
-    return <IconCloudLegacy {...props} />;
-  }
-  return <IconCloudWorker {...props} />;
+  return <IconCloudLegacy {...props} />;
 }

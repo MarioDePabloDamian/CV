@@ -238,65 +238,14 @@
     color: rgb(56, 189, 248); /* sky-400 */
   }
   
-  /* Scrollbar personalizado - más visible */
-  /* Para navegadores Webkit (Chrome, Safari, Edge) */
-  ::-webkit-scrollbar {
-    width: 12px;
-    height: 12px;
+  /* Scrollbar oculto — el progreso de scroll se muestra solo en la barra superior */
+  html {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE / Edge legacy */
   }
-  
-  /* Track - Modo claro (blanco) */
-  ::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.3);
-    border-radius: 10px;
-  }
-  
-  /* Thumb - Mismo color en ambos modos */
-  ::-webkit-scrollbar-thumb {
-    background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 99.97%);
-    border-radius: 10px;
-    border: 2px solid transparent;
-    background-clip: padding-box;
-  }
-  
-  ::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(135deg, #0284c7 0%, #0369a1 99.97%);
-    background-clip: padding-box;
-  }
-  
-  /* Track - Modo oscuro (mismo color que el fondo) */
-  .dark ::-webkit-scrollbar-track {
-    background: hsl(0, 0%, 3.9%);
-    border-radius: 10px;
-  }
-  
-  /* Thumb - Mismo color en modo oscuro */
-  .dark ::-webkit-scrollbar-thumb {
-    background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 99.97%);
-    border-radius: 10px;
-    border: 2px solid transparent;
-    background-clip: padding-box;
-  }
-  
-  .dark ::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(135deg, #0284c7 0%, #0369a1 99.97%);
-    background-clip: padding-box;
-  }
-  
-  /* Para Firefox - Modo claro (track blanco) */
-  * {
-    scrollbar-width: thin;
-    scrollbar-color: #0ea5e9 rgba(255, 255, 255, 0.3);
-  }
-  
-  /* Para Firefox - Modo oscuro (track oscuro) */
-  .dark {
-    scrollbar-width: thin;
-    scrollbar-color: #0ea5e9 hsl(0, 0%, 3.9%);
-  }
-  
-  .dark * {
-    scrollbar-color: #0ea5e9 hsl(0, 0%, 3.9%);
+
+  html::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Edge */
   }
 }
 

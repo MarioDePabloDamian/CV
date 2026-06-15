@@ -96,12 +96,12 @@ const CV: React.FC = () => {
         <main className="page-container py-4 sm:py-6 lg:py-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 lg:gap-8">
             <div className="lg:col-span-8 space-y-4 sm:space-y-6 min-w-0">
-              {/* En móvil mostramos el stack justo tras el hero (versión ligera sin nube) */}
+              {/* En móvil mostramos el stack justo tras el hero */}
               <div className="lg:hidden">
                 <ViewportLoader fallback={<SectionCard padding="md" beam={false} interactive={false}><SectionFallback /></SectionCard>}>
                   <SectionCard padding="md" beam={false} interactive={false}>
                     <Suspense fallback={<SectionFallback />}>
-                      <TechStack showCloud={false} />
+                      <TechStack />
                     </Suspense>
                   </SectionCard>
                 </ViewportLoader>
