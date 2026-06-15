@@ -12,7 +12,7 @@ const SoftSkills: React.FC = () => {
 
   return (
     <div>
-      <SectionHeading as="h3" animated={false}>
+      <SectionHeading as="h3">
         {t.skillsSoft}
       </SectionHeading>
       <ul className="space-y-2 text-gray-800 dark:text-gray-300 list-none">

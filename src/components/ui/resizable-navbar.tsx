@@ -1,17 +1,9 @@
-import {
-  motion,
-  AnimatePresence,
-  useScroll,
-  useMotionValueEvent,
-  useReducedMotion,
-  type Transition,
-} from "motion/react";
-import React, { useRef, useState } from "react";
-
+import React, { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 
 interface NavbarChildProps {
   visible?: boolean;
+  ready?: boolean;
 }
 
 interface NavbarProps {
@@ -19,19 +11,37 @@ interface NavbarProps {
   className?: string;
 }
 
-/**
- * Resizable navbar (adapted from the 21st.dev / Aceternity "Resizable Navbar").
- * Full-width and transparent at the top; collapses into a floating, blurred
- * pill once the user scrolls past the hero.
- */
+const NAV_SPRING = "width 0.35s cubic-bezier(0.22,1,0.36,1), transform 0.35s cubic-bezier(0.22,1,0.36,1)";
+
+function useReducedMotion() {
+  const [reduced, setReduced] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setReduced(mq.matches);
+    const handler = (e: MediaQueryListEvent) => setReduced(e.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
+  return reduced;
+}
+
 export function Navbar({ children, className }: NavbarProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const { scrollY } = useScroll();
   const [visible, setVisible] = useState(false);
+  // "ready" suppresses the transition on first render so the pill doesn't
+  // animate from the wrong state when the page loads already scrolled.
+  const [ready, setReady] = useState(false);
 
-  useMotionValueEvent(scrollY, "change", (latest) => {
-    setVisible(latest > 80);
-  });
+  useEffect(() => {
+    // Sync with current scroll position immediately (no animation on mount)
+    setVisible(window.scrollY > 80);
+    // Allow transitions only after the first paint
+    requestAnimationFrame(() => setReady(true));
+
+    const update = () => setVisible(window.scrollY > 80);
+    window.addEventListener("scroll", update, { passive: true });
+    return () => window.removeEventListener("scroll", update);
+  }, []);
 
   return (
     <div
@@ -45,7 +55,7 @@ export function Navbar({ children, className }: NavbarProps) {
         React.isValidElement(child)
           ? React.cloneElement(
               child as React.ReactElement<NavbarChildProps>,
-              { visible }
+              { visible, ready }
             )
           : child
       )}
@@ -53,21 +63,21 @@ export function Navbar({ children, className }: NavbarProps) {
   );
 }
 
-const spring: Transition = { type: "spring", stiffness: 220, damping: 40 };
-
 export function NavBody({
   children,
   className,
   visible,
+  ready,
 }: NavbarProps & NavbarChildProps) {
-  const reduce = useReducedMotion();
+  const reduceMotion = useReducedMotion();
+
   return (
-    <motion.div
-      animate={{
+    <div
+      style={{
         width: visible ? "min(100%, 60rem)" : "100%",
-        y: visible ? 10 : 0,
+        transform: visible ? "translateY(10px)" : "none",
+        transition: ready && !reduceMotion ? NAV_SPRING : "none",
       }}
-      transition={reduce ? { duration: 0 } : spring}
       className={cn(
         "relative z-[60] mx-auto hidden w-full items-center justify-between rounded-full px-4 py-2 lg:flex",
         visible
@@ -77,7 +87,7 @@ export function NavBody({
       )}
     >
       {children}
-    </motion.div>
+    </div>
   );
 }
 
@@ -93,30 +103,14 @@ export function NavItems({
   items: NavItem[];
   className?: string;
 }) {
-  const [hovered, setHovered] = useState<number | null>(null);
-
   return (
-    <nav
-      onMouseLeave={() => setHovered(null)}
-      className={cn(
-        "flex items-center gap-1 text-sm font-medium",
-        className
-      )}
-    >
-      {items.map((item, idx) => (
+    <nav className={cn("flex items-center gap-1 text-sm font-medium", className)}>
+      {items.map((item) => (
         <a
           key={item.link}
           href={item.link}
-          onMouseEnter={() => setHovered(idx)}
-          className="relative px-3.5 py-2 text-gray-600 transition-colors hover:text-sky-700 dark:text-gray-300 dark:hover:text-sky-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 rounded-full"
+          className="relative px-3.5 py-2 text-gray-600 transition-colors hover:text-sky-700 dark:text-gray-300 dark:hover:text-sky-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 rounded-full hover:bg-sky-100 dark:hover:bg-sky-950/50"
         >
-          {hovered === idx && (
-            <motion.span
-              layoutId="nav-hover-pill"
-              className="absolute inset-0 -z-10 rounded-full bg-sky-100 dark:bg-sky-950/50"
-              transition={{ type: "spring", stiffness: 320, damping: 30 }}
-            />
-          )}
           {item.name}
         </a>
       ))}
@@ -128,15 +122,17 @@ export function MobileNav({
   children,
   className,
   visible,
+  ready,
 }: NavbarProps & NavbarChildProps) {
-  const reduce = useReducedMotion();
+  const reduceMotion = useReducedMotion();
+
   return (
-    <motion.div
-      animate={{
+    <div
+      style={{
         width: visible ? "calc(100% - 1.5rem)" : "100%",
-        y: visible ? 8 : 0,
+        transform: visible ? "translateY(8px)" : "none",
+        transition: ready && !reduceMotion ? NAV_SPRING : "none",
       }}
-      transition={reduce ? { duration: 0 } : spring}
       className={cn(
         "relative z-50 mx-auto flex w-full flex-col px-4 py-2.5 lg:hidden",
         visible
@@ -146,7 +142,7 @@ export function MobileNav({
       )}
     >
       {children}
-    </motion.div>
+    </div>
   );
 }
 
@@ -164,21 +160,16 @@ export function MobileNavMenu({
   className,
 }: NavbarProps & { isOpen: boolean }) {
   return (
-    <AnimatePresence>
-      {isOpen && (
-        <motion.div
-          initial={{ opacity: 0, height: 0 }}
-          animate={{ opacity: 1, height: "auto" }}
-          exit={{ opacity: 0, height: 0 }}
-          transition={{ duration: 0.25, ease: "easeOut" }}
-          className={cn("w-full overflow-hidden", className)}
-        >
-          <div className="mt-2 flex flex-col gap-1 border-t border-gray-200/80 pt-2 dark:border-white/10">
-            {children}
-          </div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+    <div
+      className={cn("grid overflow-hidden transition-[grid-template-rows] duration-300 ease-out", className)}
+      style={{ gridTemplateRows: isOpen ? "1fr" : "0fr" }}
+    >
+      <div className="min-h-0 overflow-hidden">
+        <div className="mt-2 flex flex-col gap-1 border-t border-gray-200/80 pt-2 dark:border-white/10">
+          {children}
+        </div>
+      </div>
+    </div>
   );
 }
 

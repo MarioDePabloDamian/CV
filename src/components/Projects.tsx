@@ -1,6 +1,7 @@
 import React from "react";
-import { ArrowRight, Bot, ExternalLink, Github, Globe, Sparkles } from "lucide-react";
+import { ArrowRight, Bot, ExternalLink, Globe, Sparkles } from "lucide-react";
 import { FiPlay } from "react-icons/fi";
+import { FaGithub } from "react-icons/fa";
 import { useLanguage } from "../context/LanguageContext";
 import { translations } from "../translations/translations";
 import { SectionHeading } from "./ui/section-heading";
@@ -126,7 +127,7 @@ const Projects: React.FC = () => {
 
   return (
     <div>
-      <SectionHeading className="mb-6 pb-3" animated={false}>
+      <SectionHeading className="mb-6 pb-3">
         {t.personalProjects}
       </SectionHeading>
 
@@ -285,7 +286,7 @@ const Projects: React.FC = () => {
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-1.5 rounded-lg border border-gray-200 dark:border-gray-700 px-3 py-2 text-xs font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors cursor-pointer"
                   >
-                    <Github size={14} aria-hidden />
+                    <FaGithub size={14} aria-hidden />
                     {t.github}
                   </a>
                 )}

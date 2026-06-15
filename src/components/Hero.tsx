@@ -1,6 +1,7 @@
 import React from "react";
-import { ArrowRight, Briefcase, Github, Linkedin, Mail, MapPin, Sparkles, Wifi } from "lucide-react";
-import profilePhoto from "../assets/FotoCV.jpg";
+import { ArrowRight, Briefcase, Mail, MapPin, Sparkles, Wifi } from "lucide-react";
+import { FaGithub, FaLinkedin } from "react-icons/fa";
+const profilePhoto = "/FotoCV.jpg";
 import { useLanguage } from "../context/LanguageContext";
 import { translations } from "../translations/translations";
 import { profile, mailto } from "../data/profile";
@@ -40,6 +41,7 @@ function HeroPortrait({
             height="300"
             loading="eager"
             decoding="async"
+            fetchPriority="high"
           />
         </div>
       </div>
@@ -161,7 +163,7 @@ const Hero: React.FC = () => {
                     aria-label={t.viewLinkedIn}
                     className="inline-flex size-11 items-center justify-center rounded-xl border border-gray-300 bg-white/70 text-gray-700 backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-sky-400 hover:text-sky-600 dark:border-gray-700 dark:bg-gray-900/50 dark:text-gray-200 dark:hover:border-sky-600 dark:hover:text-sky-400"
                   >
-                    <Linkedin size={18} aria-hidden />
+                    <FaLinkedin size={18} aria-hidden />
                   </a>
                   <a
                     href={profile.links.github}
@@ -170,7 +172,7 @@ const Hero: React.FC = () => {
                     aria-label="GitHub"
                     className="inline-flex size-11 items-center justify-center rounded-xl border border-gray-300 bg-white/70 text-gray-700 backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-sky-400 hover:text-sky-600 dark:border-gray-700 dark:bg-gray-900/50 dark:text-gray-200 dark:hover:border-sky-600 dark:hover:text-sky-400"
                   >
-                    <Github size={18} aria-hidden />
+                    <FaGithub size={18} aria-hidden />
                   </a>
                 </div>
               </div>

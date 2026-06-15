@@ -10,7 +10,7 @@ const Languages: React.FC = () => {
 
   return (
     <div>
-      <SectionHeading as="h3" animated={false}>{t.languages}</SectionHeading>
+      <SectionHeading as="h3">{t.languages}</SectionHeading>
       <div className="text-gray-800 dark:text-gray-300 text-sm space-y-3">
         <div className="flex items-center gap-2">
           <HiLanguage

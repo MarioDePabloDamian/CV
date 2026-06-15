@@ -10,7 +10,7 @@ const Education: React.FC = () => {
 
   return (
     <div>
-      <SectionHeading as="h3" animated={false}>{t.education}</SectionHeading>
+      <SectionHeading as="h3">{t.education}</SectionHeading>
       <div className="space-y-3">
         <div className="flex items-start gap-2 text-gray-800 dark:text-gray-300 text-sm leading-relaxed">
           <BsBook

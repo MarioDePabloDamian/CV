@@ -1,6 +1,4 @@
-"use client";
-import React, { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 
 interface LayoutTextFlipProps {
@@ -16,50 +14,48 @@ export const LayoutTextFlip: React.FC<LayoutTextFlipProps> = ({
   duration = 3000,
   className,
 }) => {
-  const [currentWordIndex, setCurrentWordIndex] = useState(0);
+  const [index, setIndex] = useState(0);
+  const [phase, setPhase] = useState<"visible" | "exiting">("visible");
+  const timerRef = useRef<ReturnType<typeof setTimeout>>();
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentWordIndex((prev) => (prev + 1) % words.length);
+    const tick = setInterval(() => {
+      // Fade out current word
+      setPhase("exiting");
+      timerRef.current = setTimeout(() => {
+        setIndex((i) => (i + 1) % words.length);
+        setPhase("visible");
+      }, 350);
     }, duration);
 
-    return () => clearInterval(interval);
+    return () => {
+      clearInterval(tick);
+      clearTimeout(timerRef.current);
+    };
   }, [words.length, duration]);
 
-  // Encontrar la palabra más larga para calcular el ancho fijo
-  const maxWordLength = Math.max(...words.map(word => word.length));
-  // Usar un ancho fijo basado en la palabra más larga para evitar movimiento
-  const fixedWidth = `${maxWordLength * 0.7}ch`; // Aproximadamente 0.7ch por carácter
+  const maxLen = Math.max(...words.map((w) => w.length));
 
   return (
     <span className={cn("inline-block", className)}>
       {text}{" "}
-      <span 
+      <span
         className="relative inline-block text-left align-top"
-        style={{ 
-          width: fixedWidth,
-          minWidth: fixedWidth,
-        }}
+        style={{ width: `${maxLen * 0.7}ch`, minWidth: `${maxLen * 0.7}ch` }}
       >
-        <AnimatePresence mode="wait">
-          <motion.span
-            key={currentWordIndex}
-            initial={{ opacity: 0, y: 20, rotateX: -90 }}
-            animate={{ opacity: 1, y: 0, rotateX: 0 }}
-            exit={{ opacity: 0, y: -20, rotateX: 90 }}
-            transition={{
-              duration: 0.6,
-              ease: [0.16, 1, 0.3, 1],
-            }}
-            className="inline-block whitespace-nowrap absolute left-0"
-            style={{
-              transformStyle: "preserve-3d",
-              backfaceVisibility: "hidden",
-            }}
-          >
-            {words[currentWordIndex]}
-          </motion.span>
-        </AnimatePresence>
+        <span
+          className="inline-block whitespace-nowrap absolute left-0"
+          style={{
+            opacity: phase === "visible" ? 1 : 0,
+            transform:
+              phase === "visible" ? "translateY(0) rotateX(0deg)" : "translateY(-8px) rotateX(90deg)",
+            transition: "opacity 0.3s ease, transform 0.3s ease",
+            transformStyle: "preserve-3d",
+            backfaceVisibility: "hidden",
+          }}
+        >
+          {words[index]}
+        </span>
       </span>
     </span>
   );

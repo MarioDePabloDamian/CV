@@ -161,7 +161,7 @@ const Experience: React.FC = () => {
 
   return (
     <div>
-      <SectionHeading className="mb-6 pb-3" animated={false}>
+      <SectionHeading className="mb-6 pb-3">
         {t.experience}
       </SectionHeading>
 

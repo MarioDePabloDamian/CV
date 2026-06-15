@@ -52,7 +52,7 @@ const HowIBuild: React.FC = () => {
 
   return (
     <div>
-      <SectionHeading as="h3" animated={false}>
+      <SectionHeading as="h3">
         {t.howIBuildTitle}
       </SectionHeading>
 

@@ -3,9 +3,8 @@ import {
   useContext,
   useState,
   useEffect,
-  ReactNode,
+  type ReactNode,
 } from "react";
-import { useNavigate, useSearchParams } from "react-router";
 
 type Language = "es" | "en";
 
@@ -32,30 +31,32 @@ interface LanguageProviderProps {
   initialLanguage?: Language;
 }
 
-export const LanguageProvider = ({ children, initialLanguage }: LanguageProviderProps) => {
-  const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
-  const [language, setLanguageState] = useState<Language>(() => {
-    // Usar el idioma inicial de la URL o el guardado en localStorage o español por defecto
-    return initialLanguage || (localStorage.getItem("language") as Language) || "es";
-  });
+function readStoredLanguage(): Language {
+  const saved = localStorage.getItem("language");
+  return saved === "es" || saved === "en" ? saved : "es";
+}
+
+export const LanguageProvider = ({
+  children,
+  initialLanguage,
+}: LanguageProviderProps) => {
+  const [language, setLanguageState] = useState<Language>(
+    // URL param takes priority; otherwise fall back to validated localStorage value
+    () => initialLanguage ?? readStoredLanguage()
+  );
 
   useEffect(() => {
-    // Guardar idioma en localStorage cuando cambia
     localStorage.setItem("language", language);
   }, [language]);
 
   const setLanguage = (lang: Language) => {
     setLanguageState(lang);
-    const newSearchParams = new URLSearchParams(searchParams);
-    newSearchParams.set("lang", lang);
-    navigate(`/?${newSearchParams.toString()}`, { replace: true });
+    const url = new URL(window.location.href);
+    url.searchParams.set("lang", lang);
+    window.history.replaceState(null, "", url.toString());
   };
 
-  const toggleLanguage = () => {
-    const newLang = language === "es" ? "en" : "es";
-    setLanguage(newLang);
-  };
+  const toggleLanguage = () => setLanguage(language === "es" ? "en" : "es");
 
   return (
     <LanguageContext.Provider value={{ language, toggleLanguage, setLanguage }}>

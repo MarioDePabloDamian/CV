@@ -1,19 +1,32 @@
-import { motion, useScroll, useSpring } from "motion/react";
-
+import { useEffect, useRef } from "react";
 import { cn } from "@/lib/utils";
 
 export function ScrollProgress({ className }: { className?: string }) {
-  const { scrollYProgress } = useScroll();
-  const scaleX = useSpring(scrollYProgress, {
-    stiffness: 200,
-    damping: 50,
-    restDelta: 0.001,
-  });
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const bar = ref.current;
+    if (!bar) return;
+
+    const update = () => {
+      const { scrollTop, scrollHeight, clientHeight } =
+        document.documentElement;
+      const pct =
+        scrollHeight > clientHeight
+          ? scrollTop / (scrollHeight - clientHeight)
+          : 0;
+      bar.style.transform = `scaleX(${pct})`;
+    };
+
+    window.addEventListener("scroll", update, { passive: true });
+    update();
+    return () => window.removeEventListener("scroll", update);
+  }, []);
 
   return (
-    <motion.div
+    <div
+      ref={ref}
       aria-hidden
-      style={{ scaleX }}
       className={cn(
         "fixed inset-x-0 top-0 z-[70] h-1 origin-left bg-gradient-to-r from-sky-500 via-indigo-500 to-cyan-400 print:hidden",
         className

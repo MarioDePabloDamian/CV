@@ -1,21 +1,66 @@
-import React from "react";
+import React, { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { SectionCard } from "./ui/section-card";
 import Header from "./Header";
 import Hero from "./Hero";
-import HowIBuild from "./HowIBuild";
 import { ScrollProgress } from "./ui/scroll-progress";
-import Experience from "./Experience";
-import Projects from "./Projects";
-import Education from "./Education";
-import TechStack from "./TechStack";
-import SoftSkills from "./SoftSkills";
-import Certifications from "./Certifications";
-import Languages from "./Languages";
 import SEO from "./SEO";
 import { ContactCtas } from "./ContactCtas";
 import { useLanguage } from "../context/LanguageContext";
 import { translations } from "../translations/translations";
 import { profile } from "../data/profile";
+
+const HowIBuild = lazy(() => import("./HowIBuild"));
+const Experience = lazy(() => import("./Experience"));
+const Projects = lazy(() => import("./Projects"));
+const Education = lazy(() => import("./Education"));
+const TechStack = lazy(() => import("./TechStack"));
+const SoftSkills = lazy(() => import("./SoftSkills"));
+const Certifications = lazy(() => import("./Certifications"));
+const Languages = lazy(() => import("./Languages"));
+
+function SectionFallback() {
+  return (
+    <div className="animate-pulse rounded-xl bg-gray-100 dark:bg-gray-800/50 h-48 w-full" />
+  );
+}
+
+/**
+ * Defers rendering (and network download) of children until the sentinel
+ * element is within `rootMargin` of the viewport.
+ * Once triggered, children stay rendered permanently.
+ */
+function ViewportLoader({
+  children,
+  fallback,
+  rootMargin = "300px",
+}: {
+  children: React.ReactNode;
+  fallback: React.ReactNode;
+  rootMargin?: string;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [triggered, setTriggered] = useState(false);
+
+  useEffect(() => {
+    if (triggered) return;
+    const el = ref.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setTriggered(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [triggered, rootMargin]);
+
+  return <div ref={ref}>{triggered ? children : fallback}</div>;
+}
 
 const CV: React.FC = () => {
   const { language } = useLanguage();
@@ -53,45 +98,81 @@ const CV: React.FC = () => {
             <div className="lg:col-span-8 space-y-4 sm:space-y-6 min-w-0">
               {/* En móvil mostramos el stack justo tras el hero (versión ligera sin nube) */}
               <div className="lg:hidden">
-                <SectionCard padding="md" beam={false} interactive={false}>
-                  <TechStack showCloud={false} />
-                </SectionCard>
+                <ViewportLoader fallback={<SectionCard padding="md" beam={false} interactive={false}><SectionFallback /></SectionCard>}>
+                  <SectionCard padding="md" beam={false} interactive={false}>
+                    <Suspense fallback={<SectionFallback />}>
+                      <TechStack showCloud={false} />
+                    </Suspense>
+                  </SectionCard>
+                </ViewportLoader>
               </div>
 
               {/* Diagrama "cómo construyo" — solo pantalla (decorativo) */}
               <div className="no-print">
-                <SectionCard padding="lg" beam={false} interactive={false}>
-                  <HowIBuild />
-                </SectionCard>
+                <ViewportLoader fallback={<SectionCard padding="lg" beam={false} interactive={false}><SectionFallback /></SectionCard>}>
+                  <SectionCard padding="lg" beam={false} interactive={false}>
+                    <Suspense fallback={<SectionFallback />}>
+                      <HowIBuild />
+                    </Suspense>
+                  </SectionCard>
+                </ViewportLoader>
               </div>
 
-              <SectionCard id="experience" padding="lg" beam={false} interactive={false}>
-                <Experience />
-              </SectionCard>
+              <ViewportLoader fallback={<SectionCard id="experience" padding="lg" beam={false} interactive={false}><SectionFallback /></SectionCard>}>
+                <SectionCard id="experience" padding="lg" beam={false} interactive={false}>
+                  <Suspense fallback={<SectionFallback />}>
+                    <Experience />
+                  </Suspense>
+                </SectionCard>
+              </ViewportLoader>
 
-              <SectionCard id="projects" padding="lg" beam={false} interactive={false}>
-                <Projects />
-              </SectionCard>
+              <ViewportLoader fallback={<SectionCard id="projects" padding="lg" beam={false} interactive={false}><SectionFallback /></SectionCard>} rootMargin="200px">
+                <SectionCard id="projects" padding="lg" beam={false} interactive={false}>
+                  <Suspense fallback={<SectionFallback />}>
+                    <Projects />
+                  </Suspense>
+                </SectionCard>
+              </ViewportLoader>
             </div>
 
             <aside className="lg:col-span-4 space-y-4 sm:space-y-6 min-w-0 lg:sticky lg:top-[calc(7.5rem+env(safe-area-inset-top,0px))] lg:self-start">
               <div className="hidden lg:block">
-                <SectionCard id="skills" padding="md" beam={false} interactive={false}>
-                  <TechStack />
-                </SectionCard>
+                <ViewportLoader fallback={<SectionCard id="skills" padding="md" beam={false} interactive={false}><SectionFallback /></SectionCard>}>
+                  <SectionCard id="skills" padding="md" beam={false} interactive={false}>
+                    <Suspense fallback={<SectionFallback />}>
+                      <TechStack />
+                    </Suspense>
+                  </SectionCard>
+                </ViewportLoader>
               </div>
-              <SectionCard padding="md" beam={false} interactive={false}>
-                <Languages />
-              </SectionCard>
-              <SectionCard padding="md" beam={false} interactive={false}>
-                <Education />
-              </SectionCard>
-              <SectionCard padding="md" beam={false} interactive={false}>
-                <Certifications />
-              </SectionCard>
-              <SectionCard padding="md" beam={false} interactive={false}>
-                <SoftSkills />
-              </SectionCard>
+              <ViewportLoader fallback={<SectionCard padding="md" beam={false} interactive={false}><SectionFallback /></SectionCard>}>
+                <SectionCard padding="md" beam={false} interactive={false}>
+                  <Suspense fallback={<SectionFallback />}>
+                    <Languages />
+                  </Suspense>
+                </SectionCard>
+              </ViewportLoader>
+              <ViewportLoader fallback={<SectionCard padding="md" beam={false} interactive={false}><SectionFallback /></SectionCard>}>
+                <SectionCard padding="md" beam={false} interactive={false}>
+                  <Suspense fallback={<SectionFallback />}>
+                    <Education />
+                  </Suspense>
+                </SectionCard>
+              </ViewportLoader>
+              <ViewportLoader fallback={<SectionCard padding="md" beam={false} interactive={false}><SectionFallback /></SectionCard>}>
+                <SectionCard padding="md" beam={false} interactive={false}>
+                  <Suspense fallback={<SectionFallback />}>
+                    <Certifications />
+                  </Suspense>
+                </SectionCard>
+              </ViewportLoader>
+              <ViewportLoader fallback={<SectionCard padding="md" beam={false} interactive={false}><SectionFallback /></SectionCard>}>
+                <SectionCard padding="md" beam={false} interactive={false}>
+                  <Suspense fallback={<SectionFallback />}>
+                    <SoftSkills />
+                  </Suspense>
+                </SectionCard>
+              </ViewportLoader>
             </aside>
           </div>
         </main>

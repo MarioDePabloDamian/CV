@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { Github, Linkedin, Mail } from "lucide-react";
+import { Mail } from "lucide-react";
+import { FaGithub, FaLinkedin } from "react-icons/fa";
 import { useLanguage } from "../context/LanguageContext";
 import { translations } from "../translations/translations";
 import { profile, mailto } from "../data/profile";
@@ -60,7 +61,7 @@ const Header: React.FC = () => {
               aria-label={t.viewLinkedIn}
               className="touch-target inline-flex items-center justify-center rounded-md text-gray-600 transition-colors hover:bg-sky-50 hover:text-sky-700 dark:text-gray-300 dark:hover:bg-sky-950/40 dark:hover:text-sky-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500"
             >
-              <Linkedin size={18} aria-hidden />
+              <FaLinkedin size={18} aria-hidden />
             </a>
             <a
               href={profile.links.github}
@@ -69,7 +70,7 @@ const Header: React.FC = () => {
               aria-label="GitHub"
               className="touch-target inline-flex items-center justify-center rounded-md text-gray-600 transition-colors hover:bg-sky-50 hover:text-sky-700 dark:text-gray-300 dark:hover:bg-sky-950/40 dark:hover:text-sky-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500"
             >
-              <Github size={18} aria-hidden />
+              <FaGithub size={18} aria-hidden />
             </a>
             <ThemeToggle />
             <LanguageSelector compact />
@@ -124,7 +125,7 @@ const Header: React.FC = () => {
                 aria-label={t.viewLinkedIn}
                 className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-gray-200 px-3 py-2.5 text-sm font-medium text-gray-700 transition-colors hover:border-sky-300 hover:text-sky-700 dark:border-gray-700 dark:text-gray-200 dark:hover:text-sky-300"
               >
-                <Linkedin size={16} aria-hidden />
+                <FaLinkedin size={16} aria-hidden />
                 LinkedIn
               </a>
               <a
@@ -134,7 +135,7 @@ const Header: React.FC = () => {
                 aria-label="GitHub"
                 className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-gray-200 px-3 py-2.5 text-sm font-medium text-gray-700 transition-colors hover:border-sky-300 hover:text-sky-700 dark:border-gray-700 dark:text-gray-200 dark:hover:text-sky-300"
               >
-                <Github size={16} aria-hidden />
+                <FaGithub size={16} aria-hidden />
                 GitHub
               </a>
             </div>

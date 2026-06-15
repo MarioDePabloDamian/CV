@@ -1,5 +1,6 @@
 import React from "react";
-import { Mail, Phone, Linkedin, Github, Printer } from "lucide-react";
+import { Mail, Phone, Printer } from "lucide-react";
+import { FaGithub, FaLinkedin } from "react-icons/fa";
 import { useLanguage } from "../context/LanguageContext";
 import { translations } from "../translations/translations";
 import { profile, mailto } from "../data/profile";
@@ -41,7 +42,7 @@ export const ContactCtas: React.FC<ContactCtasProps> = ({
           className={iconBtn}
           aria-label={t.viewLinkedIn}
         >
-          <Linkedin size={14} aria-hidden />
+          <FaLinkedin size={14} aria-hidden />
         </a>
         <a
           href={profile.links.github}
@@ -50,7 +51,7 @@ export const ContactCtas: React.FC<ContactCtasProps> = ({
           className={`${iconBtn} hidden min-[380px]:inline-flex`}
           aria-label="GitHub"
         >
-          <Github size={15} aria-hidden />
+          <FaGithub size={15} aria-hidden />
         </a>
         <button
           type="button"
@@ -98,7 +99,7 @@ export const ContactCtas: React.FC<ContactCtasProps> = ({
         rel="noopener noreferrer"
         className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium rounded-lg border border-sky-200 dark:border-sky-700 text-sky-700 dark:text-sky-300 hover:bg-sky-50 dark:hover:bg-sky-950/50 transition-colors"
       >
-        <Linkedin size={16} aria-hidden />
+        <FaLinkedin size={16} aria-hidden />
         {t.viewLinkedIn}
       </a>
       <a
@@ -107,7 +108,7 @@ export const ContactCtas: React.FC<ContactCtasProps> = ({
         rel="noopener noreferrer"
         className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium rounded-lg border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors"
       >
-        <Github size={16} aria-hidden />
+        <FaGithub size={16} aria-hidden />
         GitHub
       </a>
       <button

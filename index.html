@@ -2,11 +2,18 @@
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
-    />
+    <!-- Inline script: reads theme from localStorage BEFORE any CSS renders to prevent FOUC -->
+    <script>
+      (function () {
+        var t = localStorage.getItem("theme");
+        if (t === "dark" || (!t && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
+          document.documentElement.classList.add("dark");
+        }
+      })();
+    </script>
+    <link rel="icon" type="image/png" href="/logo.png" />
+    <link rel="apple-touch-icon" href="/logo.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta
       name="description"
       content="CV de Mario de Pablo Damián - Fullstack Developer & DevOps Engineer con experiencia en React, FastAPI, Docker, y sistemas de observabilidad industrial."
@@ -15,12 +22,29 @@
     <meta name="author" content="Mario de Pablo Damián" />
     <meta name="robots" content="index, follow" />
     <meta name="theme-color" content="#0ea5e9" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,600;0,700;1,600&display=swap"
-      rel="stylesheet"
-    />
+    <!-- Open Graph / LinkedIn / WhatsApp -->
+    <meta property="og:type" content="profile" />
+    <meta property="og:url" content="https://mariodepablo.es/" />
+    <meta property="og:title" content="Mario de Pablo Damián — Fullstack Developer & DevOps Engineer" />
+    <meta property="og:description" content="CV interactivo de Mario de Pablo Damián. Fullstack Developer y DevOps Engineer con experiencia en React, FastAPI, Docker y sistemas de observabilidad industrial." />
+    <meta property="og:image" content="https://mariodepablo.es/FotoCV.jpg" />
+    <meta property="og:image:width" content="300" />
+    <meta property="og:image:height" content="300" />
+    <meta property="og:locale" content="es_ES" />
+    <!-- Twitter / X Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Mario de Pablo Damián — Fullstack Developer & DevOps Engineer" />
+    <meta name="twitter:description" content="CV interactivo de Mario de Pablo Damián. Fullstack Developer y DevOps Engineer." />
+    <meta name="twitter:image" content="https://mariodepablo.es/FotoCV.jpg" />
+    <!-- Canonical -->
+    <link rel="canonical" href="https://mariodepablo.es/" />
+    <!-- Font preload: Latin subset of Montserrat — prevents FOUT on first paint -->
+    <link rel="preload" as="font" href="/fonts/montserrat-latin-wght-normal.woff2" type="font/woff2" crossorigin />
+    <!-- LCP image preload — must match Hero.tsx src -->
+    <link rel="preload" as="image" href="/FotoCV.jpg" type="image/jpeg" fetchpriority="high" />
+    <!-- External CDN hints -->
+    <link rel="preconnect" href="https://cdn.simpleicons.org" crossorigin />
+    <link rel="dns-prefetch" href="https://cdn.simpleicons.org" />
     <title>CV - Mario de Pablo Damián</title>
   </head>
   <body class="transparent">

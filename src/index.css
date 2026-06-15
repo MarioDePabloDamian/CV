@@ -5,7 +5,7 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-  --font-sans: Montserrat, sans-serif;
+  --font-sans: "Montserrat Variable", Montserrat, sans-serif;
 
   --radius-lg: var(--radius);
   --radius-md: calc(var(--radius) - 2px);
@@ -77,53 +77,15 @@
   min-width: 2.75rem;
 }
 
-@utility section-border {
-  /* Separadores de sección */
-  border-bottom: 3px solid rgba(125, 211, 252);
-
-  .dark & {
-    border-bottom: 3px solid rgba(56, 189, 248);
-  }
-}
-
-@utility dark {
-  & .section-border {
-    border-bottom: 3px solid rgba(56, 189, 248);
-  }
-
-  & .experience-list ul li:before {
-    background: linear-gradient(135deg, #38bdf8 0%, #0ea5e9 99.97%);
-  }
-}
-
-@utility experience-list {
-  /* Bullets para listas - solo en experiencia */
-  & ul li {
-    position: relative;
-    padding-left: 15px;
-  }
-
-  & ul li:before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0.625rem;
-    width: 4px;
-    height: 4px;
-    background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 99.97%);
-    border-radius: 50%;
-    display: block;
-  }
-
-  .dark & ul li:before {
-    background: linear-gradient(135deg, #38bdf8 0%, #0ea5e9 99.97%);
-  }
-}
 
 @layer base {
-  * {
+  /* Transiciones de tema solo activas durante el cambio (evita jank en scroll/hover) */
+  .theme-transitioning,
+  .theme-transitioning *,
+  .theme-transitioning *::before,
+  .theme-transitioning *::after {
     transition: background-color 0.3s ease, color 0.3s ease,
-      border-color 0.3s ease;
+      border-color 0.3s ease !important;
   }
 
   html {
@@ -195,16 +157,6 @@
   }
 }
 
-@keyframes float {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
-}
-
 /* --- Portfolio bold tokens --------------------------------------------- */
 
 @keyframes aurora-drift {
@@ -265,61 +217,6 @@
   }
   .aurora-blob {
     animation: none;
-  }
-}
-
-@keyframes gradient-shift {
-  0% {
-    background-position: 200% center;
-  }
-  100% {
-    background-position: -100% center;
-  }
-}
-
-@theme {
-  --animate-float: float 3s ease-in-out infinite;
-  --animate-gradient-shift: gradient-shift 6s linear infinite;
-  --animate-orbit: orbit calc(var(--duration) * 1s) linear infinite;
-  --animate-marquee: marquee var(--duration) linear infinite;
-  --animate-marquee-vertical: marquee-vertical var(--duration) linear infinite;
-}
-
-@keyframes marquee {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(calc(-100% - var(--gap)));
-  }
-}
-
-@keyframes marquee-vertical {
-  from {
-    transform: translateY(0);
-  }
-  to {
-    transform: translateY(calc(-100% - var(--gap)));
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .animate-marquee,
-  .animate-marquee-vertical,
-  .animate-orbit {
-    animation-play-state: paused !important;
-  }
-}
-
-@keyframes orbit {
-  0% {
-    transform: rotate(calc(var(--angle) * 1deg))
-      translateY(calc(var(--radius) * 1px)) rotate(calc(var(--angle) * -1deg));
-  }
-  100% {
-    transform: rotate(calc(var(--angle) * 1deg + 360deg))
-      translateY(calc(var(--radius) * 1px))
-      rotate(calc((var(--angle) * -1deg) - 360deg));
   }
 }
 

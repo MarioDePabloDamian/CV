@@ -28,23 +28,19 @@ interface ThemeProviderProps {
   children: ReactNode;
 }
 
+function readStoredTheme(): Theme {
+  const saved = localStorage.getItem("theme");
+  if (saved === "dark" || saved === "light") return saved;
+  return window.matchMedia("(prefers-color-scheme: dark)").matches
+    ? "dark"
+    : "light";
+}
+
 export const ThemeProvider = ({ children }: ThemeProviderProps) => {
-  const [theme, setTheme] = useState<Theme>("light");
+  // Lazy init: reads localStorage synchronously on first render — no FOUC.
+  // The inline script in index.html applies the class before React hydrates.
+  const [theme, setTheme] = useState<Theme>(readStoredTheme);
 
-  // Inicializar el tema desde localStorage y aplicarlo inmediatamente
-  useEffect(() => {
-    const savedTheme = localStorage.getItem("theme") || "light";
-    setTheme(savedTheme as Theme);
-
-    const root = document.documentElement;
-    root.classList.remove("dark");
-
-    if (savedTheme === "dark") {
-      root.classList.add("dark");
-    }
-  }, []);
-
-  // Actualizar cuando el tema cambia
   useEffect(() => {
     const root = document.documentElement;
     if (theme === "dark") {
@@ -56,12 +52,14 @@ export const ThemeProvider = ({ children }: ThemeProviderProps) => {
   }, [theme]);
 
   const toggleTheme = () => {
+    const root = document.documentElement;
+    root.classList.add("theme-transitioning");
     setTheme((prev) => (prev === "light" ? "dark" : "light"));
+    const timer = setTimeout(() => root.classList.remove("theme-transitioning"), 350);
+    return () => clearTimeout(timer);
   };
 
-  const setThemeValue = (value: Theme) => {
-    setTheme(value);
-  };
+  const setThemeValue = (value: Theme) => setTheme(value);
 
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme, setTheme: setThemeValue }}>
