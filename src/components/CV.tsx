@@ -44,13 +44,6 @@ const CV: React.FC = () => {
 
       <div className="relative z-10 min-h-screen">
         <SEO />
-        <a
-          href="#main-content"
-          className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-sky-600 focus:text-white focus:rounded-md"
-        >
-          {t.skipToContent}
-        </a>
-
         <Header />
 
         <Hero />

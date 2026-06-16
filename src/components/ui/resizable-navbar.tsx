@@ -1,10 +1,16 @@
+import {
+  motion,
+  AnimatePresence,
+  useScroll,
+  useMotionValueEvent,
+  useReducedMotion,
+  type Transition,
+} from "motion/react";
 import React, { forwardRef, useRef, useState, useEffect, useLayoutEffect } from "react";
 import { cn } from "@/lib/utils";
-import { useReducedMotion } from "@/hooks/use-reduced-motion";
 
 interface NavbarChildProps {
   visible?: boolean;
-  ready?: boolean;
   fits?: boolean;
 }
 
@@ -13,22 +19,27 @@ interface NavbarProps {
   className?: string;
 }
 
-const NAV_SPRING = "max-width 0.45s cubic-bezier(0.22,1,0.36,1), transform 0.35s cubic-bezier(0.22,1,0.36,1)";
+const spring: Transition = { type: "spring", stiffness: 220, damping: 40 };
 
 export function Navbar({ children, className }: NavbarProps) {
   const ref = useRef<HTMLDivElement>(null);
+  const { scrollY } = useScroll();
   const [visible, setVisible] = useState(false);
-  const [ready, setReady] = useState(false);
   const [fits, setFits] = useState(true);
   const minWidthRef = useRef(0);
 
-  const measure = () => {
+  useMotionValueEvent(scrollY, "change", (latest) => {
+    setVisible(latest > 80);
+  });
+
+  // Synchronous measurement before the browser paints — no flash possible.
+  // NavBody starts visible (fits=true), so its offsetWidth reflects real content width.
+  useLayoutEffect(() => {
     const container = ref.current;
     if (!container) return;
     const navBody = container.querySelector<HTMLElement>("[data-nav-body]");
     if (navBody) {
-      // Temporarily remove width constraints so the element reports its natural content width.
-      // useLayoutEffect fires before paint, so the user never sees this intermediate state.
+      // Temporarily remove width constraints to read the element's natural content width.
       navBody.style.setProperty("width", "max-content", "important");
       navBody.style.setProperty("max-width", "none", "important");
       const natural = navBody.offsetWidth;
@@ -37,29 +48,15 @@ export function Navbar({ children, className }: NavbarProps) {
       if (natural > 0) minWidthRef.current = natural + 8;
     }
     setFits(container.offsetWidth >= minWidthRef.current);
-  };
-
-  // Synchronous — fires after DOM mutations, before the browser paints.
-  // We measure the real content width here so the user never sees the wrong layout.
-  useLayoutEffect(measure, []);
+  }, []);
 
   useEffect(() => {
-    setVisible(window.scrollY > 80);
-    requestAnimationFrame(() => setReady(true));
-
-    const onScroll = () => setVisible(window.scrollY > 80);
-    window.addEventListener("scroll", onScroll, { passive: true });
-
     const container = ref.current;
     if (!container) return;
     const onResize = () => setFits(container.offsetWidth >= minWidthRef.current);
     const ro = new ResizeObserver(onResize);
     ro.observe(container);
-
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      ro.disconnect();
-    };
+    return () => ro.disconnect();
   }, []);
 
   return (
@@ -74,7 +71,7 @@ export function Navbar({ children, className }: NavbarProps) {
         React.isValidElement(child)
           ? React.cloneElement(
               child as React.ReactElement<NavbarChildProps>,
-              { visible, ready, fits }
+              { visible, fits }
             )
           : child
       )}
@@ -86,21 +83,19 @@ export function NavBody({
   children,
   className,
   visible,
-  ready,
   fits,
 }: NavbarProps & NavbarChildProps) {
-  const reduceMotion = useReducedMotion();
+  const reduce = useReducedMotion();
 
   return (
-    <div
+    <motion.div
       data-nav-body
-      style={{
-        width: "100%",
-        maxWidth: visible ? "620px" : "9999px",
-        transform: visible ? "translateY(10px)" : "none",
-        transition: ready && !reduceMotion ? NAV_SPRING : "none",
-        display: fits ? undefined : "none",
+      animate={{
+        width: visible ? "min(100%, 60rem)" : "100%",
+        y: visible ? 10 : 0,
       }}
+      transition={reduce ? { duration: 0 } : spring}
+      style={{ display: fits ? undefined : "none" }}
       className={cn(
         "relative z-[60] mx-auto flex w-full items-center justify-between rounded-full px-4 py-2",
         visible
@@ -110,7 +105,7 @@ export function NavBody({
       )}
     >
       {children}
-    </div>
+    </motion.div>
   );
 }
 
@@ -126,14 +121,27 @@ export function NavItems({
   items: NavItem[];
   className?: string;
 }) {
+  const [hovered, setHovered] = useState<number | null>(null);
+
   return (
-    <nav className={cn("flex items-center gap-1 text-sm font-medium", className)}>
-      {items.map((item) => (
+    <nav
+      onMouseLeave={() => setHovered(null)}
+      className={cn("flex items-center gap-1 text-sm font-medium", className)}
+    >
+      {items.map((item, idx) => (
         <a
           key={item.link}
           href={item.link}
-          className="relative px-3.5 py-2 text-gray-600 transition-colors hover:text-sky-700 dark:text-gray-300 dark:hover:text-sky-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 rounded-full hover:bg-sky-100 dark:hover:bg-sky-950/50"
+          onMouseEnter={() => setHovered(idx)}
+          className="relative px-3.5 py-2 text-gray-600 transition-colors hover:text-sky-700 dark:text-gray-300 dark:hover:text-sky-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 rounded-full"
         >
+          {hovered === idx && (
+            <motion.span
+              layoutId="nav-hover-pill"
+              className="absolute inset-0 -z-10 rounded-full bg-sky-100 dark:bg-sky-950/50"
+              transition={{ type: "spring", stiffness: 320, damping: 30 }}
+            />
+          )}
           {item.name}
         </a>
       ))}
@@ -145,19 +153,18 @@ export function MobileNav({
   children,
   className,
   visible,
-  ready,
   fits,
 }: NavbarProps & NavbarChildProps) {
-  const reduceMotion = useReducedMotion();
+  const reduce = useReducedMotion();
 
   return (
-    <div
-      style={{
+    <motion.div
+      animate={{
         width: visible ? "calc(100% - 1.5rem)" : "100%",
-        transform: visible ? "translateY(8px)" : "none",
-        transition: ready && !reduceMotion ? NAV_SPRING : "none",
-        display: fits ? "none" : undefined,
+        y: visible ? 8 : 0,
       }}
+      transition={reduce ? { duration: 0 } : spring}
+      style={{ display: fits ? "none" : undefined }}
       className={cn(
         "relative z-50 mx-auto flex w-full flex-col px-4 py-2.5",
         visible
@@ -167,7 +174,7 @@ export function MobileNav({
       )}
     >
       {children}
-    </div>
+    </motion.div>
   );
 }
 
@@ -185,16 +192,21 @@ export function MobileNavMenu({
   className,
 }: NavbarProps & { isOpen: boolean }) {
   return (
-    <div
-      className={cn("grid overflow-hidden transition-[grid-template-rows] duration-300 ease-out motion-reduce:transition-none", className)}
-      style={{ gridTemplateRows: isOpen ? "1fr" : "0fr" }}
-    >
-      <div className="min-h-0 overflow-hidden">
-        <div className="mt-2 flex flex-col gap-1 border-t border-gray-200/80 pt-2 dark:border-white/10">
-          {children}
-        </div>
-      </div>
-    </div>
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div
+          initial={{ opacity: 0, height: 0 }}
+          animate={{ opacity: 1, height: "auto" }}
+          exit={{ opacity: 0, height: 0 }}
+          transition={{ duration: 0.25, ease: "easeOut" }}
+          className={cn("w-full overflow-hidden", className)}
+        >
+          <div className="mt-2 flex flex-col gap-1 border-t border-gray-200/80 pt-2 dark:border-white/10">
+            {children}
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }
 
