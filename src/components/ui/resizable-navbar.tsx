@@ -97,9 +97,10 @@ export function NavBody({
       style={{ display: fits ? undefined : "none" }}
       className={cn(
         "relative z-[60] mx-auto flex w-full items-center justify-between rounded-full px-4 py-2",
+        "ring-1 transition-[background-color,box-shadow] duration-300 ease-out motion-reduce:transition-none",
         visible
-          ? "border border-gray-200/70 bg-white/80 shadow-[0_8px_30px_-12px_rgba(14,165,233,0.35)] backdrop-blur-md dark:border-white/10 dark:bg-gray-950/80"
-          : "border border-transparent",
+          ? "ring-gray-200/70 bg-white/80 shadow-[0_8px_30px_-12px_rgba(14,165,233,0.35)] backdrop-blur-md dark:ring-white/10 dark:bg-gray-950/80"
+          : "ring-transparent bg-transparent shadow-none",
         className
       )}
     >
@@ -158,17 +159,17 @@ export function MobileNav({
 
   return (
     <motion.div
-      animate={{
-        width: visible ? "calc(100% - 1.5rem)" : "100%",
-        y: visible ? 8 : 0,
-      }}
+      animate={{ y: visible ? 8 : 0 }}
       transition={reduce ? { duration: 0 } : spring}
       style={{ display: fits ? "none" : undefined }}
       className={cn(
+        // CSS transition handles background, border, radius and shadow smoothly
+        // so they don't jump while Framer Motion animates y.
         "relative z-50 mx-auto flex w-full flex-col px-4 py-2.5",
+        "ring-1 transition-[background-color,border-radius,box-shadow] duration-300 ease-out motion-reduce:transition-none",
         visible
-          ? "rounded-2xl border border-gray-200/70 bg-white/85 shadow-lg backdrop-blur-md dark:border-white/10 dark:bg-gray-950/85"
-          : "border-b border-gray-200/80 dark:border-white/10",
+          ? "rounded-2xl ring-gray-200/70 bg-white/85 shadow-lg backdrop-blur-md dark:ring-white/10 dark:bg-gray-950/85"
+          : "rounded-none ring-transparent bg-transparent shadow-none",
         className
       )}
     >
