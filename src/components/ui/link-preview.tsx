@@ -7,6 +7,7 @@ import React from "react";
 import { AnimatePresence, motion, useMotionValue, useSpring } from "motion/react";
 import { ExternalLink } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useLanguage } from "@/context/LanguageContext";
 
 type LinkPreviewProps = {
   children: React.ReactNode;
@@ -21,6 +22,35 @@ type LinkPreviewProps = {
   customPreview?: React.ReactNode;
 };
 
+const strings = {
+  es: {
+    contact: "Contacto",
+    link: "Enlace",
+    clickContact: "Haz clic para abrir el formulario de contacto",
+    visit: "Haz clic para visitar",
+    visitSite: "Haz clic para visitar el sitio",
+    openForm: "Abrir formulario",
+    goToSite: "Ir al sitio",
+    devPlatform: "Plataforma de desarrollo",
+    professionalNetwork: "Red social profesional",
+    viewMap: "Ver ubicación en Google Maps",
+    repository: "Repositorio",
+  },
+  en: {
+    contact: "Contact",
+    link: "Link",
+    clickContact: "Click to open the contact form",
+    visit: "Click to visit",
+    visitSite: "Click to visit the site",
+    openForm: "Open form",
+    goToSite: "Go to site",
+    devPlatform: "Development platform",
+    professionalNetwork: "Professional social network",
+    viewMap: "View location on Google Maps",
+    repository: "Repository",
+  },
+} as const;
+
 export const LinkPreview = ({
   children,
   url,
@@ -33,6 +63,9 @@ export const LinkPreview = ({
   email,
   customPreview,
 }: LinkPreviewProps) => {
+  const { language } = useLanguage();
+  const s = strings[language];
+
   const [isOpen, setOpen] = React.useState(false);
   const springConfig = { stiffness: 100, damping: 15 };
   const x = useMotionValue(0);
@@ -46,31 +79,31 @@ export const LinkPreview = ({
 
   const getTitle = () => {
     if (title) return title;
-    if (email) return "Contacto";
-    if (!url) return "Enlace";
+    if (email) return s.contact;
+    if (!url) return s.link;
     try {
       const hostname = new URL(url).hostname.replace("www.", "");
       if (hostname.includes("github.com")) return "GitHub";
       if (hostname.includes("linkedin.com")) return "LinkedIn";
       if (hostname.includes("maps.google") || hostname.includes("goo.gl")) return "Google Maps";
       return hostname.split(".")[0].charAt(0).toUpperCase() + hostname.split(".")[0].slice(1);
-    } catch { return "Enlace"; }
+    } catch { return s.link; }
   };
 
   const getDescription = () => {
     if (description) return description;
-    if (email) return "Haz clic para abrir el formulario de contacto";
-    if (!url) return "Haz clic para visitar";
+    if (email) return s.clickContact;
+    if (!url) return s.visit;
     try {
       const urlObj = new URL(url);
       if (urlObj.hostname.includes("github.com")) {
         const parts = urlObj.pathname.split("/").filter(Boolean);
-        return parts.length >= 2 ? `Repositorio: ${parts[0]}/${parts[1]}` : "Plataforma de desarrollo";
+        return parts.length >= 2 ? `${s.repository}: ${parts[0]}/${parts[1]}` : s.devPlatform;
       }
-      if (urlObj.hostname.includes("linkedin.com")) return "Red social profesional";
-      if (urlObj.hostname.includes("maps.google") || urlObj.hostname.includes("goo.gl")) return "Ver ubicación en Google Maps";
+      if (urlObj.hostname.includes("linkedin.com")) return s.professionalNetwork;
+      if (urlObj.hostname.includes("maps.google") || urlObj.hostname.includes("goo.gl")) return s.viewMap;
       return urlObj.hostname.replace("www.", "");
-    } catch { return "Haz clic para visitar el sitio"; }
+    } catch { return s.visitSite; }
   };
 
   const getDomain = () => {
@@ -118,7 +151,7 @@ export const LinkPreview = ({
               animate={{ opacity: 1, y: 0, scale: 1, transition: { type: "spring", stiffness: 260, damping: 20 } }}
               exit={{ opacity: 0, y: 20, scale: 0.6 }}
               className={cn(
-                "shadow-xl rounded-xl bg-white dark:bg-gray-800 p-4",
+                "shadow-xl rounded-xl bg-white dark:bg-gray-900/95 p-4",
                 customPreview ? "min-w-[300px] max-w-[400px]" : "min-w-[250px] max-w-[320px]"
               )}
               style={{ x: translateX }}
@@ -132,15 +165,15 @@ export const LinkPreview = ({
                     </h3>
                   </div>
                   <p className="text-xs text-gray-600 dark:text-gray-400 line-clamp-2">{getDescription()}</p>
-                  <div className="text-xs text-gray-500 dark:text-gray-500 truncate">{getDomain()}</div>
+                  <div className="text-xs text-gray-500 dark:text-gray-400 truncate">{getDomain()}</div>
                   <div className="border-t border-gray-200 dark:border-gray-700" />
                   {buttonAction ? (
                     <button
                       type="button"
                       onClick={handleButtonClick}
-                      className="flex items-center justify-center gap-2 px-4 py-2 bg-sky-600 hover:bg-sky-700 dark:bg-sky-500 dark:hover:bg-sky-600 text-white rounded-lg text-sm font-medium transition-colors"
+                      className="flex items-center justify-center gap-2 px-4 py-2 bg-sky-600 hover:bg-sky-700 dark:bg-sky-500 dark:hover:bg-sky-600 text-white rounded-lg text-sm font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400"
                     >
-                      <span>{buttonText ?? "Abrir formulario"}</span>
+                      <span>{buttonText ?? s.openForm}</span>
                     </button>
                   ) : url ? (
                     <a
@@ -148,9 +181,9 @@ export const LinkPreview = ({
                       target={url.startsWith("mailto:") ? undefined : "_blank"}
                       rel={url.startsWith("mailto:") ? undefined : "noopener noreferrer"}
                       onClick={handleButtonClick}
-                      className="flex items-center justify-center gap-2 px-4 py-2 bg-sky-600 hover:bg-sky-700 dark:bg-sky-500 dark:hover:bg-sky-600 text-white rounded-lg text-sm font-medium transition-colors"
+                      className="flex items-center justify-center gap-2 px-4 py-2 bg-sky-600 hover:bg-sky-700 dark:bg-sky-500 dark:hover:bg-sky-600 text-white rounded-lg text-sm font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400"
                     >
-                      <span>{buttonText ?? "Ir al sitio"}</span>
+                      <span>{buttonText ?? s.goToSite}</span>
                       <ExternalLink size={14} />
                     </a>
                   ) : null}

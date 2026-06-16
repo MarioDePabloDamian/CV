@@ -3,6 +3,8 @@ import {
   useContext,
   useState,
   useEffect,
+  useCallback,
+  useMemo,
   type ReactNode,
 } from "react";
 
@@ -41,7 +43,6 @@ export const LanguageProvider = ({
   initialLanguage,
 }: LanguageProviderProps) => {
   const [language, setLanguageState] = useState<Language>(
-    // URL param takes priority; otherwise fall back to validated localStorage value
     () => initialLanguage ?? readStoredLanguage()
   );
 
@@ -49,17 +50,25 @@ export const LanguageProvider = ({
     localStorage.setItem("language", language);
   }, [language]);
 
-  const setLanguage = (lang: Language) => {
+  const setLanguage = useCallback((lang: Language) => {
     setLanguageState(lang);
     const url = new URL(window.location.href);
     url.searchParams.set("lang", lang);
     window.history.replaceState(null, "", url.toString());
-  };
+  }, []);
 
-  const toggleLanguage = () => setLanguage(language === "es" ? "en" : "es");
+  const toggleLanguage = useCallback(
+    () => setLanguage(language === "es" ? "en" : "es"),
+    [language, setLanguage]
+  );
+
+  const value = useMemo(
+    () => ({ language, toggleLanguage, setLanguage }),
+    [language, toggleLanguage, setLanguage]
+  );
 
   return (
-    <LanguageContext.Provider value={{ language, toggleLanguage, setLanguage }}>
+    <LanguageContext.Provider value={value}>
       {children}
     </LanguageContext.Provider>
   );

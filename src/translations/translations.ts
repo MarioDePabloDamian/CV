@@ -148,6 +148,7 @@ export interface TranslationKeys {
   techCategoryInfrastructure: string;
   techCategoryObservability: string;
   viewLinkedIn: string;
+  selectLanguage: string;
 }
 
 export type Translations = {
@@ -271,7 +272,7 @@ export const translations: Translations = {
     native: "Nativo",
     languageLevelB2: "B2",
     languageExamDate: "11 jun 2022",
-    languageCurrentLevel: "Practico a diario con amigos ingleses",
+    languageCurrentLevel: "Practico a diario con amigos de Países Bajos",
 
     // Footer
     copyright: "© 2025 Mario de Pablo Damián - Fullstack Developer",
@@ -365,6 +366,7 @@ export const translations: Translations = {
     techCategoryInfrastructure: "Infraestructura",
     techCategoryObservability: "Observabilidad",
     viewLinkedIn: "LinkedIn",
+    selectLanguage: "Seleccionar idioma",
   },
   en: {
     // Header
@@ -481,7 +483,7 @@ export const translations: Translations = {
     native: "Native",
     languageLevelB2: "B2",
     languageExamDate: "Jun 11, 2022",
-    languageCurrentLevel: "Daily practice with English friends",
+    languageCurrentLevel: "Daily practice with friends from the Netherlands",
 
     // Footer
     copyright: "© 2025 Mario de Pablo Damián - Fullstack Developer",
@@ -574,5 +576,6 @@ export const translations: Translations = {
     techCategoryInfrastructure: "Infrastructure",
     techCategoryObservability: "Observability",
     viewLinkedIn: "LinkedIn",
+    selectLanguage: "Select language",
   },
 };

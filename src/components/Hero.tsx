@@ -65,7 +65,6 @@ const Hero: React.FC = () => {
 
   return (
     <section
-      id="main-content"
       aria-labelledby="main-heading"
       className="no-print relative overflow-hidden scroll-mt-20 lg:scroll-mt-24"
     >
@@ -171,7 +170,7 @@ const Hero: React.FC = () => {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={t.viewLinkedIn}
-                    className="inline-flex size-11 items-center justify-center rounded-xl border border-gray-300 bg-white/70 text-gray-700 backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-sky-400 hover:text-sky-600 dark:border-gray-700 dark:bg-gray-900/50 dark:text-gray-200 dark:hover:border-sky-600 dark:hover:text-sky-400"
+                    className="inline-flex size-11 items-center justify-center rounded-xl border border-gray-300 bg-white/70 text-gray-700 backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-sky-400 hover:text-sky-600 dark:border-gray-700 dark:bg-gray-900/50 dark:text-gray-200 dark:hover:border-sky-600 dark:hover:text-sky-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-950"
                   >
                     <FaLinkedin size={18} aria-hidden />
                   </a>
@@ -180,7 +179,7 @@ const Hero: React.FC = () => {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label="GitHub"
-                    className="inline-flex size-11 items-center justify-center rounded-xl border border-gray-300 bg-white/70 text-gray-700 backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-sky-400 hover:text-sky-600 dark:border-gray-700 dark:bg-gray-900/50 dark:text-gray-200 dark:hover:border-sky-600 dark:hover:text-sky-400"
+                    className="inline-flex size-11 items-center justify-center rounded-xl border border-gray-300 bg-white/70 text-gray-700 backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-sky-400 hover:text-sky-600 dark:border-gray-700 dark:bg-gray-900/50 dark:text-gray-200 dark:hover:border-sky-600 dark:hover:text-sky-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-950"
                   >
                     <FaGithub size={18} aria-hidden />
                   </a>

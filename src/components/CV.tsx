@@ -1,4 +1,4 @@
-import React from "react";
+import React, { lazy, Suspense } from "react";
 import { SectionCard } from "./ui/section-card";
 import Header from "./Header";
 import Hero from "./Hero";
@@ -8,14 +8,21 @@ import { ContactCtas } from "./ContactCtas";
 import { useLanguage } from "../context/LanguageContext";
 import { translations } from "../translations/translations";
 import { profile } from "../data/profile";
-import HowIBuild from "./HowIBuild";
-import Experience from "./Experience";
-import Projects from "./Projects";
-import Education from "./Education";
 import TechStack from "./TechStack";
-import SoftSkills from "./SoftSkills";
+import Education from "./Education";
 import Certifications from "./Certifications";
 import Languages from "./Languages";
+import SoftSkills from "./SoftSkills";
+
+const HowIBuild = lazy(() => import("./HowIBuild"));
+const Experience = lazy(() => import("./Experience"));
+const Projects = lazy(() => import("./Projects"));
+
+function SectionFallback({ minH = "min-h-[20rem]" }: { minH?: string }) {
+  return (
+    <div className={`${minH} animate-pulse rounded-2xl bg-gray-100/60 dark:bg-gray-800/30`} />
+  );
+}
 
 const CV: React.FC = () => {
   const { language } = useLanguage();
@@ -48,7 +55,7 @@ const CV: React.FC = () => {
 
         <Hero />
 
-        <main className="page-container py-4 sm:py-6 lg:py-8">
+        <main id="main-content" className="page-container py-4 sm:py-6 lg:py-8">
           <div className="grid grid-cols-1 gap-4 sm:gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(17.5rem,22rem)] lg:gap-8 2xl:grid-cols-[minmax(0,1fr)_minmax(18rem,24rem)] 2xl:gap-10">
             <div className="min-w-0 space-y-4 sm:space-y-6 2xl:space-y-8">
               <div className="lg:hidden">
@@ -59,16 +66,22 @@ const CV: React.FC = () => {
 
               <div className="no-print">
                 <SectionCard padding="lg" beam={false} interactive={false}>
-                  <HowIBuild />
+                  <Suspense fallback={<SectionFallback minH="min-h-[16rem]" />}>
+                    <HowIBuild />
+                  </Suspense>
                 </SectionCard>
               </div>
 
               <SectionCard id="experience" padding="lg" beam={false} interactive={false}>
-                <Experience />
+                <Suspense fallback={<SectionFallback minH="min-h-[40rem]" />}>
+                  <Experience />
+                </Suspense>
               </SectionCard>
 
               <SectionCard id="projects" padding="lg" beam={false} interactive={false}>
-                <Projects />
+                <Suspense fallback={<SectionFallback minH="min-h-[32rem]" />}>
+                  <Projects />
+                </Suspense>
               </SectionCard>
             </div>
 
@@ -109,7 +122,7 @@ const CV: React.FC = () => {
             <div className="mt-6 flex justify-center">
               <ContactCtas layout="footer" />
             </div>
-            <p className="mt-8 text-sm text-gray-500 dark:text-gray-500">
+            <p className="mt-8 text-sm text-gray-500 dark:text-gray-400">
               © {year} {profile.fullName} — {t.footerRole}
             </p>
           </div>

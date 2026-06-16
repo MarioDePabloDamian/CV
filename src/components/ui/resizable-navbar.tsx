@@ -1,5 +1,6 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { forwardRef, useRef, useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
+import { useReducedMotion } from "@/hooks/use-reduced-motion";
 
 interface NavbarChildProps {
   visible?: boolean;
@@ -11,19 +12,7 @@ interface NavbarProps {
   className?: string;
 }
 
-const NAV_SPRING = "width 0.35s cubic-bezier(0.22,1,0.36,1), transform 0.35s cubic-bezier(0.22,1,0.36,1)";
-
-function useReducedMotion() {
-  const [reduced, setReduced] = useState(false);
-  useEffect(() => {
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    setReduced(mq.matches);
-    const handler = (e: MediaQueryListEvent) => setReduced(e.matches);
-    mq.addEventListener("change", handler);
-    return () => mq.removeEventListener("change", handler);
-  }, []);
-  return reduced;
-}
+const NAV_SPRING = "max-width 0.45s cubic-bezier(0.22,1,0.36,1), width 0.45s cubic-bezier(0.22,1,0.36,1), transform 0.35s cubic-bezier(0.22,1,0.36,1)";
 
 export function Navbar({ children, className }: NavbarProps) {
   const ref = useRef<HTMLDivElement>(null);
@@ -74,7 +63,8 @@ export function NavBody({
   return (
     <div
       style={{
-        width: visible ? "min(100%, var(--layout-max-width))" : "100%",
+        width: "100%",
+        maxWidth: visible ? "620px" : "9999px",
         transform: visible ? "translateY(10px)" : "none",
         transition: ready && !reduceMotion ? NAV_SPRING : "none",
       }}
@@ -161,7 +151,7 @@ export function MobileNavMenu({
 }: NavbarProps & { isOpen: boolean }) {
   return (
     <div
-      className={cn("grid overflow-hidden transition-[grid-template-rows] duration-300 ease-out", className)}
+      className={cn("grid overflow-hidden transition-[grid-template-rows] duration-300 ease-out motion-reduce:transition-none", className)}
       style={{ gridTemplateRows: isOpen ? "1fr" : "0fr" }}
     >
       <div className="min-h-0 overflow-hidden">
@@ -173,17 +163,13 @@ export function MobileNavMenu({
   );
 }
 
-export function MobileNavToggle({
-  isOpen,
-  onClick,
-  label,
-}: {
-  isOpen: boolean;
-  onClick: () => void;
-  label: string;
-}) {
+export const MobileNavToggle = forwardRef<
+  HTMLButtonElement,
+  { isOpen: boolean; onClick: () => void; label: string }
+>(function MobileNavToggle({ isOpen, onClick, label }, ref) {
   return (
     <button
+      ref={ref}
       type="button"
       onClick={onClick}
       aria-label={label}
@@ -212,4 +198,4 @@ export function MobileNavToggle({
       </span>
     </button>
   );
-}
+});

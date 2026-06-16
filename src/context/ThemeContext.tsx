@@ -3,6 +3,9 @@ import {
   useContext,
   useState,
   useEffect,
+  useCallback,
+  useMemo,
+  useRef,
   ReactNode,
 } from "react";
 
@@ -37,9 +40,7 @@ function readStoredTheme(): Theme {
 }
 
 export const ThemeProvider = ({ children }: ThemeProviderProps) => {
-  // Lazy init: reads localStorage synchronously on first render — no FOUC.
-  // The inline script in index.html applies the class before React hydrates.
-  const [theme, setTheme] = useState<Theme>(readStoredTheme);
+  const [theme, setThemeState] = useState<Theme>(readStoredTheme);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -51,18 +52,30 @@ export const ThemeProvider = ({ children }: ThemeProviderProps) => {
     localStorage.setItem("theme", theme);
   }, [theme]);
 
-  const toggleTheme = () => {
+  const timerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
+  const setTheme = useCallback((value: Theme) => {
     const root = document.documentElement;
+    clearTimeout(timerRef.current);
     root.classList.add("theme-transitioning");
-    setTheme((prev) => (prev === "light" ? "dark" : "light"));
-    const timer = setTimeout(() => root.classList.remove("theme-transitioning"), 350);
-    return () => clearTimeout(timer);
-  };
+    setThemeState(value);
+    timerRef.current = setTimeout(
+      () => root.classList.remove("theme-transitioning"),
+      350
+    );
+  }, []);
 
-  const setThemeValue = (value: Theme) => setTheme(value);
+  const toggleTheme = useCallback(
+    () => setTheme(theme === "light" ? "dark" : "light"),
+    [theme, setTheme]
+  );
+
+  const value = useMemo(
+    () => ({ theme, toggleTheme, setTheme }),
+    [theme, toggleTheme, setTheme]
+  );
 
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme, setTheme: setThemeValue }}>
+    <ThemeContext.Provider value={value}>
       {children}
     </ThemeContext.Provider>
   );

@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
+import { useReducedMotion } from "@/hooks/use-reduced-motion";
 
 interface BlurFadeProps {
   children: ReactNode;
@@ -23,6 +24,7 @@ export function BlurFade({
   blur = "0px",
 }: BlurFadeProps) {
   const ref = useRef<HTMLDivElement>(null);
+  const reduceMotion = useReducedMotion();
   const [visible, setVisible] = useState(!inView);
 
   useEffect(() => {
@@ -55,10 +57,11 @@ export function BlurFade({
       className={cn(className)}
       style={{
         opacity: visible ? 1 : 0,
-        transform: visible ? "none" : translate,
+        transform: visible || reduceMotion ? "none" : translate,
         filter: visible && blur !== "0px" ? "none" : blur !== "0px" ? `blur(${blur})` : undefined,
-        transition: `opacity ${duration}s ease ${0.04 + delay}s, transform ${duration}s ease ${0.04 + delay}s`,
-        willChange: "opacity, transform",
+        transition: reduceMotion
+          ? "none"
+          : `opacity ${duration}s ease ${0.04 + delay}s, transform ${duration}s ease ${0.04 + delay}s`,
       }}
     >
       {children}

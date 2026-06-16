@@ -23,7 +23,8 @@ function LanguageCard({
   flagGradient,
   badge,
   badgeVariant,
-  children,
+  sub,
+  date,
 }: {
   code: string;
   name: string;
@@ -31,7 +32,8 @@ function LanguageCard({
   flagGradient: string;
   badge: string;
   badgeVariant: "native" | "b2";
-  children?: ReactNode;
+  sub?: ReactNode;
+  date?: ReactNode;
 }) {
   return (
     <article className={cn(cardBase, "px-3.5 py-3")}>
@@ -50,21 +52,32 @@ function LanguageCard({
           >
             {code}
           </span>
-          <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">{name}</p>
+          <div className="min-w-0">
+            <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">{name}</p>
+            {date && (
+              <p className="text-[10px] font-medium text-gray-400 dark:text-gray-500">{date}</p>
+            )}
+          </div>
         </div>
-        <span
-          className={cn(
-            badgeClass,
-            badgeVariant === "native" &&
-              "bg-emerald-50 text-emerald-700 ring-emerald-200/80 dark:bg-emerald-950/50 dark:text-emerald-300 dark:ring-emerald-800/60",
-            badgeVariant === "b2" &&
-              "bg-sky-50 text-sky-700 ring-sky-200/80 dark:bg-sky-950/60 dark:text-sky-300 dark:ring-sky-800/60"
-          )}
-        >
-          {badge}
-        </span>
+        <div className="flex shrink-0 flex-col items-end gap-1">
+          <span
+            className={cn(
+              badgeClass,
+              badgeVariant === "native" &&
+                "bg-emerald-50 text-emerald-700 ring-emerald-200/80 dark:bg-emerald-950/50 dark:text-emerald-300 dark:ring-emerald-800/60",
+              badgeVariant === "b2" &&
+                "bg-sky-50 text-sky-700 ring-sky-200/80 dark:bg-sky-950/60 dark:text-sky-300 dark:ring-sky-800/60"
+            )}
+          >
+            {badge}
+          </span>
+        </div>
       </div>
-      {children}
+      {sub && (
+        <div className="mt-2 border-t border-gray-200/70 pt-2 pl-1 dark:border-gray-700/70">
+          {sub}
+        </div>
+      )}
     </article>
   );
 }
@@ -93,8 +106,8 @@ export default function Languages() {
           flagGradient="bg-gradient-to-br from-sky-500 to-indigo-600"
           badge={t.languageLevelB2}
           badgeVariant="b2"
-        >
-          <div className="mt-2.5 space-y-1 border-t border-gray-200/70 pt-2.5 pl-1 dark:border-gray-700/70">
+          date={<time dateTime="2022-06-11">Cambridge · {t.languageExamDate}</time>}
+          sub={
             <p className="flex items-center gap-1.5 text-[11px] leading-snug text-gray-600 dark:text-gray-400">
               <FiMessageCircle
                 className="size-3.5 shrink-0 text-sky-500 dark:text-sky-400"
@@ -102,14 +115,8 @@ export default function Languages() {
               />
               {t.languageCurrentLevel}
             </p>
-            <time
-              dateTime="2022-06-11"
-              className="block pl-5 text-[10px] font-medium text-gray-400 dark:text-gray-500"
-            >
-              Cambridge · {t.languageExamDate}
-            </time>
-          </div>
-        </LanguageCard>
+          }
+        />
       </div>
     </div>
   );

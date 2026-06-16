@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Briefcase, Calendar, Building2, Tag } from "lucide-react";
 import { motion, useScroll, useTransform } from "motion/react";
 import { useLanguage } from "../context/LanguageContext";
@@ -50,7 +50,7 @@ const ProjectTimeline: React.FC<{ projects: TimelineProject[] }> = ({
       {projects.map((project, pIdx) => {
         const isFirst = pIdx === 0;
         return (
-          <li key={pIdx} className="relative flex gap-4 sm:gap-5">
+          <li key={project.name} className="relative flex gap-4 sm:gap-5">
             <div className="relative z-10 flex w-[26px] shrink-0 justify-center">
               <span
                 aria-hidden
@@ -88,7 +88,7 @@ const ProjectTimeline: React.FC<{ projects: TimelineProject[] }> = ({
               <ul className="max-w-[72ch] 2xl:max-w-none mt-3.5 space-y-2.5 list-none border-t border-gray-200 dark:border-gray-700/70 pt-3.5">
                 {project.responsibilities.map((resp, rIdx) => (
                   <li
-                    key={rIdx}
+                    key={`${project.name}-r${rIdx}`}
                     className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed flex gap-2.5"
                   >
                     <span
@@ -111,7 +111,7 @@ const Experience: React.FC = () => {
   const { language } = useLanguage();
   const t = translations[language];
 
-  const experiences = [
+  const experiences = useMemo(() => [
     {
       title: t.experienceTitle,
       company: t.experienceCompany,
@@ -149,7 +149,7 @@ const Experience: React.FC = () => {
         },
       ],
     },
-  ];
+  ], [t]);
 
   return (
     <div>
@@ -158,8 +158,8 @@ const Experience: React.FC = () => {
       </SectionHeading>
 
       <div className="space-y-8">
-        {experiences.map((exp, idx) => (
-          <article key={idx} className="cv-experience-item">
+        {experiences.map((exp) => (
+          <article key={exp.company} className="cv-experience-item">
             <header className="mb-4 sm:mb-5 pb-3 sm:pb-4 border-b border-gray-200 dark:border-gray-700">
               <div className="flex items-start gap-2.5 sm:gap-3 min-w-0">
                 <div className="p-2 rounded-lg bg-sky-100 dark:bg-sky-900/30 text-sky-600 dark:text-sky-400 shrink-0">

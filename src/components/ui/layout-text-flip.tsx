@@ -17,20 +17,35 @@ export const LayoutTextFlip: React.FC<LayoutTextFlipProps> = ({
   const [index, setIndex] = useState(0);
   const [phase, setPhase] = useState<"visible" | "exiting">("visible");
   const timerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
+  const intervalRef = useRef<ReturnType<typeof setInterval>>(undefined);
 
   useEffect(() => {
-    const tick = setInterval(() => {
-      // Fade out current word
-      setPhase("exiting");
-      timerRef.current = setTimeout(() => {
-        setIndex((i) => (i + 1) % words.length);
-        setPhase("visible");
-      }, 350);
-    }, duration);
+    const start = () => {
+      intervalRef.current = setInterval(() => {
+        setPhase("exiting");
+        timerRef.current = setTimeout(() => {
+          setIndex((i) => (i + 1) % words.length);
+          setPhase("visible");
+        }, 350);
+      }, duration);
+    };
+
+    const stop = () => {
+      clearInterval(intervalRef.current);
+      clearTimeout(timerRef.current);
+    };
+
+    const onVisibilityChange = () => {
+      if (document.hidden) stop();
+      else start();
+    };
+
+    start();
+    document.addEventListener("visibilitychange", onVisibilityChange);
 
     return () => {
-      clearInterval(tick);
-      clearTimeout(timerRef.current);
+      stop();
+      document.removeEventListener("visibilitychange", onVisibilityChange);
     };
   }, [words.length, duration]);
 

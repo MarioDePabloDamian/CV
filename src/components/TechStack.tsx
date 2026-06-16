@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { useLanguage } from "../context/LanguageContext";
 import { translations } from "../translations/translations";
 import { cn } from "@/lib/utils";
@@ -16,6 +16,11 @@ const TechStack: React.FC<TechStackProps> = ({ showCloud = true }) => {
   const t = translations[language];
   const cloudSize = useIconCloudSize();
 
+  const cloudItems = useMemo(
+    () => techStackCloudItems.map((item) => ({ src: item.icon, label: item.name })),
+    []
+  );
+
   const categoryTitles: Record<(typeof techStackCategories)[number]["id"], string> = {
     development: t.techCategoryDevelopment,
     infrastructure: t.techCategoryInfrastructure,
@@ -31,10 +36,7 @@ const TechStack: React.FC<TechStackProps> = ({ showCloud = true }) => {
       {showCloud && (
         <div className="no-print flex flex-col items-center mb-4 sm:mb-5 w-full">
           <IconCloud
-            items={techStackCloudItems.map((item) => ({
-              src: item.icon,
-              label: item.name,
-            }))}
+            items={cloudItems}
             size={cloudSize}
             ariaLabel={t.techStackHint}
             className="mx-auto w-full max-w-[min(100%,280px)] h-auto aspect-square"

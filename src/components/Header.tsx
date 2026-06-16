@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Mail } from "lucide-react";
 import { FaGithub, FaLinkedin } from "react-icons/fa";
 import { useLanguage } from "../context/LanguageContext";
@@ -10,7 +10,6 @@ import LanguageSelector from "./LanguageSelector";
 import {
   Navbar,
   NavBody,
-  NavItems,
   MobileNav,
   MobileNavHeader,
   MobileNavMenu,
@@ -21,14 +20,21 @@ const Header: React.FC = () => {
   const { language } = useLanguage();
   const t = translations[language];
   const [menuOpen, setMenuOpen] = useState(false);
+  const toggleRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setMenuOpen(false);
+        toggleRef.current?.focus();
+      }
+    };
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [menuOpen]);
 
   const locationFull = `${profile.address.locality}, ${profile.address.region}`;
-
-  const navItems = [
-    { name: t.navExperience, link: "#experience" },
-    { name: t.navProjects, link: "#projects" },
-    { name: t.navContact, link: "#contact" },
-  ];
 
   const Logo = (
     <a
@@ -53,7 +59,9 @@ const Header: React.FC = () => {
       <Navbar>
         <NavBody>
           {Logo}
-          <NavItems items={navItems} />
+          <span className="truncate bg-gradient-to-r from-sky-500 to-indigo-500 bg-clip-text text-sm font-bold text-transparent [transform:translateZ(0)]">
+            {profile.fullName}
+          </span>
           <div className="flex shrink-0 items-center gap-1.5">
             <a
               href={profile.links.linkedin}
@@ -88,10 +96,16 @@ const Header: React.FC = () => {
         <MobileNav>
           <MobileNavHeader>
             {Logo}
+            <div className="flex min-w-0 flex-1 flex-col items-center gap-0.5 px-2">
+              <span className="truncate bg-gradient-to-r from-sky-500 to-indigo-500 bg-clip-text text-sm font-bold leading-tight text-transparent [transform:translateZ(0)]">
+                {profile.fullName}
+              </span>
+            </div>
             <div className="flex items-center gap-1.5">
               <ThemeToggle />
               <LanguageSelector compact />
               <MobileNavToggle
+                ref={toggleRef}
                 isOpen={menuOpen}
                 onClick={() => setMenuOpen((v) => !v)}
                 label={menuOpen ? t.navCloseMenu : t.navMenu}
@@ -100,16 +114,6 @@ const Header: React.FC = () => {
           </MobileNavHeader>
 
           <MobileNavMenu isOpen={menuOpen}>
-            {navItems.map((item) => (
-              <a
-                key={item.link}
-                href={item.link}
-                onClick={() => setMenuOpen(false)}
-                className="rounded-lg px-3 py-2.5 text-sm font-medium text-gray-700 transition-colors hover:bg-sky-50 hover:text-sky-700 dark:text-gray-200 dark:hover:bg-sky-950/40 dark:hover:text-sky-300"
-              >
-                {item.name}
-              </a>
-            ))}
             <a
               href={mailto}
               onClick={() => setMenuOpen(false)}
