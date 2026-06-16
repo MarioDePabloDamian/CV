@@ -120,7 +120,6 @@ export interface TranslationKeys {
   project3Card2Content: string;
   project3Card2Designation: string;
   techStackHint: string;
-  skipToContent: string;
   statTechnologies: string;
   statCertifications: string;
   statProjects: string;
@@ -337,7 +336,6 @@ export const translations: Translations = {
       "Entregué <strong>control horario legal</strong>, <strong>con registro de jornada auditable y conforme a normativa</strong>, mediante fichajes, gestión de horarios y despliegue en producción.",
     project3Card2Designation: "Proyecto de Cumplimiento Normativo",
     techStackHint: "Arrastra o haz clic en un icono para explorar",
-    skipToContent: "Saltar al contenido principal",
     statTechnologies: "Tecnologías",
     statCertifications: "Certificaciones",
     statProjects: "Proyectos",
@@ -547,7 +545,6 @@ export const translations: Translations = {
       "Delivered <strong>legally compliant time tracking</strong>, <strong>with auditable work-hour records</strong>, by check-in/out flows, schedule management, and production deployment.",
     project3Card2Designation: "Regulatory Compliance Project",
     techStackHint: "Drag or click an icon to explore",
-    skipToContent: "Skip to main content",
     statTechnologies: "Technologies",
     statCertifications: "Certifications",
     statProjects: "Projects",
