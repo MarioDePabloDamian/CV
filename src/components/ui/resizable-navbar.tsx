@@ -1,6 +1,5 @@
 import {
   motion,
-  AnimatePresence,
   useScroll,
   useMotionValueEvent,
   useReducedMotion,
@@ -192,21 +191,19 @@ export function MobileNavMenu({
   className,
 }: NavbarProps & { isOpen: boolean }) {
   return (
-    <AnimatePresence>
-      {isOpen && (
-        <motion.div
-          initial={{ opacity: 0, height: 0 }}
-          animate={{ opacity: 1, height: "auto" }}
-          exit={{ opacity: 0, height: 0 }}
-          transition={{ duration: 0.25, ease: "easeOut" }}
-          className={cn("w-full overflow-hidden", className)}
-        >
-          <div className="mt-2 flex flex-col gap-1 border-t border-gray-200/80 pt-2 dark:border-white/10">
-            {children}
-          </div>
-        </motion.div>
+    <div
+      className={cn(
+        "grid overflow-hidden transition-[grid-template-rows] duration-300 ease-out motion-reduce:transition-none",
+        className
       )}
-    </AnimatePresence>
+      style={{ gridTemplateRows: isOpen ? "1fr" : "0fr" }}
+    >
+      <div className="min-h-0 overflow-hidden">
+        <div className="mt-2 flex flex-col gap-1 border-t border-gray-200/80 pt-2 dark:border-white/10">
+          {children}
+        </div>
+      </div>
+    </div>
   );
 }
 
