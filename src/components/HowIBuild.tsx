@@ -30,7 +30,7 @@ const icon = (name: string, color: string) =>
   `https://cdn.simpleicons.org/${name}/${color}`;
 
 const GroupLabel: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <p className="mb-1 h-4 text-center text-[10px] font-semibold uppercase tracking-wide text-gray-400 dark:text-gray-500">
+  <p className="mb-1 h-4 w-full px-1 text-center text-[10px] font-semibold uppercase tracking-wide text-gray-400 dark:text-gray-500">
     {children}
   </p>
 );
@@ -58,12 +58,12 @@ const HowIBuild: React.FC = () => {
 
       <div
         ref={containerRef}
-        className="relative mt-4 flex h-[190px] w-full items-stretch justify-between px-0 sm:h-[230px] sm:px-4 md:h-[250px] xl:h-[280px] xl:px-8 2xl:h-[320px] 2xl:px-12"
+        className="relative mt-4 flex h-[190px] w-full items-stretch px-0 sm:h-[230px] sm:px-4 md:h-[250px] xl:h-[280px] xl:px-8 2xl:h-[320px] 2xl:px-12"
       >
         {/* Casi siempre (rejilla 2x2) */}
-        <div className="flex flex-col">
+        <div className="flex min-w-0 flex-1 flex-col items-center">
           <GroupLabel>{t.howIBuildAlways}</GroupLabel>
-          <div className="flex flex-1 items-center">
+          <div className="flex flex-1 items-center justify-center">
             <div className="grid grid-cols-2 gap-x-2 gap-y-3.5 sm:gap-x-5 sm:gap-y-6 xl:gap-x-10 2xl:gap-x-14">
               <Node ref={reactRef} label="React">
                 <img src={icon("react", "61DAFB")} alt="" className="size-full" />
@@ -90,13 +90,13 @@ const HowIBuild: React.FC = () => {
         </div>
 
         {/* Docker en el centro: todo corre aquí */}
-        <div className="flex flex-col">
+        <div className="flex shrink-0 flex-col items-center">
           <GroupLabel>&nbsp;</GroupLabel>
           <div className="flex flex-1 items-center justify-center">
             <Node
               ref={dockerRef}
               label="Docker"
-              className="size-11 border-sky-300 ring-2 ring-sky-100 dark:border-sky-700 dark:ring-sky-900/40 sm:size-14 sm:ring-3 md:size-16 md:ring-4 lg:size-[4.5rem]"
+              className="size-12 border-sky-300 ring-2 ring-sky-100 dark:border-sky-700 dark:ring-sky-900/40 sm:size-16 sm:ring-3 md:size-[4.5rem] md:ring-4 lg:size-20 xl:size-[5.25rem] 2xl:size-24"
             >
               <img src={icon("docker", "2496ED")} alt="" className="size-full" />
             </Node>
@@ -104,9 +104,9 @@ const HowIBuild: React.FC = () => {
         </div>
 
         {/* Según el proyecto (rejilla 2x2) */}
-        <div className="flex flex-col">
+        <div className="flex min-w-0 flex-1 flex-col items-center">
           <GroupLabel>{t.howIBuildDepends}</GroupLabel>
-          <div className="flex flex-1 items-center">
+          <div className="flex flex-1 items-center justify-center">
             <div className="grid grid-cols-2 gap-x-2 gap-y-3.5 sm:gap-x-5 sm:gap-y-6 xl:gap-x-10 2xl:gap-x-14">
               <Node ref={redisRef} label="Redis">
                 <img src={icon("redis", "FF4438")} alt="" className="size-full" />
