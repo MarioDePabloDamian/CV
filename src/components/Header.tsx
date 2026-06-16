@@ -103,7 +103,6 @@ const Header: React.FC = () => {
             </div>
             <div className="flex items-center gap-1.5">
               <ThemeToggle />
-              <LanguageSelector compact />
               <MobileNavToggle
                 ref={toggleRef}
                 isOpen={menuOpen}
@@ -143,6 +142,7 @@ const Header: React.FC = () => {
                 <FaGithub size={16} aria-hidden />
                 GitHub
               </a>
+              <LanguageSelector compact />
             </div>
           </MobileNavMenu>
         </MobileNav>

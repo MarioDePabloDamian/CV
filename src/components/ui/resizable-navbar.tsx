@@ -1,10 +1,11 @@
-import React, { forwardRef, useRef, useState, useEffect } from "react";
+import React, { forwardRef, useRef, useState, useEffect, useLayoutEffect } from "react";
 import { cn } from "@/lib/utils";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 
 interface NavbarChildProps {
   visible?: boolean;
   ready?: boolean;
+  fits?: boolean;
 }
 
 interface NavbarProps {
@@ -12,24 +13,53 @@ interface NavbarProps {
   className?: string;
 }
 
-const NAV_SPRING = "max-width 0.45s cubic-bezier(0.22,1,0.36,1), width 0.45s cubic-bezier(0.22,1,0.36,1), transform 0.35s cubic-bezier(0.22,1,0.36,1)";
+const NAV_SPRING = "max-width 0.45s cubic-bezier(0.22,1,0.36,1), transform 0.35s cubic-bezier(0.22,1,0.36,1)";
 
 export function Navbar({ children, className }: NavbarProps) {
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
-  // "ready" suppresses the transition on first render so the pill doesn't
-  // animate from the wrong state when the page loads already scrolled.
   const [ready, setReady] = useState(false);
+  const [fits, setFits] = useState(true);
+  const minWidthRef = useRef(0);
+
+  const measure = () => {
+    const container = ref.current;
+    if (!container) return;
+    const navBody = container.querySelector<HTMLElement>("[data-nav-body]");
+    if (navBody) {
+      // Temporarily remove width constraints so the element reports its natural content width.
+      // useLayoutEffect fires before paint, so the user never sees this intermediate state.
+      navBody.style.setProperty("width", "max-content", "important");
+      navBody.style.setProperty("max-width", "none", "important");
+      const natural = navBody.offsetWidth;
+      navBody.style.removeProperty("width");
+      navBody.style.removeProperty("max-width");
+      if (natural > 0) minWidthRef.current = natural + 8;
+    }
+    setFits(container.offsetWidth >= minWidthRef.current);
+  };
+
+  // Synchronous — fires after DOM mutations, before the browser paints.
+  // We measure the real content width here so the user never sees the wrong layout.
+  useLayoutEffect(measure, []);
 
   useEffect(() => {
-    // Sync with current scroll position immediately (no animation on mount)
     setVisible(window.scrollY > 80);
-    // Allow transitions only after the first paint
     requestAnimationFrame(() => setReady(true));
 
-    const update = () => setVisible(window.scrollY > 80);
-    window.addEventListener("scroll", update, { passive: true });
-    return () => window.removeEventListener("scroll", update);
+    const onScroll = () => setVisible(window.scrollY > 80);
+    window.addEventListener("scroll", onScroll, { passive: true });
+
+    const container = ref.current;
+    if (!container) return;
+    const onResize = () => setFits(container.offsetWidth >= minWidthRef.current);
+    const ro = new ResizeObserver(onResize);
+    ro.observe(container);
+
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      ro.disconnect();
+    };
   }, []);
 
   return (
@@ -44,7 +74,7 @@ export function Navbar({ children, className }: NavbarProps) {
         React.isValidElement(child)
           ? React.cloneElement(
               child as React.ReactElement<NavbarChildProps>,
-              { visible, ready }
+              { visible, ready, fits }
             )
           : child
       )}
@@ -57,19 +87,22 @@ export function NavBody({
   className,
   visible,
   ready,
+  fits,
 }: NavbarProps & NavbarChildProps) {
   const reduceMotion = useReducedMotion();
 
   return (
     <div
+      data-nav-body
       style={{
         width: "100%",
         maxWidth: visible ? "620px" : "9999px",
         transform: visible ? "translateY(10px)" : "none",
         transition: ready && !reduceMotion ? NAV_SPRING : "none",
+        display: fits ? undefined : "none",
       }}
       className={cn(
-        "relative z-[60] mx-auto hidden w-full items-center justify-between rounded-full px-4 py-2 lg:flex",
+        "relative z-[60] mx-auto flex w-full items-center justify-between rounded-full px-4 py-2",
         visible
           ? "border border-gray-200/70 bg-white/80 shadow-[0_8px_30px_-12px_rgba(14,165,233,0.35)] backdrop-blur-md dark:border-white/10 dark:bg-gray-950/80"
           : "border border-transparent",
@@ -113,6 +146,7 @@ export function MobileNav({
   className,
   visible,
   ready,
+  fits,
 }: NavbarProps & NavbarChildProps) {
   const reduceMotion = useReducedMotion();
 
@@ -122,9 +156,10 @@ export function MobileNav({
         width: visible ? "calc(100% - 1.5rem)" : "100%",
         transform: visible ? "translateY(8px)" : "none",
         transition: ready && !reduceMotion ? NAV_SPRING : "none",
+        display: fits ? "none" : undefined,
       }}
       className={cn(
-        "relative z-50 mx-auto flex w-full flex-col px-4 py-2.5 lg:hidden",
+        "relative z-50 mx-auto flex w-full flex-col px-4 py-2.5",
         visible
           ? "rounded-2xl border border-gray-200/70 bg-white/85 shadow-lg backdrop-blur-md dark:border-white/10 dark:bg-gray-950/85"
           : "border-b border-gray-200/80 dark:border-white/10",
