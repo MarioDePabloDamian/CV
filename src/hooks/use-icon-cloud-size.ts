@@ -11,7 +11,10 @@ export function useIconCloudSize() {
       else if (width < 480) setSize(230);
       else if (width < 640) setSize(250);
       else if (width < 1024) setSize(270);
-      else setSize(280);
+      else if (width < 1536) setSize(280);
+      else if (width < 1920) setSize(320);
+      else if (width < 2560) setSize(360);
+      else setSize(400);
     };
 
     update();

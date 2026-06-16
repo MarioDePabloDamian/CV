@@ -9,17 +9,17 @@ const Node = forwardRef<
   HTMLDivElement,
   { className?: string; children: React.ReactNode; label: string }
 >(({ className, children, label }, ref) => (
-  <div className="flex flex-col items-center gap-1.5">
+  <div className="flex flex-col items-center gap-1 sm:gap-1.5">
     <div
       ref={ref}
       className={cn(
-        "z-10 flex size-12 items-center justify-center rounded-full border border-gray-200 bg-white p-2.5 shadow-[0_2px_8px_rgba(0,0,0,0.08)] dark:border-gray-700 dark:bg-gray-900 sm:size-14",
+        "z-10 flex size-9 items-center justify-center rounded-full border border-gray-200 bg-white p-1.5 shadow-[0_2px_8px_rgba(0,0,0,0.08)] dark:border-gray-700 dark:bg-gray-900 sm:size-11 sm:p-2 md:size-12 md:p-2.5 lg:size-14",
         className
       )}
     >
       {children}
     </div>
-    <span className="text-[10px] font-medium text-gray-500 dark:text-gray-400">
+    <span className="max-w-[3.25rem] text-center text-[8px] leading-tight font-medium text-gray-500 sm:max-w-none sm:text-[10px] sm:leading-normal dark:text-gray-400">
       {label}
     </span>
   </div>
@@ -58,13 +58,13 @@ const HowIBuild: React.FC = () => {
 
       <div
         ref={containerRef}
-        className="relative mt-4 flex h-[250px] w-full items-stretch justify-between px-1 sm:px-4 xl:h-[280px] xl:px-8 2xl:h-[320px] 2xl:px-12"
+        className="relative mt-4 flex h-[190px] w-full items-stretch justify-between px-0 sm:h-[230px] sm:px-4 md:h-[250px] xl:h-[280px] xl:px-8 2xl:h-[320px] 2xl:px-12"
       >
         {/* Casi siempre (rejilla 2x2) */}
         <div className="flex flex-col">
           <GroupLabel>{t.howIBuildAlways}</GroupLabel>
           <div className="flex flex-1 items-center">
-            <div className="grid grid-cols-2 gap-x-5 gap-y-6 sm:gap-x-7 xl:gap-x-10 2xl:gap-x-14">
+            <div className="grid grid-cols-2 gap-x-2 gap-y-3.5 sm:gap-x-5 sm:gap-y-6 xl:gap-x-10 2xl:gap-x-14">
               <Node ref={reactRef} label="React">
                 <img src={icon("react", "61DAFB")} alt="" className="size-full" />
               </Node>
@@ -96,7 +96,7 @@ const HowIBuild: React.FC = () => {
             <Node
               ref={dockerRef}
               label="Docker"
-              className="size-16 border-sky-300 ring-4 ring-sky-100 dark:border-sky-700 dark:ring-sky-900/40 sm:size-[4.5rem]"
+              className="size-11 border-sky-300 ring-2 ring-sky-100 dark:border-sky-700 dark:ring-sky-900/40 sm:size-14 sm:ring-3 md:size-16 md:ring-4 lg:size-[4.5rem]"
             >
               <img src={icon("docker", "2496ED")} alt="" className="size-full" />
             </Node>
@@ -107,7 +107,7 @@ const HowIBuild: React.FC = () => {
         <div className="flex flex-col">
           <GroupLabel>{t.howIBuildDepends}</GroupLabel>
           <div className="flex flex-1 items-center">
-            <div className="grid grid-cols-2 gap-x-5 gap-y-6 sm:gap-x-7 xl:gap-x-10 2xl:gap-x-14">
+            <div className="grid grid-cols-2 gap-x-2 gap-y-3.5 sm:gap-x-5 sm:gap-y-6 xl:gap-x-10 2xl:gap-x-14">
               <Node ref={redisRef} label="Redis">
                 <img src={icon("redis", "FF4438")} alt="" className="size-full" />
               </Node>

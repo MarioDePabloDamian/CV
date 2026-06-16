@@ -49,7 +49,7 @@ const CV: React.FC = () => {
         <Hero />
 
         <main id="main-content" className="page-container py-4 sm:py-6 lg:py-8">
-          <div className="grid grid-cols-1 gap-4 sm:gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(17.5rem,22rem)] lg:gap-8 2xl:grid-cols-[minmax(0,1fr)_minmax(18rem,24rem)] 2xl:gap-10">
+          <div className="grid grid-cols-1 gap-4 sm:gap-6 lg:grid-cols-[minmax(0,1.65fr)_minmax(18rem,1fr)] lg:gap-8 2xl:grid-cols-[minmax(0,1.55fr)_minmax(20rem,1fr)] 2xl:gap-10">
             <div className="min-w-0 space-y-4 sm:space-y-6 2xl:space-y-8">
               <div className="lg:hidden">
                 <SectionCard padding="md" beam={false} interactive={false}>

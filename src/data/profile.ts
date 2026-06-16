@@ -11,7 +11,7 @@ export const profile = {
     linkedin: "https://www.linkedin.com/in/mario-de-pablo-damian/",
     github: "https://github.com/Mariosos1",
     maps: "https://www.google.com/maps/place/28521+Rivas-Vaciamadrid,+Madrid",
-    openclaw: "https://nemoclaw.mariodepablo.es",
+    openclaw: "https://openclaw.mariodepablo.es/",
   },
   address: {
     locality: "Rivas-Vaciamadrid",

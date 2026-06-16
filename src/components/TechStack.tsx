@@ -39,7 +39,7 @@ const TechStack: React.FC<TechStackProps> = ({ showCloud = true }) => {
             items={cloudItems}
             size={cloudSize}
             ariaLabel={t.techStackHint}
-            className="mx-auto w-full max-w-[min(100%,280px)] h-auto aspect-square"
+            className="mx-auto w-full max-w-[min(100%,clamp(17.5rem,90%,28rem))] h-auto aspect-square"
           />
         </div>
       )}
